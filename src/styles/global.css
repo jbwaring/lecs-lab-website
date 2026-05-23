@@ -225,6 +225,9 @@ p { margin: 0 0 1em; text-wrap: pretty; }
   border: 1px solid transparent; cursor: pointer;
   transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
+.btn:focus-visible { outline: 2px solid var(--maroon); outline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--maroon); outline-offset: 2px; }
+a.btn:focus-visible { outline-offset: 2px; }
 .btn.primary { background: var(--maroon); color: #fff; }
 .btn.primary:hover { background: var(--maroon-dark); }
 .btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.5); }
@@ -948,41 +951,18 @@ section.band.alt .area { background: var(--paper-2); }
   .util .breadcrumb { display: none; }
   .util .actions { margin-left: auto; gap: 10px; }
 
-  /* Header + nav: stack the nav under the brand on its own row, scrollable
-     horizontally so a 7-item nav doesn't squeeze the brand. */
+  /* Brand + hamburger row. Drawer-style nav is handled in Layout.astro. */
   .header .wrap {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    min-height: 0;
-    row-gap: 6px;
-    padding-top: 12px;
-    padding-bottom: 0;
+    align-items: center;
+    min-height: 64px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 12px;
   }
   .brand { flex: 1 1 auto; min-width: 0; }
-  .brand .mark { height: 38px; padding: 0 10px; font-size: 15px; }
-  .brand .word .lab { font-size: 16px; }
-  .brand .word .uni { font-size: 9.5px; }
-
-  .nav {
-    margin-left: 0;
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    padding: 4px 0 6px;
-    border-top: 1px solid var(--rule);
-    margin-top: 8px;
-    gap: 0;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
-  }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav a {
-    padding: 10px 10px;
-    font-size: 14px;
-  }
-  .nav a.active::after { left: 10px; right: 10px; }
+  .brand .mark { height: 36px; padding: 0 10px; font-size: 14px; }
+  .brand .word .lab { font-size: 15px; }
+  .brand .word .uni { font-size: 9.5px; margin-top: 4px; }
 
   .hero .wrap { padding-top: 56px; padding-bottom: 96px; min-height: auto; }
   .hero .glass { padding: 26px 24px 28px; }
@@ -995,9 +975,11 @@ section.band.alt .area { background: var(--paper-2); }
   .pub-row .pub-venue { text-align: left; }
   .profile-hero .wrap { grid-template-columns: 1fr; }
   .profile-hero .portrait { max-width: 200px; }
-  .paper-actions .wrap { gap: 12px; }
-  .paper-actions .actions { gap: 8px; }
-  .paper-actions .actions .btn { font-size: 12px; padding: 8px 10px; }
+  .paper-actions { padding: 14px 0; }
+  .paper-actions .wrap { flex-direction: column; align-items: stretch; gap: 12px; }
+  .paper-actions .left { font-size: 12px; }
+  .paper-actions .actions { gap: 8px; width: 100%; }
+  .paper-actions .actions .btn { font-size: 13px; padding: 10px 12px; flex: 1 1 auto; justify-content: center; }
   section.band { padding: 56px 0; }
 }
 
