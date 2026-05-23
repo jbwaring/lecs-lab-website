@@ -1,0 +1,24 @@
+{
+  "slug": "design-reconfigurable-receiver-nanophotonic-interconnects-2022",
+  "title": "Design of a Reconfigurable Receiver for Nanophotonic Interconnects",
+  "authors": [
+    "Shayan Zohrei",
+    "S. L. Beux"
+  ],
+  "abstract": "As silicon photonics is becoming a mature technology, it is now possible to envision nanophotonic interconnects replacing electrical interconnects. This transition can improve the chip-scale communication bandwidth, latency, and energy efficiency. This paper presents a digitally controlled reconfigurable receiver that can adapt its gain based on the input optical power. The receiver power consumption can thus be reduced to the minimum required to reach the targeted BER (Bit Error Rate). For this purpose, we propose a design method to configure the receivers according to both system-level and technological level parameters. Compared to the conventional receiver, the proposed receiver reduces power consumption by 9% on average and up to 25% for short-range communications.",
+  "date": "2022-06-19",
+  "year": 2022,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "86edbedbf5d0a07178d2f022a08d212ff299855b",
+  "doi": "10.1109/NEWCAS52662.2022.9842058",
+  "paperUrl": "https://doi.org/10.1109/NEWCAS52662.2022.9842058",
+  "pdfPath": null
+}

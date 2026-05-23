@@ -1,0 +1,182 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Avatar from "../../../components/Avatar.astro";
+import { articles } from "../../../data/lecs";
+import { getCollection } from "astro:content";
+import { detectLocale, t, fmtDate, fmtDateLong, readingTime } from "../../../lib/i18n";
+import type { StringKey } from "../../../i18n/strings";
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+const articleBase = lang === "fr" ? "/fr/article" : "/article";
+const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
+const profileBase = lang === "fr" ? "/fr/profile" : "/profile";
+const articlesIndex = lang === "fr" ? "/fr/articles" : "/articles";
+
+const people = await getCollection("people");
+const publications = await getCollection("publications");
+
+const author = people.find((p) => p.data.name === article.author);
+const pub = article.relatedPub
+  ? publications.find((p) => p.data.slug === article.relatedPub)
+  : undefined;
+const related = articles
+  .filter((a) => a.slug !== article.slug && a.topics.some((t) => article.topics.includes(t)))
+  .slice(0, 3);
+
+const emailMailto = author ? (author.data.email ?? "").replace(" (at) ", "@") : null;
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
+  { href: langHome, label: "LECS" },
+  { href: articlesIndex, label: tt("nav.articles") }
+];
+---
+
+<Layout
+  title={`${article.title} — LECS · Concordia University`}
+  description={article.excerpt}
+  activeNav="articles"
+  crumbs={crumbs}
+  condensedFooter
+  locale={lang}
+>
+  <section class="paper-hero">
+    <div class="wrap">
+      <div class="breadcrumb-mini">
+        <a href={articlesIndex}>{tt("nav.articles")}</a>
+        <span>›</span>
+        <span>{fmtDateLong(article.date, lang)}</span>
+      </div>
+      <div class="type-pill">{article.tag}</div>
+      <h1>{article.title}</h1>
+      <div class="authors-row">
+        {tt("articles.by")} {
+          author ? (
+            <a href={`${profileBase}/${author.id}`}>{article.author}</a>
+          ) : (
+            <span>{article.author}</span>
+          )
+        }
+      </div>
+      <div class="venue-row">
+        {fmtDateLong(article.date, lang)} · {readingTime(article.body)} {tt("articles.minRead")}
+      </div>
+      <div class="pill-row">
+        {article.topics.map((t) => <span class="topic-pill">{tt(`area.${t}` as StringKey)}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="paper-body">
+    <div class="wrap">
+      <div class="paper-main">
+        <div class="abstract-block">
+          <div class="label">{tt("article.inBrief")}</div>
+          <p>{article.excerpt}</p>
+        </div>
+
+        <div class="paper-section">
+          {article.body.map((para) => <p>{para}</p>)}
+        </div>
+
+        {
+          pub && (
+            <div class="key-points">
+              <div class="label">{tt("article.companionHeading")}</div>
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; gap:24px; padding-top:6px;"
+              >
+                <div>
+                  <div
+                    style="font-family: var(--accent); font-weight:500; font-size:18px; color: var(--ink); margin-bottom:4px;"
+                  >
+                    {pub.data.title}
+                  </div>
+                  <div style="font-size:14px; color: var(--ink-3);">
+                    <strong style="color: var(--maroon); font-weight:500;">{pub.data.venue}</strong>
+                    · {pub.data.year} · {pub.data.authors.join(", ")}
+                  </div>
+                </div>
+                <a class="btn solid" href={`${pubBase}/${pub.data.slug}`} style="flex-shrink:0;">
+                  {tt("pub.openPaper")}
+                </a>
+              </div>
+            </div>
+          )
+        }
+
+        <div class="paper-section">
+          <h2>{tt("article.commentsHeading")}</h2>
+          <p>{tt("article.commentsBody")}</p>
+        </div>
+      </div>
+
+      <aside class="paper-sidebar">
+        <div class="sidebar-card">
+          <h4>{tt("article.author")}</h4>
+          {
+            author ? (
+              <a class="author-mini" href={`${profileBase}/${author.id}`}>
+                <div class="av"><Avatar name={author.data.name} /></div>
+                <div class="info">
+                  <span class="n">{author.data.name}</span>
+                  <span class="r">{tt(`roleFull.${author.data.role}` as StringKey)}</span>
+                </div>
+              </a>
+            ) : (
+              <div style="font-size:14px;">{article.author}</div>
+            )
+          }
+        </div>
+
+        <div class="sidebar-card">
+          <h4>{tt("article.thisArticle")}</h4>
+          <div class="meta-row">
+            <span class="k">{tt("article.published")}</span>
+            <span class="v">{fmtDateLong(article.date, lang)}</span>
+          </div>
+          <div class="meta-row">
+            <span class="k">{tt("article.category")}</span>
+            <span class="v">{article.tag}</span>
+          </div>
+          <div class="meta-row">
+            <span class="k">{tt("article.readingTime")}</span>
+            <span class="v">{readingTime(article.body)} min</span>
+          </div>
+        </div>
+
+        {
+          related.length > 0 && (
+            <div class="sidebar-card">
+              <h4>{tt("article.related")}</h4>
+              <div class="related-papers">
+                {related.map((r) => (
+                  <a href={`${articleBase}/${r.slug}`}>
+                    <div class="t">{r.title}</div>
+                    <div class="v">
+                      <strong>{r.tag}</strong> · {fmtDate(r.date, lang)}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <div style="margin-top:24px;">
+          <a class="btn outline" href={articlesIndex} style="width:100%; justify-content:center;"
+            >{tt("articles.allArticles")}</a
+          >
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>

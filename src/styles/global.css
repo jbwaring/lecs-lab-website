@@ -101,8 +101,8 @@ p { margin: 0 0 1em; text-wrap: pretty; }
   border-radius: 2px;
   letter-spacing: .04em;
 }
-.brand .word { line-height: 1.05; }
-.brand .word .lab { font-family: var(--accent); font-weight: 500; font-size: 19px; letter-spacing: -.005em; color: var(--ink); }
+.brand .word { line-height: 1.15; max-width: 22em; }
+.brand .word .lab { font-family: var(--accent); font-weight: 500; font-size: 19px; letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
 .brand .word .lab .lab-for {
   font-family: "Georgia", "Times New Roman", serif;
   font-style: italic;
@@ -114,7 +114,17 @@ p { margin: 0 0 1em; text-wrap: pretty; }
 }
 .brand .word .uni { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-top: 7px; }
 
-.nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+.nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* Allow the whole nav block to wrap to a second row instead of squeezing
+     individual items below their natural text width (French labels are
+     longer than English equivalents). */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 .nav a {
   color: var(--ink-2);
   text-decoration: none;
@@ -122,6 +132,8 @@ p { margin: 0 0 1em; text-wrap: pretty; }
   font-size: 15px;
   border-radius: 2px;
   position: relative;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .nav a:hover { color: var(--maroon); background: var(--paper-2); }
 .nav a.active { color: var(--maroon); }
@@ -743,7 +755,9 @@ section.band.alt .area { background: var(--paper-2); }
 }
 
 .paper-body { padding: 0 0 96px; background: var(--paper); }
-.paper-body .wrap { display: grid; grid-template-columns: 1fr 320px; gap: 72px; align-items: start; max-width: 1180px; }
+.paper-body .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 72px; align-items: start; max-width: 1180px; }
+.paper-body .paper-main { min-width: 0; }
+.paper-body .paper-section { min-width: 0; }
 
 .paper-actions {
   /* Sits between hero and body, full-width band with download/copy actions */
@@ -808,7 +822,12 @@ section.band.alt .area { background: var(--paper-2); }
   background: #1a1a1a; color: #f3eee3;
   padding: 22px 24px;
   font: 13px/1.55 ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
-  white-space: pre; overflow-x: auto;
+  /* Preserve line breaks (BibTeX is line-based) but wrap long author lists / URLs
+     so the page never grows wider than the viewport. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
   border-left: 3px solid var(--gold);
 }
 

@@ -1,0 +1,30 @@
+{
+  "slug": "offline-optimization-wavelength-allocation-laser-2018",
+  "title": "Offline Optimization of Wavelength Allocation and Laser Power in Nanophotonic Interconnects",
+  "authors": [
+    "Jiating Luo",
+    "C. Killian",
+    "S. L. Beux",
+    "D. Chillet",
+    "Olivier Sentieys",
+    "I. O’Connor"
+  ],
+  "abstract": "Optical Network-on-Chip (ONoC) is a promising communication medium for large-scale multiprocessor systems-on-chips. Indeed, ONoC can outperform classical electrical NoCs in terms of energy efficiency and bandwidth density, in particular, because this medium can support multiple transactions at the same time on different wavelengths by using Wavelength Division Multiplexing (WDM). However, multiple signals sharing simultaneously the same part of a waveguide can lead to inter-channel crosstalk noise. This problem impacts the signal-to-noise ratio of the optical signals, which leads to an increase in the Bit Error Rate (BER) at the receiver side. If a specific BER is targeted, an increase of laser power should be necessary to satisfy the SNR. In this context, an important issue is to evaluate the laser power needed to satisfy the various desired communication bandwidths based on the BER performance requirements. In this article, we propose an off-line approach that concurrently optimizes the laser power scaling and execution time of a global application. A set of different levels of power is introduced for each laser, to ensure that optical signals can be emitted with just-enough power to ensure targeted BER. As a result, most promising solutions are highlighted for mapping a defined application onto a 16-core ring-based WDM ONoC.",
+  "date": "2018-07-12",
+  "year": 2018,
+  "venue": "ACM Journal on Emerging Technologies in Computing Systems",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "noc",
+    "soc"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "3b2ca72a13d82852b0f0aea1dd881b2d8d764042",
+  "doi": "10.1145/3178453",
+  "paperUrl": "https://doi.org/10.1145/3178453",
+  "openAccessUrl": "https://hal.inria.fr/hal-01934870/file/Main_doc%20%281%29.pdf",
+  "pdfPath": "/papers/offline-optimization-wavelength-allocation-laser-2018.pdf"
+}

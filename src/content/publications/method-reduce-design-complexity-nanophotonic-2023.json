@@ -1,0 +1,24 @@
+{
+  "slug": "method-reduce-design-complexity-nanophotonic-2023",
+  "title": "A Method to Reduce the Design Complexity of Nanophotonic Interconnects",
+  "authors": [
+    "Shayan Zohrei",
+    "Bayan Alsalem",
+    "S. L. Beux"
+  ],
+  "abstract": "Silicon photonics leverages the advantages of silicon, such as its low cost, high scalability, and compatibility with CMOS technology. However, the optical power efficiency of integrated lasers is low, and insertion loss of optical devices reduces the received optical power based on the receiver’s distance from the transmitter. This paper proposes a design method for nanophotonic interconnects, configuring the receiver gain and transmitter optical power to satisfy the required BER. This has been achieved by implementing a current steering Digital to Analog Converter (DAC) on both the transmitter and receiver. A reduction method calculates each receiver’s most optimum receiver gain and laser optical power configuration based on the optical link and circuit characteristics. Then, the DACs are optimized, and the unused configurations are eliminated. In our case study, the average optical link power consumption is reduced by up to 20%, and the number of control bits is reduced by up to 40%.",
+  "date": "2023-06-26",
+  "year": 2023,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "4988491ed2393eec963da9b88ee3b2eb5298329b",
+  "doi": "10.1109/NEWCAS57931.2023.10198144",
+  "paperUrl": "https://doi.org/10.1109/NEWCAS57931.2023.10198144",
+  "pdfPath": null
+}

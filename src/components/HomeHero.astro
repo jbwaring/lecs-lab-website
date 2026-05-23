@@ -1,15 +1,20 @@
 ---
 import { Image } from "astro:assets";
 import heroImg from "../assets/hero/laura-ockel-pGVr8YRtQ80-unsplash.jpg";
-import { lab } from "../data/lecs";
+import { detectLocale, t, type Locale } from "../lib/i18n";
+import type { StringKey } from "../i18n/strings";
 
 interface Props {
   publicationsCount: number;
   activeMembers: number;
   yearsAtConcordia: number;
+  locale?: Locale;
 }
 
-const { publicationsCount, activeMembers, yearsAtConcordia } = Astro.props;
+const { publicationsCount, activeMembers, yearsAtConcordia, locale } = Astro.props;
+const lang: Locale = locale ?? detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
 ---
 
 <section class="hero">
@@ -28,31 +33,31 @@ const { publicationsCount, activeMembers, yearsAtConcordia } = Astro.props;
   </div>
   <div class="wrap">
     <div class="glass">
-      <div class="eyebrow">Concordia University · Gina Cody School</div>
-      <h1>Architectures for the <em>next</em> generation of computing.</h1>
-      <p class="lede">{lab.tagline}</p>
+      <div class="eyebrow">{tt("hero.eyebrow")}</div>
+      <h1>{tt("hero.titleLead")} <em>{tt("hero.titleEm")}</em> {tt("hero.titleTrail")}</h1>
+      <p class="lede">{tt("hero.lede")}</p>
       <div class="cta-row">
-        <a class="btn primary" href="#research">Our research →</a>
-        <a class="btn ghost" href="#people">Meet the group</a>
+        <a class="btn primary" href={`${langHome}#research`}>{tt("hero.ctaResearch")}</a>
+        <a class="btn ghost" href={`${langHome}#people`}>{tt("hero.ctaPeople")}</a>
       </div>
     </div>
 
     <div class="stats">
       <div class="stat">
         <div class="num">{publicationsCount}</div>
-        <div class="lbl">arXiv preprints</div>
+        <div class="lbl">{tt("hero.stats.papers")}</div>
       </div>
       <div class="stat">
         <div class="num">9</div>
-        <div class="lbl">Research themes</div>
+        <div class="lbl">{tt("hero.stats.themes")}</div>
       </div>
       <div class="stat">
         <div class="num">{activeMembers}</div>
-        <div class="lbl">Active members</div>
+        <div class="lbl">{tt("hero.stats.members")}</div>
       </div>
       <div class="stat">
         <div class="num">{yearsAtConcordia}+</div>
-        <div class="lbl">Years at Concordia</div>
+        <div class="lbl">{tt("hero.stats.years")}</div>
       </div>
     </div>
   </div>

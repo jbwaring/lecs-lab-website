@@ -1,0 +1,27 @@
+{
+  "slug": "non-volatile-phase-change-material-2022",
+  "title": "Non-Volatile Phase Change Material based Nanophotonic Interconnect",
+  "authors": [
+    "Parya Zolfaghari",
+    "Joel Ortiz",
+    "C. Killian",
+    "S. L. Beux"
+  ],
+  "abstract": "Integrated optics is a promising technology to take advantage of light propagation for high throughput chip-scale interconnects in many core architectures. A key challenge for the deployment of nanophotonic interconnects is their high static power, which is induced by signal losses and devices calibration. To tackle this challenge, we propose to use Phase Change Material (PCM) to configure optical paths between writers and readers. The non-volatility of PCM elements and the high contrast between crystalline and amorphous phase states allow to bypass unused readers, thus reducing losses and calibration requirements. We evaluate the efficiency of the proposed PCM-based interconnects using system level simulations carried out with SNIPER manycore simulator. For this purpose, we have modified the simulator to partition clusters according to executed applications. Simulation results show that bypassing readers using PCM leads up to 52% communication power saving.",
+  "date": "2022-03-14",
+  "year": 2022,
+  "venue": "Design, Automation and Test in Europe",
+  "type": "Journal",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "paria-zolfaghari",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "4d8023d3f75e2266c0b6be7658cd96c62641e075",
+  "doi": "10.23919/DATE54114.2022.9774648",
+  "paperUrl": "https://doi.org/10.23919/DATE54114.2022.9774648",
+  "openAccessUrl": "https://hal.archives-ouvertes.fr/hal-03512251/file/draft-date-v8%20ck.pdf",
+  "pdfPath": "/papers/non-volatile-phase-change-material-2022.pdf"
+}

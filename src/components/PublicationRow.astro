@@ -1,19 +1,24 @@
 ---
-import { areaTitle } from "../data/lecs";
 import type { CollectionEntry } from "astro:content";
+import { detectLocale, t, type Locale } from "../lib/i18n";
+import type { StringKey } from "../i18n/strings";
 
 interface Props {
   pub: CollectionEntry<"publications">;
   /** Author surname to highlight via <mark>. Defaults to "Le Beux". */
   highlightAuthor?: string;
+  locale?: Locale;
 }
-const { pub, highlightAuthor = "Le Beux" } = Astro.props;
+const { pub, highlightAuthor = "Le Beux", locale } = Astro.props;
+const lang: Locale = locale ?? detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
 const p = pub.data;
+const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
 ---
 
 <a
   class="pub-row"
-  href={`/publication/${p.slug}`}
+  href={`${pubBase}/${p.slug}`}
   style="color:inherit; text-decoration:none;"
   data-year={p.year}
   data-topics={p.topics.join(",")}
@@ -34,7 +39,7 @@ const p = pub.data;
       }
     </div>
     <div class="topics">
-      {p.topics.map((t) => <span>{areaTitle[t]}</span>)}
+      {p.topics.map((t) => <span>{tt(`area.${t}` as StringKey)}</span>)}
     </div>
   </div>
   <div class="pub-venue">

@@ -1,0 +1,25 @@
+{
+  "slug": "photonic-interconnects-computing-systems-2017",
+  "title": "Photonic Interconnects for Computing Systems",
+  "authors": [
+    "G. Nicolescu",
+    "S. L. Beux",
+    "Mahdi Nikdast",
+    "Jiang Xu"
+  ],
+  "abstract": "In recent years, there has been a considerable amount of effort, both in industry and academia, focusing on the design, implementation, performance analysis, evaluation and prediction of silicon photonic interconnects for inter-and intra-chip communication, paving the way for the design and dimensioning of the next and future generation of high-performance computing systems. Photonic Interconnects for Computing Systems provides a comprehensive overview of the current state-of-the-art technology and research achievements in employing silicon photonics for interconnection networks and high-performance computing, summarizing main opportunities and some challenges. The majority of the chapters were collected from presentations made at the International Workshop on Optical/Photonic Interconnects for Computing Systems (OPTICS) held over the past two years. The workshop invites internationally recognized speakers on the range of topics relevant to silicon photonics and computing systems. Technical topics discussed",
+  "date": "2017-06-29",
+  "year": 2017,
+  "venue": "Preprint",
+  "type": "Review",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "d432349c0b4deb3374ccc9613f1e2749c0e494f5",
+  "doi": "10.1201/9781003339076",
+  "paperUrl": "https://doi.org/10.1201/9781003339076",
+  "pdfPath": null
+}

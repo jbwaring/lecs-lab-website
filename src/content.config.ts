@@ -38,22 +38,35 @@ const topic = z.enum([
 const publications = defineCollection({
   loader: glob({ pattern: "**/*.json", base: "./src/content/publications" }),
   schema: z.object({
-    arxivId: z.string(),
+    // Identity & display
     slug: z.string(),
     title: z.string(),
     authors: z.array(z.string()),
     abstract: z.string(),
     date: z.string(),
     year: z.number().int(),
-    primaryCategory: z.string().optional(),
     venue: z.string().default("arXiv"),
     type: z.string().default("Preprint"),
     topics: z.array(topic).default([]),
-    pdfPath: z.string().nullable().optional(),
-    arxivAbs: z.string().url(),
-    arxivPdf: z.string().url(),
+    labMembers: z.array(labMemberId).default([]),
+
+    // arXiv (optional — only set for arXiv-mirrored papers)
+    arxivId: z.string().optional(),
+    arxivAbs: z.string().url().optional(),
+    arxivPdf: z.string().url().optional(),
     arxivHtml: z.string().url().optional(),
-    labMembers: z.array(labMemberId).default([])
+    primaryCategory: z.string().optional(),
+
+    // Semantic Scholar (optional)
+    semanticScholarId: z.string().optional(),
+    doi: z.string().optional(),
+    /** Canonical web page for the paper — DOI link, Semantic Scholar page, or arXiv abs. */
+    paperUrl: z.string().url().optional(),
+    /** Open-access PDF URL from the publisher / repository, when not on arXiv. */
+    openAccessUrl: z.string().url().optional(),
+
+    // Local mirror under public/papers/[basename].pdf — null when no download available.
+    pdfPath: z.string().nullable().optional()
   })
 });
 

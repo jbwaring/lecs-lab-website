@@ -2,17 +2,29 @@
   "arxivId": "1512.07491",
   "slug": "thermal-aware-vcsel-optical-interconnect-2015",
   "title": "Thermal Aware Design Method for VCSEL-Based On-Chip Optical Interconnect",
-  "authors": ["Hui Li", "Alain Fourmigue", "Sébastien Le Beux", "Xavier Letartre", "Ian O 'Connor", "Gabriela Nicolescu"],
+  "authors": [
+    "Hui Li",
+    "Alain Fourmigue",
+    "Sébastien Le Beux",
+    "Xavier Letartre",
+    "Ian O 'Connor",
+    "Gabriela Nicolescu"
+  ],
   "abstract": "Optical Network-on-Chip (ONoC) is an emerging technology considered as one of the key solutions for future generation on-chip interconnects. However, silicon photonic devices in ONoC are highly sensitive to temperature variation, which leads to a lower efficiency of Vertical-Cavity Surface-Emitting Lasers (VCSELs), a resonant wavelength shift of Microring Resonators (MR), and results in a lower Signal to Noise Ratio (SNR). In this paper, we propose a methodology enabling thermal-aware design for optical interconnects relying on CMOS-compatible VCSEL. Thermal simulations allow designing ONoC interfaces with low gradient temperature and analytical models allow evaluating the SNR.",
   "date": "2015-12-23",
   "year": 2015,
   "primaryCategory": "cs.ET",
-  "venue": "arXiv",
-  "type": "Preprint",
-  "topics": ["photonics", "noc"],
+  "venue": "DATE",
+  "type": "Conference",
+  "topics": [
+    "photonics",
+    "noc"
+  ],
   "pdfPath": "/papers/1512.07491.pdf",
   "arxivAbs": "https://arxiv.org/abs/1512.07491",
   "arxivPdf": "https://arxiv.org/pdf/1512.07491",
   "arxivHtml": "https://arxiv.org/html/1512.07491",
-  "labMembers": ["sebastien-le-beux"]
+  "labMembers": [
+    "sebastien-le-beux"
+  ]
 }

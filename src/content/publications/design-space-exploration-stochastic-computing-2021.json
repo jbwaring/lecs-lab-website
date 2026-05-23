@@ -1,0 +1,24 @@
+{
+  "slug": "design-space-exploration-stochastic-computing-2021",
+  "title": "Design Space Exploration of Stochastic Computing Architectures Implemented Using Integrated Optics",
+  "authors": [
+    "Hassnaa El-Derhalli",
+    "S. Le Beux",
+    "S. Tahar"
+  ],
+  "abstract": "Approximate computing allows to trade-off design energy efficiency with computing accuracy. Stochastic computing is an approximate computing technique, where numbers are represented as bit streams corresponding to probabilities. The serial computation of the bit streams leads to reduced hardware complexity but involves high latency, which is the main limitation of the technique. Integrated optics technology relies on high propagation speed of signals, which has the potential to reduce the processing latency in stochastic computing. However, the design of stochastic computing architectures implemented using integrated optics involves the exploration of numerous parameters at system and technological levels. In this work, we propose a design space exploration framework that allows to optimize energy efficiency, computing accuracy, and latency of such architectures. The efficiency of the framework is evaluated using a Gamma correction image processing application. Results show that, for processing 160 x 160 pixels images, an acceptable <inline-formula><tex-math notation=\"LaTeX\">$ \\times 4.5$</tex-math><alternatives><mml:math><mml:mrow><mml:mo>×</mml:mo><mml:mn>4</mml:mn><mml:mo>.</mml:mo><mml:mn>5</mml:mn></mml:mrow></mml:math><inline-graphic xlink:href=\"elderhalli-ieq1-2969435.gif\"/></alternatives></inline-formula> increase in the errors leads to <inline-formula><tex-math notation=\"LaTeX\">$ \\times 47$</tex-math><alternatives><mml:math><mml:mrow><mml:mo>×</mml:mo><mml:mn>47</mml:mn></mml:mrow></mml:math><inline-graphic xlink:href=\"elderhalli-ieq2-2969435.gif\"/></alternatives></inline-formula> energy efficiency and <inline-formula><tex-math notation=\"LaTeX\">$ \\times 16$</tex-math><alternatives><mml:math><mml:mrow><mml:mo>×</mml:mo><mml:mn>16</mml:mn></mml:mrow></mml:math><inline-graphic xlink:href=\"elderhalli-ieq3-2969435.gif\"/></alternatives></inline-formula> processing speed. We also show that the same computing accuracy can be obtained for different energy efficiency and computing latency, thus, validating the ability of the framework to explore the design space.",
+  "date": "2021-10-01",
+  "year": 2021,
+  "venue": "IEEE Transactions on Emerging Topics in Computing",
+  "type": "Journal",
+  "topics": [
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "645d42dcab915095519488f7f41e2a9257820172",
+  "doi": "10.1109/tetc.2020.2969435",
+  "paperUrl": "https://doi.org/10.1109/tetc.2020.2969435",
+  "pdfPath": null
+}

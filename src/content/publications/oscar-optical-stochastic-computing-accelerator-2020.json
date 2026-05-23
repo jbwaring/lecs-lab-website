@@ -1,0 +1,26 @@
+{
+  "slug": "oscar-optical-stochastic-computing-accelerator-2020",
+  "title": "OSCAR: An Optical Stochastic Computing AcceleRator for Polynomial Functions",
+  "authors": [
+    "Hassnaa El-Derhalli",
+    "S. L. Beux",
+    "S. Tahar"
+  ],
+  "abstract": "Approximate computing allows improving design energy efficiency at the cost of computing accuracy. Stochastic computing is an approximate computing technique, where numbers are represented as probabilities using stochastic bit streams. The serial processing of the bit streams leads to reduced hardware complexity but induces high processing latency. Silicon photonics has the potential to overcome this limitation thanks to high propagation speed of signals and high bandwidth. However, the technology remains costly, which calls for optical accelerators capable to adapt to application-specific requirements. In this paper, we propose a reconfigurable optical accelerator capable to adapt to computing accuracy, energy efficiency, and throughput objectives. The architecture can be configured to execute i) 4th order function for high accuracy processing or ii) 2nd order function for high-energy efficiency or high throughput purposes. Evaluations are carried out using image processing Gamma correction application. Compared to a static architecture for which accuracy is defined at design time, the proposed architecture leads to 36.8% energy overhead but increases the range of reachable accuracy by 65%.",
+  "date": "2020-03-01",
+  "year": 2020,
+  "venue": "Design, Automation and Test in Europe",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "a213793eca6bab4cde60a62c8274a029b5300f9c",
+  "doi": "10.23919/DATE48585.2020.9116346",
+  "paperUrl": "https://doi.org/10.23919/DATE48585.2020.9116346",
+  "pdfPath": null
+}

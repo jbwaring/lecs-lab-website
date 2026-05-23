@@ -1,0 +1,29 @@
+{
+  "slug": "exploration-optical-behavior-phase-change-2021",
+  "title": "Exploration of the optical behavior of phase-change materials integrated in silicon photonics platforms",
+  "authors": [
+    "Clément Zrounba",
+    "S. Cueff",
+    "S. Le Beux",
+    "I. O’Connor",
+    "F. Pavanello"
+  ],
+  "abstract": "Silicon photonics is rapidly emerging as a viable and robust technology for a large range of applications thanks to its high versatility and to its CMOS-compatibility. Nonetheless, there is a strong interest in achieving monolithic integration of novel materials to provide additional functionalities. In particular, phase change materials (PCMs) have started to receive considerable attention due to their unique optical and electrical properties. PCMs such as Ge 2 Sb 2 Te 5 (GST) exhibit a large optical index contrast between their amorphous and crystalline phases [1] . Phase transitions in these materials can be initiated by locally increasing the temperature either optically (light absorption) or electrically (Joule heating), with response times potentially below the ns range [1] . These characteristics have already been exploited in multiple applications such as circuit elements for neuromorphic architectures and multi-level optical memories, where PCMs are deposited as thin-film patches over integrated waveguides [2] – [4] .",
+  "date": "2021-06-21",
+  "year": 2021,
+  "venue": "2021 Conference on Lasers and Electro-Optics Europe & European Quantum Electronics Conference (CLEO/Europe-EQEC)",
+  "type": "Conference",
+  "topics": [
+    "photonics",
+    "quantum",
+    "neuro"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "72f513ff56eee107655f90cabfbf691ea71ba8cc",
+  "doi": "10.1109/CLEO/Europe-EQEC52157.2021.9542745",
+  "paperUrl": "https://doi.org/10.1109/CLEO/Europe-EQEC52157.2021.9542745",
+  "openAccessUrl": "https://hal.archives-ouvertes.fr/hal-03368043/file/CLEO_EU_2021.pdf",
+  "pdfPath": "/papers/exploration-optical-behavior-phase-change-2021.pdf"
+}

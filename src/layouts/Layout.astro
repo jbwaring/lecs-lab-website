@@ -1,9 +1,11 @@
 ---
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
+import { detectLocale, t, counterpartPath, type Locale } from "../lib/i18n";
 
 interface Crumb {
   href?: string;
+  /** Either an inline label or an i18n key. */
   label: string;
   muted?: boolean;
 }
@@ -24,40 +26,55 @@ interface Props {
   crumbs?: Crumb[];
   /** Drop the territorial acknowledgement + extended footer columns on sub-pages. */
   condensedFooter?: boolean;
+  /** Override the auto-detected locale (useful for static page mirrors). */
+  locale?: Locale;
 }
 
+const pathname = Astro.url.pathname;
+const locale: Locale = Astro.props.locale ?? detectLocale(pathname);
+const tt = (key: Parameters<typeof t>[1]) => t(locale, key);
+
 const {
-  title = "LECS — Laboratory for Emerging Computing Systems · Concordia University",
-  description = "The Laboratory for Emerging Computing Systems (LECS) at Concordia University, led by Prof. Sébastien Le Beux. Research on silicon photonic interconnects, reconfigurable architectures, and emerging computing.",
+  title = locale === "fr"
+    ? "LECS — Laboratoire pour les systèmes informatiques émergents · Université Concordia"
+    : "LECS — Laboratory for Emerging Computing Systems · Concordia University",
+  description = locale === "fr"
+    ? "Le Laboratoire pour les systèmes informatiques émergents (LECS) à l'Université Concordia, dirigé par le Pr Sébastien Le Beux. Recherche sur les interconnexions photoniques sur silicium, les architectures reconfigurables, et l'informatique émergente."
+    : "The Laboratory for Emerging Computing Systems (LECS) at Concordia University, led by Prof. Sébastien Le Beux. Research on silicon photonic interconnects, reconfigurable architectures, and emerging computing.",
   activeNav = "about",
   crumbs,
-  condensedFooter = false,
+  condensedFooter = false
 } = Astro.props;
 
+const langHome = locale === "fr" ? "/fr/" : "/";
+
 const defaultCrumbs: Crumb[] = [
-  { href: "https://www.concordia.ca", label: "Concordia University" },
-  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
   {
     href: "https://www.concordia.ca/ginacody/electrical-computer-eng.html",
-    label: "Electrical & Computer Engineering",
+    label: tt("util.breadcrumb.ece")
   },
-  { label: "LECS", muted: true },
+  { label: "LECS", muted: true }
 ];
 const crumbsToShow = crumbs ?? defaultCrumbs;
 
 const nav = [
-  { href: "/#about", label: "About", key: "about" },
-  { href: "/#research", label: "Research", key: "research" },
-  { href: "/#people", label: "People", key: "people" },
-  { href: "/#news", label: "News", key: "news" },
-  { href: "/articles", label: "Articles", key: "articles" },
-  { href: "/#publications", label: "Publications", key: "publications" },
-  { href: "/#join", label: "Join us", key: "join" },
+  { href: `${langHome}#about`, label: tt("nav.about"), key: "about" },
+  { href: `${langHome}#research`, label: tt("nav.research"), key: "research" },
+  { href: `${langHome}#people`, label: tt("nav.people"), key: "people" },
+  { href: `${langHome}#news`, label: tt("nav.news"), key: "news" },
+  { href: locale === "fr" ? "/fr/articles" : "/articles", label: tt("nav.articles"), key: "articles" },
+  { href: `${langHome}#publications`, label: tt("nav.publications"), key: "publications" },
+  { href: `${langHome}#join`, label: tt("nav.join"), key: "join" }
 ] as const;
+
+const altPath = counterpartPath(pathname, locale);
+const altLabel = tt("lang.toggle");
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -67,6 +84,8 @@ const nav = [
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="alternate" hreflang="en" href={locale === "fr" ? counterpartPath(pathname, "fr") : pathname} />
+    <link rel="alternate" hreflang="fr" href={locale === "fr" ? pathname : counterpartPath(pathname, "en")} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -93,22 +112,24 @@ const nav = [
           }
         </nav>
         <div class="actions">
-          <a href="mailto:slebeux@encs.concordia.ca">Contact</a>
-          <a href="/#join">Open positions</a>
-          <span class="lang">EN · FR</span>
+          <a href="mailto:slebeux@encs.concordia.ca">{tt("util.actions.contact")}</a>
+          <a href={`${langHome}#join`}>{tt("util.actions.openPositions")}</a>
+          <a class="lang" href={altPath} aria-label={tt("lang.label")}>
+            {locale === "en" ? <>EN · <strong>FR</strong></> : <><strong>EN</strong> · FR</>}
+          </a>
         </div>
       </div>
     </div>
 
     <header class="header">
       <div class="wrap">
-        <a class="brand" href="/">
+        <a class="brand" href={langHome}>
           <div class="mark">LECS</div>
           <div class="word">
             <div class="lab">
-              Laboratory <span class="lab-for">for</span> Emerging Computing Systems
+              {tt("brand.lab")} <span class="lab-for">{tt("brand.for")}</span> {tt("brand.emerging")}
             </div>
-            <div class="uni">Concordia University · Montréal</div>
+            <div class="uni">{tt("brand.affiliation")}</div>
           </div>
         </a>
         <nav class="nav" aria-label="Primary">
@@ -132,20 +153,16 @@ const nav = [
         {
           !condensedFooter && (
             <p class="land-ack">
-              <strong>Territorial acknowledgement.</strong> Concordia University is located on
-              unceded Indigenous lands. The Kanien&rsquo;keh&aacute;:ka Nation is recognized as the
-              custodians of Tiohtià:ke / Montréal.
+              <strong>{tt("foot.landAck.lead")}</strong> {tt("foot.landAck.body")}
             </p>
           )
         }
 
         <div class="cols">
           <div>
-            <h4>Laboratory for Emerging Computing Systems</h4>
+            <h4>{tt("foot.labCol.heading")}</h4>
             <p style="margin-top:0; color:rgba(255,255,255,.78); font-size:14px; max-width:34em;">
-              Dept. of Electrical &amp; Computer Engineering · Gina Cody School of Engineering and
-              Computer Science · Concordia University. EV Building, 1515 Sainte-Catherine St. W.,
-              Montréal, Québec.
+              {tt("foot.labCol.body")}
             </p>
             {
               !condensedFooter && (
@@ -157,46 +174,48 @@ const nav = [
           </div>
 
           <div>
-            <h4>The lab</h4>
+            <h4>{tt("foot.theLab")}</h4>
             <ul>
-              <li><a href="/#about">About</a></li>
-              <li><a href="/#research">Research</a></li>
-              <li><a href="/#people">People</a></li>
-              <li><a href="/#publications">Publications</a></li>
+              <li><a href={`${langHome}#about`}>{tt("nav.about")}</a></li>
+              <li><a href={`${langHome}#research`}>{tt("nav.research")}</a></li>
+              <li><a href={`${langHome}#people`}>{tt("nav.people")}</a></li>
+              <li><a href={`${langHome}#publications`}>{tt("nav.publications")}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4>Resources</h4>
+            <h4>{tt("foot.resources")}</h4>
             <ul>
               <li>
-                <a href="https://scholar.google.com/citations?user=n2zWgXkAAAAJ">Google Scholar</a>
+                <a href="https://scholar.google.com/citations?user=n2zWgXkAAAAJ">
+                  {tt("foot.scholar")}
+                </a>
               </li>
-              <li><a href="http://dblp.uni-trier.de/pers/hd/b/Beux:S=eacute=bastien_Le">DBLP</a></li>
+              <li><a href="http://dblp.uni-trier.de/pers/hd/b/Beux:S=eacute=bastien_Le">{tt("foot.dblp")}</a></li>
               {
                 !condensedFooter && (
                   <li>
-                    <a href="https://sites.google.com/site/lebeux/">Supervisor’s site</a>
+                    <a href="https://sites.google.com/site/lebeux/">{tt("foot.supervisor")}</a>
                   </li>
                 )
               }
-              {!condensedFooter && <li><a href="/#join">Open positions</a></li>}
+              {!condensedFooter && <li><a href={`${langHome}#join`}>{tt("util.actions.openPositions")}</a></li>}
             </ul>
           </div>
 
           <div>
-            <h4>Concordia</h4>
+            <h4>{tt("foot.concordia")}</h4>
             <ul>
-              <li><a href="https://www.concordia.ca/ginacody.html">Gina Cody School</a></li>
+              <li><a href="https://www.concordia.ca/ginacody.html">{tt("foot.ginaCody")}</a></li>
               <li>
-                <a href="https://www.concordia.ca/ginacody/electrical-computer-eng.html"
-                  >ECE Department</a
-                >
+                <a href="https://www.concordia.ca/ginacody/electrical-computer-eng.html">
+                  {tt("foot.eceDept")}
+                </a>
               </li>
               {
                 !condensedFooter && (
                   <li>
-                    <a href="https://www.concordia.ca/research.html">Research at Concordia</a>
+                    <a href="https://www.concordia.ca/research.html">{tt("foot.research")}</a>
                   </li>
                 )
               }
@@ -204,7 +223,7 @@ const nav = [
                 !condensedFooter && (
                   <li>
                     <a href="https://www.concordia.ca/admissions/graduate.html">
-                      Graduate admissions
+                      {tt("foot.grad")}
                     </a>
                   </li>
                 )
@@ -214,11 +233,11 @@ const nav = [
         </div>
 
         <div class="meta">
-          <span>© 2026 Laboratory for Emerging Computing Systems · Concordia University</span>
+          <span>{tt("foot.copyright")}</span>
           <span>
-            <a href="https://www.concordia.ca/web/accessibility.html">Accessibility</a> ·
-            <a href="https://www.concordia.ca/privacy.html">Privacy</a> ·
-            <a href="https://www.concordia.ca/web/terms.html">Terms</a>
+            <a href="https://www.concordia.ca/web/accessibility.html">{tt("foot.accessibility")}</a> ·
+            <a href="https://www.concordia.ca/privacy.html">{tt("foot.privacy")}</a> ·
+            <a href="https://www.concordia.ca/web/terms.html">{tt("foot.terms")}</a>
           </span>
         </div>
       </div>
@@ -227,3 +246,19 @@ const nav = [
     <Analytics />
   </body>
 </html>
+
+<style>
+  .util .lang {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    text-decoration: none;
+    color: #e9e6e0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    opacity: 0.85;
+  }
+  .util .lang:hover { opacity: 1; }
+  .util .lang strong { color: #fff; font-weight: 600; }
+</style>

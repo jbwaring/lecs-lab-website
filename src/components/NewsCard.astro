@@ -1,13 +1,16 @@
 ---
 import NewsThumb from "./NewsThumb.astro";
-import { fmtDate, type NewsItem } from "../data/lecs";
+import { detectLocale, fmtDate, type Locale } from "../lib/i18n";
+import type { NewsItem } from "../data/lecs";
 
 interface Props {
   item: NewsItem;
   /** Optional click-through link. When omitted the card is non-interactive. */
   href?: string;
+  locale?: Locale;
 }
-const { item, href } = Astro.props;
+const { item, href, locale } = Astro.props;
+const lang: Locale = locale ?? detectLocale(Astro.url.pathname);
 const interactive = Boolean(href);
 ---
 
@@ -20,7 +23,7 @@ const interactive = Boolean(href);
     <NewsThumb tag={item.tag} title={item.title} />
   </div>
   <div class="meta">
-    <span>{fmtDate(item.date)}</span>
+    <span>{fmtDate(item.date, lang)}</span>
     <span class="tag">{item.tag}</span>
   </div>
   <h3>{item.title}</h3>

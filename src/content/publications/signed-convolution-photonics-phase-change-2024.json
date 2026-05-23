@@ -1,0 +1,32 @@
+{
+  "slug": "signed-convolution-photonics-phase-change-2024",
+  "title": "Signed Convolution in Photonics with Phase-Change Materials using Mixed-Polarity Bitstreams",
+  "authors": [
+    "Raphael Cardoso",
+    "Clément Zrounba",
+    "M.F. Abdalla",
+    "Paul Jiménez",
+    "Mauricio Gomes de Queiroz",
+    "B. Charbonnier",
+    "Fabio Pavanello",
+    "Ian O'Connor",
+    "S. L. Beux"
+  ],
+  "abstract": "As AI continues to grow in importance, in order to reduce its carbon footprint and utilization of computer resources, numerous alternatives are under investigation to improve its hardware building blocks. In particular, in convolutional neural networks (CNNs), the convolution function represents the most important operation and one of the best targets for optimization. A new approach to convolution had recently emerged using optics, phase-change materials (PCMs) and stochastic computing, but is thus far limited to unsigned operands. In this paper, we propose an extension in which the convolutional kernels are signed, using mixed-polarity bitstreams. We present a proof of validity for our method, while also showing that, in simulation and under similar operating conditions, our approach is less affected by noise than the common approach in the literature.",
+  "date": "2024-01-22",
+  "year": 2024,
+  "venue": "Asia and South Pacific Design Automation Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "neuro",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "8068657de02c561ee1bdf3eafd27cedcf52ab6d6",
+  "doi": "10.1109/ASP-DAC58780.2024.10473952",
+  "paperUrl": "https://doi.org/10.1109/ASP-DAC58780.2024.10473952",
+  "pdfPath": null
+}

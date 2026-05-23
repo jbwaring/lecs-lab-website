@@ -2,17 +2,32 @@
   "arxivId": "2005.14039",
   "slug": "3d-logic-cells-vertical-nwfet-2020",
   "title": "3D logic cells design and results based on Vertical NWFET technology including tied compact model",
-  "authors": ["C. Mukherjee", "M. Deng", "F. Marc", "C. Maneux", "A. Poittevin", "I. OConnor", "S. Le Beux", "A. Kumar", "A. Lecestre", "G. Larrieu"],
+  "authors": [
+    "C. Mukherjee",
+    "M. Deng",
+    "F. Marc",
+    "C. Maneux",
+    "A. Poittevin",
+    "I. OConnor",
+    "S. Le Beux",
+    "A. Kumar",
+    "A. Lecestre",
+    "G. Larrieu"
+  ],
   "abstract": "Gate-all-around Vertical Nanowire Field Effect Transistors (VNWFET) are emerging devices, which are well suited to pursue scaling beyond lateral scaling limitations around 7nm. This work explores the relative merits and drawbacks of the technology in the context of logic cell design. We describe a junctionless nanowire technology and associated compact model, which accurately describes fabricated device behavior in all regions of operations for transistors based on between 16 and 625 parallel nanowires of diameters between 22 and 50nm. We used this model to simulate the projected performance of inverter logic gates based on passive load, active load and complementary topologies and carry out an performance exploration for the number of nanowires in transistors. In terms of compactness, through a dedicated full 3D layout design, we also demonstrate a 1.4x reduction in lateral dimensions for the complementary structure with respect to 7nm FinFET-based inverters.",
   "date": "2020-05-28",
   "year": 2020,
   "primaryCategory": "eess.SY",
-  "venue": "arXiv",
-  "type": "Preprint",
-  "topics": ["soc"],
+  "venue": "VLSI-SoC",
+  "type": "Conference",
+  "topics": [
+    "soc"
+  ],
   "pdfPath": "/papers/2005.14039.pdf",
   "arxivAbs": "https://arxiv.org/abs/2005.14039",
   "arxivPdf": "https://arxiv.org/pdf/2005.14039",
   "arxivHtml": "https://arxiv.org/html/2005.14039",
-  "labMembers": ["sebastien-le-beux"]
+  "labMembers": [
+    "sebastien-le-beux"
+  ]
 }

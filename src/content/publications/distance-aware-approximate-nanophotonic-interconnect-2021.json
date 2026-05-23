@@ -1,0 +1,28 @@
+{
+  "slug": "distance-aware-approximate-nanophotonic-interconnect-2021",
+  "title": "Distance-aware Approximate Nanophotonic Interconnect",
+  "authors": [
+    "Jaechul Lee",
+    "C. Killian",
+    "S. L. Beux",
+    "D. Chillet"
+  ],
+  "abstract": "The energy consumption of manycore architectures is dominated by data movement, which calls for energy-efficient and high-bandwidth interconnects. To overcome the bandwidth limitation of electrical interconnects, integrated optics appear as a promising technology. However, it suffers from high power overhead related to low laser efficiency, which calls for the use of techniques and methods to improve its energy costs. Besides, approximate computing is emerging as an efficient method to reduce energy consumption and improve execution speed of embedded computing systems. It relies on allowing accuracy reduction on data at the cost of tolerable application output error. In this context, the work presented in this article exploits both features by defining approximate communications for error-tolerant applications. We propose a method to design realistic and scalable nanophotonic interconnect supporting approximate data transmission and power adaption according to the communication distance to improve the energy efficiency. For this purpose, the data can be sent by mixing low optical power signal and truncation for the Least Significant Bits (LSB) of the floating-point numbers, while the overall power is adapted according to the communication distance. We define two ranges of communications, short and long, which require only four power levels. This reduces area and power overhead to control the laser output power. A transmission model allows estimating the laser power according to the targeted BER and the number of truncated bits, while the optical network interface allows configuring, at runtime, the number of approximated and truncated bits and the laser output powers. We explore the energy efficiency provided by each communication scheme, and we investigate the error resilience of the benchmarks over several approximation and truncation schemes. The simulation results of ApproxBench applications show that, compared to an interconnect involving only robust communications, approximations in the optical transmission led to up to 53% laser power reduction with a limited degradation at the application level with less than 9% of output error. Finally, we show that our solution is scalable and leads to 10% reduction in the total energy consumption, 35× reduction in the laser driver size, and 10× reduction in the laser controller compared to state-of-the-art solution.",
+  "date": "2021-11-02",
+  "year": 2021,
+  "venue": "ACM Trans. Design Autom. Electr. Syst.",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "edge-ai",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "fcc8ec58b3f09980c474b70a46c8a439fecaad0e",
+  "doi": "10.1145/3484309",
+  "paperUrl": "https://doi.org/10.1145/3484309",
+  "openAccessUrl": "https://hal.inria.fr/hal-03500153/file/New_Approx_ONoC_Extension_second_round.pdf",
+  "pdfPath": "/papers/distance-aware-approximate-nanophotonic-interconnect-2021.pdf"
+}

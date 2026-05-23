@@ -1,0 +1,31 @@
+{
+  "slug": "reconfigurable-photonic-gemm-phase-change-2024",
+  "title": "Reconfigurable Photonic GEMM Based on Phase-Change-Materials and Stochastic Computing",
+  "authors": [
+    "Raphael Cardoso",
+    "Clément Zrounba",
+    "M.F. Abdalla",
+    "Mauricio Gomes de Queiroz",
+    "Paul Jiménez",
+    "Ian O'Connor",
+    "S. Le Beux"
+  ],
+  "abstract": "General matrix multiplication (GEMM) is one of the most important operations required by applications ranging from scientific computing to AI. With the rise of emerging technologies and paradigms as alternatives to the classic Von-Neumann computer architecture, an increased research activity has been seen in two particular fields: photonic computing and computation in memory (CIM). With the inclusion of phase-change materials (PCM) that bring CIM to photonics, we propose a novel GEMM circuit and architecture capable of accurate tiled matrix multiplication in real-life noise conditions. In this paper, we find the optimal tile shape to be $2\\times 2$, while proposing ways that tiles can be used as either sign or quantization extenders, a sign of its reconfigurability. We test our circuit and the literature baseline in an MNIST inferencing application using circuit-level simulations with conservative noise and data recovery assumptions, where we achieve a consistent 95% accuracy in different situations. Conversely, we show that the State-of-the Art approach to compute with PCMs is limited in speed by noise, having an accuracy as low as 43% at 1 GHz.",
+  "date": "2024-11-15",
+  "year": 2024,
+  "venue": "Journal of Lightwave Technology",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "neuro"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "c21b1806f2fdab80832c7dd8e6514d7e71c4531b",
+  "doi": "10.1109/JLT.2024.3421621",
+  "paperUrl": "https://doi.org/10.1109/JLT.2024.3421621",
+  "openAccessUrl": "https://doi.org/10.1109/jlt.2024.3421621",
+  "pdfPath": null
+}

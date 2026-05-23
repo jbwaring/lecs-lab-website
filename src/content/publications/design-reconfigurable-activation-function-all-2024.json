@@ -1,0 +1,28 @@
+{
+  "slug": "design-reconfigurable-activation-function-all-2024",
+  "title": "Design of a Reconfigurable Activation Function for All-Optical Neural Networks",
+  "authors": [
+    "Oceane Destras",
+    "S. L. Beux",
+    "F. Magalhães",
+    "G. Nicolescu"
+  ],
+  "abstract": "Photonic integrated circuits present a promising avenue for the integration of Deep Neural Networks (DNNs), offering solutions to the speed and power consumption constraints inherent to their electronic counterparts. Notably, research showcasing the ability of photonic integrated circuits to realize matrix multiplications - a crucial operation in DNNs - at the speed of light has drawn much attention to the field of optical neural networks (ONNs). One of the challenges of designing fully optical DNNs is the photonic integration of the activation function, a nonlinear function. Optical nonlinear responses often deviate in shape from traditional DNN activation functions. A pivotal requirement for standardizing ONN architectures without sacrificing flexibility is the development of a fully tunable optical activation function. Presently, reconfigurable optical activation functions exhibit limitations in reproducing diverse functions, constraining the potential of photonic DNNs. In this article, we propose an architecture leveraging Mach-Zehnder interferometers and saturable absorbers to execute a range of activation functions, including ReLU, sigmoid, and tanh.",
+  "date": "2024-06-16",
+  "year": 2024,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "neuro"
+  ],
+  "labMembers": [
+    "oceane-destras",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "793331c622ce744b8aa74b5acdb482b98f60e3e2",
+  "doi": "10.1109/NewCAS58973.2024.10666337",
+  "paperUrl": "https://doi.org/10.1109/NewCAS58973.2024.10666337",
+  "pdfPath": null
+}

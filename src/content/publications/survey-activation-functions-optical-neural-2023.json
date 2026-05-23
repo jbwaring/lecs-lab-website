@@ -1,0 +1,28 @@
+{
+  "slug": "survey-activation-functions-optical-neural-2023",
+  "title": "Survey on Activation Functions for Optical Neural Networks",
+  "authors": [
+    "Oceane Destras",
+    "S. Le Beux",
+    "Felipe Gohring de Magalhães",
+    "G. Nicolescu"
+  ],
+  "abstract": "Integrated photonics arises as a fast and energy-efficient technology for the implementation of artificial neural networks (ANNs). Indeed, with the growing interest in ANNs, photonics shows great promise to overcome current limitations of electronic-based implementation. For example, it has been shown that neural networks integrating optical matrix multiplications can potentially run two orders of magnitude faster than their electronic counterparts. However, the transposition in the optical domain of the activation functions, which is a key feature of ANNs, remains a challenge. There is no direct optical implementation of state-of-the-art activation functions. Currently, most designs require time-consuming and power-hungry electro-optical conversions. In this survey, we review both all-optical and opto-electronic activation functions proposed in the state-of-the-art. We present activation functions with their key characteristics, and we summarize challenges for their use in the context of all-optical neural networks. We then highlight research directions for the implementation of fully optical neural networks.",
+  "date": "2023-07-11",
+  "year": 2023,
+  "venue": "ACM Computing Surveys",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "neuro"
+  ],
+  "labMembers": [
+    "oceane-destras",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "8fb88425bacb893ca506bb31b368068f5a35793b",
+  "doi": "10.1145/3607533",
+  "paperUrl": "https://doi.org/10.1145/3607533",
+  "openAccessUrl": "https://dl.acm.org/doi/pdf/10.1145/3607533",
+  "pdfPath": null
+}

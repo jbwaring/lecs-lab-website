@@ -1,0 +1,32 @@
+{
+  "slug": "introducing-specs-scalable-photonic-event-2023",
+  "title": "Introducing SPECS: scalable photonic event-driven circuit simulator",
+  "authors": [
+    "Clément Zrounba",
+    "Raphael Cardoso",
+    "Mauricio Gomes de Queiroz",
+    "Paul Jiménez",
+    "M.F. Abdalla",
+    "A. Bosio",
+    "S. L. Beux",
+    "Fabio Pavanello",
+    "Ian O'Connor"
+  ],
+  "abstract": "We present SPECS, a SystemC-based tool for fast, fs-accurate large-scale photonic circuit simulation. Through its event-driven nature, SPECS excels in sparse activity applications like neuromorphic computing. Even in unfavorable scenarios, it is faster than other simulators by orders of magnitude",
+  "date": "2023-01-01",
+  "year": 2023,
+  "venue": "European Conference on Optical Communication",
+  "type": "Conference",
+  "topics": [
+    "photonics",
+    "neuro"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "1b7736fc39699d8faa9410df967fe3910e701644",
+  "doi": "10.1049/icp.2023.2480",
+  "paperUrl": "https://doi.org/10.1049/icp.2023.2480",
+  "openAccessUrl": "https://hal.science/hal-04302200/file/Zrounba2023_ECOC_abstract.pdf",
+  "pdfPath": "/papers/introducing-specs-scalable-photonic-event-2023.pdf"
+}

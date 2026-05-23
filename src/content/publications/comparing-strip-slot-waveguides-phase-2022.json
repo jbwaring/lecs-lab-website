@@ -1,0 +1,30 @@
+{
+  "slug": "comparing-strip-slot-waveguides-phase-2022",
+  "title": "Comparing Strip and Slot Waveguides for Phase-Change Material Devices in SOI Platforms",
+  "authors": [
+    "Clément Zrounba",
+    "Raphael Cardoso",
+    "M.F. Abdalla",
+    "S. Cueff",
+    "A. Bosio",
+    "S. Le Beux",
+    "X. Letartre",
+    "Ian O’Connor",
+    "F. Pavanello"
+  ],
+  "abstract": "We introduce a novel design for integrated phase-change material devices. A figure-of-merit is introduced to quantify the improvement of the proposed design over previous implementations. Additionally, the significance of non-linear effects is discussed.",
+  "date": "2022-01-01",
+  "year": 2022,
+  "venue": "Optica Advanced Photonics Congress 2022",
+  "type": "Article",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "252e2b0591cc6e1fa93060abfdc7ab4a4e0329fd",
+  "doi": "10.1364/bgppm.2022.jtu2a.11",
+  "paperUrl": "https://doi.org/10.1364/bgppm.2022.jtu2a.11",
+  "pdfPath": null
+}

@@ -1,0 +1,30 @@
+{
+  "slug": "clap-crosstalk-loss-analysis-platform-2014",
+  "title": "CLAP: a crosstalk and loss analysis platform for optical interconnects",
+  "authors": [
+    "M. Nikdast",
+    "Luan H. K. Duong",
+    "Jiang Xu",
+    "S. L. Beux",
+    "Xiaowen Wu",
+    "Zhehui Wang",
+    "Peng Yang",
+    "Yaoyao Ye"
+  ],
+  "abstract": "Basic photonic devices in inter- and intra-chip optical networks suffer from inevitable power loss and crosstalk noise. Incoherent crosstalk introduces quick power fluctuations, while coherent crosstalk varies the optical power of the optical signal in optical interconnection networks (OINs). As a result, the accumulative crosstalk in large scale OINs considerably hurts the signal-to-noise ratio (SNR) and imposes high power penalties. In this work, we aim at studying the worst-case incoherent and coherent crosstalk in OINs at the system level. The proposed analytical models are integrated into a newly developed crosstalk and loss analysis platform, called CLAP, to facilitate the SNR analyses in arbitrary OINs.",
+  "date": "2014-09-01",
+  "year": 2014,
+  "venue": "ACM/IEEE International Symposium on Networks-on-Chips",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "noc"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "010f04801f23c5f6822b484a66232bf7ec18cd97",
+  "doi": "10.1109/NOCS.2014.7008779",
+  "paperUrl": "https://doi.org/10.1109/NOCS.2014.7008779",
+  "pdfPath": null
+}

@@ -1,7 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ArticleThumb from "../components/ArticleThumb.astro";
-import { articles, areaTitle, fmtDate, readingTime } from "../data/lecs";
+import { articles } from "../data/lecs";
+import { detectLocale, t, fmtDate, readingTime } from "../lib/i18n";
+import type { StringKey } from "../i18n/strings";
+
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+const articleBase = lang === "fr" ? "/fr/article" : "/article";
 
 const sorted = [...articles].sort((a, b) => (a.date < b.date ? 1 : -1));
 const [feature, ...rest] = sorted;
@@ -13,71 +20,73 @@ for (const k of topicKeys) {
 }
 
 const crumbs = [
-  { href: "https://www.concordia.ca", label: "Concordia University" },
-  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
-  { href: "/", label: "LECS" },
-  { label: "Articles", muted: true }
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
+  { href: langHome, label: "LECS" },
+  { label: tt("nav.articles"), muted: true }
 ];
 ---
 
 <Layout
-  title="Articles — LECS · Concordia University"
-  description="Long-form writing from members of the lab — research notes, engineering write-ups, and reflections on running an architecture group."
+  title={`${tt("nav.articles")} — LECS · Concordia University`}
+  description={tt("articles.heroLede")}
   activeNav="articles"
   crumbs={crumbs}
   condensedFooter
+  locale={lang}
 >
   <section class="articles-hero">
     <div class="wrap">
       <div class="breadcrumb-mini">
-        <a href="/">LECS</a>
+        <a href={langHome}>LECS</a>
         <span>›</span>
-        <span>Articles</span>
+        <span>{tt("nav.articles")}</span>
       </div>
-      <h1>Articles &amp; research notes.</h1>
-      <p class="lede">
-        Long-form writing from members of the lab — research notes accompanying recent papers,
-        engineering write-ups, and the occasional reflection on the practice of running an
-        architecture group.
-      </p>
+      <h1>{tt("articles.heroTitle")}</h1>
+      <p class="lede">{tt("articles.heroLede")}</p>
     </div>
   </section>
 
   <section class="articles-body">
     <div class="wrap">
       <div class="articles-filter" data-articles-filter>
-        <span class="label">Filter by topic</span>
+        <span class="label">{tt("articles.filterLabel")}</span>
         <button class="chip active" data-topic="all" type="button">
-          All <span class="count">{topicCounts.all}</span>
+          {tt("role.all")} <span class="count">{topicCounts.all}</span>
         </button>
         {
           topicKeys.map((k) => (
             <button class="chip" data-topic={k} type="button">
-              {areaTitle[k]} <span class="count">{topicCounts[k]}</span>
+              {tt(`area.${k}` as StringKey)} <span class="count">{topicCounts[k]}</span>
             </button>
           ))
         }
       </div>
 
       <div class="articles-empty pubs-empty" hidden data-articles-empty>
-        No articles match this filter.
+        {tt("articles.empty")}
       </div>
 
       {
         feature && (
-          <article class="article-feature" data-article-item data-topics={feature.topics.join(",")}>
-            <a href={`/article/${feature.slug}`} class="thumb-wrap" aria-label={feature.title}>
+          <article
+            class="article-feature"
+            data-article-item
+            data-topics={feature.topics.join(",")}
+          >
+            <a href={`${articleBase}/${feature.slug}`} class="thumb-wrap" aria-label={feature.title}>
               <ArticleThumb topic={feature.topics[0]} title={feature.title} />
             </a>
             <div>
               <div class="meta">
-                <span>{fmtDate(feature.date)}</span>
+                <span>{fmtDate(feature.date, lang)}</span>
                 <span class="tag">{feature.tag}</span>
               </div>
-              <h2><a href={`/article/${feature.slug}`}>{feature.title}</a></h2>
+              <h2><a href={`${articleBase}/${feature.slug}`}>{feature.title}</a></h2>
               <p>{feature.excerpt}</p>
               <div class="byline">
-                By <strong>{feature.author}</strong> · {readingTime(feature.body)} min read
+                {tt("articles.by")} <strong>{feature.author}</strong> · {readingTime(feature.body)}{" "}
+                {tt("articles.minRead")}
               </div>
             </div>
           </article>
@@ -90,7 +99,7 @@ const crumbs = [
             {rest.map((a) => (
               <a
                 class="article-card"
-                href={`/article/${a.slug}`}
+                href={`${articleBase}/${a.slug}`}
                 data-article-item
                 data-topics={a.topics.join(",")}
               >
@@ -98,13 +107,13 @@ const crumbs = [
                   <ArticleThumb topic={a.topics[0]} title={a.title} />
                 </div>
                 <div class="meta">
-                  <span>{fmtDate(a.date)}</span>
+                  <span>{fmtDate(a.date, lang)}</span>
                   <span class="tag">{a.tag}</span>
                 </div>
                 <h3>{a.title}</h3>
                 <p>{a.excerpt}</p>
                 <div class="byline">
-                  By <strong>{a.author}</strong>
+                  {tt("articles.by")} <strong>{a.author}</strong>
                 </div>
               </a>
             ))}

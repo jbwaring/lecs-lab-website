@@ -1,0 +1,29 @@
+{
+  "slug": "novel-optical-network-chip-design-2013",
+  "title": "A novel optical network on chip design for future generation of multiprocessors system on chip",
+  "authors": [
+    "M. Channoufi",
+    "P. Lecoy",
+    "S. L. Beux",
+    "R. Attia",
+    "B. Delacressonniere"
+  ],
+  "abstract": "The paper presents a novel Optical Network on Chip (ONoC) relying on the multi-level optical layer design paradigm and called “OMNoC”. The proposed ONoC relies on multi-level microring resonator allowing efficient light coupling between superposed waveguides. Such microring resonator avoids using waveguide crossing, which contribute to reduce propagation losses. Preliminary experimental results demonstrate the potential of multi-level optical layer for reducing power consumption and increasing scalability in the proposed ONoC.",
+  "date": "2013-01-01",
+  "year": 2013,
+  "venue": "Preprint",
+  "type": "Article",
+  "topics": [
+    "photonics",
+    "noc",
+    "soc"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "d94928c8f72d5fc869968e24ce667f009474f4f7",
+  "doi": "10.14569/IJACSA.2013.040336",
+  "paperUrl": "https://doi.org/10.14569/IJACSA.2013.040336",
+  "openAccessUrl": "http://thesai.org/Downloads/Volume4No3/Paper_36-A_novel_optical_network_on_chip_design_for_future_generation_of_multiprocessors_system_on_chip.pdf",
+  "pdfPath": "/papers/novel-optical-network-chip-design-2013.pdf"
+}

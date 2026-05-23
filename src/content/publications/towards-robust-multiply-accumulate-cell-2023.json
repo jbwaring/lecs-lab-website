@@ -1,0 +1,32 @@
+{
+  "slug": "towards-robust-multiply-accumulate-cell-2023",
+  "title": "Towards a Robust Multiply-Accumulate Cell in Photonics using Phase-Change Materials",
+  "authors": [
+    "Raphael Cardoso",
+    "Clément Zrounba",
+    "M.F. Abdalla",
+    "Paul Jiménez",
+    "Mauricio Gomes de Queiroz",
+    "B. Charbonnier",
+    "Fabio Pavanello",
+    "I. O’Connor",
+    "S. L. Beux"
+  ],
+  "abstract": "In this paper we propose a novel approach to multiply-accumulate (MAC) operations in photonics. This approach is based on stochastic computing and on the dynamic behavior of phase-change materials (PCMs), leading to the unique characteristic of automatically storing the result in non-volatile memory. We demonstrate that, even with perfect look-up tables, the standard approach to PCM scalar multiplication is highly susceptible to perturbations as small as 0.1% of the input power, causing repetitive peaks of 600% relative error. In the same operating conditions, the proposed method achieves an average of 7× improvement in precision.",
+  "date": "2023-04-01",
+  "year": 2023,
+  "venue": "Design, Automation and Test in Europe",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "338d3461f0b9e0522fb6c75c043460255f5f88b6",
+  "doi": "10.23919/DATE56975.2023.10137313",
+  "paperUrl": "https://doi.org/10.23919/DATE56975.2023.10137313",
+  "openAccessUrl": "https://hal.science/hal-04301969/file/2022_DATE_OCTANE_LBR_submit.pdf",
+  "pdfPath": "/papers/towards-robust-multiply-accumulate-cell-2023.pdf"
+}

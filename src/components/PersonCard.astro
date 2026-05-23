@@ -1,29 +1,34 @@
 ---
 import Avatar from "./Avatar.astro";
-import { areaTitle, roleLabel } from "../data/lecs";
 import type { PersonEntry } from "../lib/people";
+import { detectLocale, t, type Locale } from "../lib/i18n";
+import type { StringKey } from "../i18n/strings";
 
 interface Props {
   person?: PersonEntry;
   featured?: boolean;
+  locale?: Locale;
 }
 
-const { person, featured = false } = Astro.props;
+const { person, featured = false, locale } = Astro.props;
+const lang: Locale = locale ?? detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
 
-// Defensive: skip rendering if the parent passed nothing (e.g., supervisor lookup miss).
 const data = person?.data;
 const id = person?.id;
-const label = data ? roleLabel[data.role] : "";
+const label = data ? tt(`roleFull.${data.role}` as StringKey) : "";
 const bioSnippet =
   featured && data?.bio ? data.bio.split(". ").slice(0, 2).join(". ") + "." : null;
 const visibleAreas = (data?.areas ?? []).slice(0, featured ? 6 : 2);
+
+const profileBase = lang === "fr" ? "/fr/profile" : "/profile";
 ---
 
 {
   person && data && (
     <a
       class:list={["person-card", featured && "featured"]}
-      href={`/profile/${id}`}
+      href={`${profileBase}/${id}`}
       data-role={data.role}
     >
       <div class="portrait">
@@ -36,10 +41,10 @@ const visibleAreas = (data?.areas ?? []).slice(0, featured ? 6 : 2);
         {bioSnippet && <p class="bio-snip">{bioSnippet}</p>}
         <div class="areas">
           {visibleAreas.map((a) => (
-            <span>{areaTitle[a]}</span>
+            <span>{tt(`area.${a}` as StringKey)}</span>
           ))}
         </div>
-        <span class="arrow">View profile →</span>
+        <span class="arrow">{tt("people.viewProfile")}</span>
       </div>
     </a>
   )

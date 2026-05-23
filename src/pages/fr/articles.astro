@@ -1,0 +1,152 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ArticleThumb from "../../components/ArticleThumb.astro";
+import { articles } from "../../data/lecs";
+import { detectLocale, t, fmtDate, readingTime } from "../../lib/i18n";
+import type { StringKey } from "../../i18n/strings";
+
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+const articleBase = lang === "fr" ? "/fr/article" : "/article";
+
+const sorted = [...articles].sort((a, b) => (a.date < b.date ? 1 : -1));
+const [feature, ...rest] = sorted;
+
+const topicKeys = [...new Set(sorted.flatMap((a) => a.topics))];
+const topicCounts: Record<string, number> = { all: sorted.length };
+for (const k of topicKeys) {
+  topicCounts[k] = sorted.filter((a) => a.topics.includes(k)).length;
+}
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
+  { href: langHome, label: "LECS" },
+  { label: tt("nav.articles"), muted: true }
+];
+---
+
+<Layout
+  title={`${tt("nav.articles")} — LECS · Concordia University`}
+  description={tt("articles.heroLede")}
+  activeNav="articles"
+  crumbs={crumbs}
+  condensedFooter
+  locale={lang}
+>
+  <section class="articles-hero">
+    <div class="wrap">
+      <div class="breadcrumb-mini">
+        <a href={langHome}>LECS</a>
+        <span>›</span>
+        <span>{tt("nav.articles")}</span>
+      </div>
+      <h1>{tt("articles.heroTitle")}</h1>
+      <p class="lede">{tt("articles.heroLede")}</p>
+    </div>
+  </section>
+
+  <section class="articles-body">
+    <div class="wrap">
+      <div class="articles-filter" data-articles-filter>
+        <span class="label">{tt("articles.filterLabel")}</span>
+        <button class="chip active" data-topic="all" type="button">
+          {tt("role.all")} <span class="count">{topicCounts.all}</span>
+        </button>
+        {
+          topicKeys.map((k) => (
+            <button class="chip" data-topic={k} type="button">
+              {tt(`area.${k}` as StringKey)} <span class="count">{topicCounts[k]}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="articles-empty pubs-empty" hidden data-articles-empty>
+        {tt("articles.empty")}
+      </div>
+
+      {
+        feature && (
+          <article
+            class="article-feature"
+            data-article-item
+            data-topics={feature.topics.join(",")}
+          >
+            <a href={`${articleBase}/${feature.slug}`} class="thumb-wrap" aria-label={feature.title}>
+              <ArticleThumb topic={feature.topics[0]} title={feature.title} />
+            </a>
+            <div>
+              <div class="meta">
+                <span>{fmtDate(feature.date, lang)}</span>
+                <span class="tag">{feature.tag}</span>
+              </div>
+              <h2><a href={`${articleBase}/${feature.slug}`}>{feature.title}</a></h2>
+              <p>{feature.excerpt}</p>
+              <div class="byline">
+                {tt("articles.by")} <strong>{feature.author}</strong> · {readingTime(feature.body)}{" "}
+                {tt("articles.minRead")}
+              </div>
+            </div>
+          </article>
+        )
+      }
+
+      {
+        rest.length > 0 && (
+          <div class="article-grid">
+            {rest.map((a) => (
+              <a
+                class="article-card"
+                href={`${articleBase}/${a.slug}`}
+                data-article-item
+                data-topics={a.topics.join(",")}
+              >
+                <div class="thumb-wrap">
+                  <ArticleThumb topic={a.topics[0]} title={a.title} />
+                </div>
+                <div class="meta">
+                  <span>{fmtDate(a.date, lang)}</span>
+                  <span class="tag">{a.tag}</span>
+                </div>
+                <h3>{a.title}</h3>
+                <p>{a.excerpt}</p>
+                <div class="byline">
+                  {tt("articles.by")} <strong>{a.author}</strong>
+                </div>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const filterBar = document.querySelector<HTMLElement>("[data-articles-filter]");
+  const items = Array.from(document.querySelectorAll<HTMLElement>("[data-article-item]"));
+  const empty = document.querySelector<HTMLElement>("[data-articles-empty]");
+
+  if (filterBar) {
+    filterBar.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest<HTMLButtonElement>("button.chip");
+      if (!btn) return;
+      const topic = btn.dataset.topic ?? "all";
+      filterBar
+        .querySelectorAll("button.chip")
+        .forEach((b) => b.classList.toggle("active", b === btn));
+
+      let visible = 0;
+      items.forEach((item) => {
+        const t = (item.dataset.topics ?? "").split(",");
+        const show = topic === "all" || t.includes(topic);
+        item.hidden = !show;
+        if (show) visible += 1;
+      });
+      if (empty) empty.hidden = visible !== 0;
+    });
+  }
+</script>

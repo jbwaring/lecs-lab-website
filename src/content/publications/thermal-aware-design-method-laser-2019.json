@@ -1,0 +1,27 @@
+{
+  "slug": "thermal-aware-design-method-laser-2019",
+  "title": "Thermal-Aware Design Method for Laser Group Control in Nanophotonic Interconnects",
+  "authors": [
+    "Yuqi Wang",
+    "Amira Aouina",
+    "Hui Li",
+    "I. O’Connor",
+    "G. Nicolescu",
+    "S. Le Beux"
+  ],
+  "abstract": "On-chip integrated lasers are key devices to deliver the high bandwidth expected from nanophotonic interconnects. However, lasers are highly sensitive to temperature variation, which influences the lasing efficiency and the wavelengths of emitted optical signals, both of which are key factors in interconnect power efficiency. It is, thus, necessary to develop techniques for efficient thermal-aware control of lasers. In this brief, we propose the grouping of lasers for efficient power control of their temperature. Laser grouping is carried out taking into account the layout symmetries, and a design method allows the definition of control laws.",
+  "date": "2019-01-07",
+  "year": 2019,
+  "venue": "IEEE Transactions on Very Large Scale Integration (VLSI) Systems",
+  "type": "Journal",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "c99941d2c2ee89a1e645d97f4a8af1815e902fb6",
+  "doi": "10.1109/TVLSI.2018.2888589",
+  "paperUrl": "https://doi.org/10.1109/TVLSI.2018.2888589",
+  "pdfPath": null
+}

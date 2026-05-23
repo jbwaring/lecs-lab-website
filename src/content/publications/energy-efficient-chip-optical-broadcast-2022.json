@@ -1,0 +1,30 @@
+{
+  "slug": "energy-efficient-chip-optical-broadcast-2022",
+  "title": "Energy efficient on-chip optical broadcast with partial-absorption photodiodes",
+  "authors": [
+    "Raphael Cardoso",
+    "Lubna Arif",
+    "Clément Zrounba",
+    "F. Pavanello",
+    "I. O’Connor",
+    "L. Vivien",
+    "L. Virot",
+    "S. L. Beux"
+  ],
+  "abstract": "As we enter in the 1000-core era, broadcast-enabled interconnects are needed to synchronize processors and maintain cache coherency. While silicon photonics is a promising technology to deliver high bandwidth communications, there are currently no photonic links enabling energy efficient broadcast. Indeed, existing solutions rely on thermally sensitive microring resonators that require continuous calibration. We propose an on-chip optical link dedicated to broadcast that relies on partial-absorption photodiodes, which allow to evenly distribute the broadcasted signal power to all receivers. Since a single wavelength is used, no ring resonators are required, thus allowing a 39% reduction in the broadcast energy consumption.",
+  "date": "2022-06-19",
+  "year": 2022,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "5370eabafcc154270e898e46a5afe16c4e6d1fef",
+  "doi": "10.1109/NEWCAS52662.2022.9842233",
+  "paperUrl": "https://doi.org/10.1109/NEWCAS52662.2022.9842233",
+  "openAccessUrl": "https://hal.science/hal-03754402/file/2022_NEWCAS_OPTICALL2.pdf",
+  "pdfPath": "/papers/energy-efficient-chip-optical-broadcast-2022.pdf"
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "photonique-sur-silicium-des-reseaux-2019",
+  "title": "Photonique sur silicium : des réseaux à fibres au traitement optique de données",
+  "authors": [
+    "Christophe Kopp",
+    "Stephane Bernabe",
+    "Mohand Achouche",
+    "Sébastien Le Beux"
+  ],
+  "abstract": "La technologie photonique intégrée sur silicium s’est développée depuis les années 2000 avec comme objectif principal de répondre au besoin croissant du réseau internet en composants d’émission et de réception à très haut débit sur fibre optique. Aujourd’hui, plusieurs fonderies proposent des plateformes matures et des produits sont commercialisés. Une nouvelle génération technologique est développée afin d’élargir les domaines d’application de la transmission au traitement optique de données.",
+  "date": "2019-09-01",
+  "year": 2019,
+  "venue": "Photoniques",
+  "type": "Article",
+  "topics": [],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "5e590146aef50ac69e016a927dde5dc4fc049633",
+  "doi": "10.1051/photon/20199824",
+  "paperUrl": "https://doi.org/10.1051/photon/20199824",
+  "openAccessUrl": "https://www.photoniques.com/articles/photon/pdf/2019/05/photon201998p24.pdf",
+  "pdfPath": "/papers/photonique-sur-silicium-des-reseaux-2019.pdf"
+}

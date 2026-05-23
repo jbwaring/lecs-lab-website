@@ -1,0 +1,28 @@
+{
+  "slug": "all-optical-reconfigurable-activation-function-2025",
+  "title": "All-Optical Reconfigurable Activation Function Based on Saturable Absorption",
+  "authors": [
+    "Oceane Destras",
+    "F. Magalhães",
+    "S. L. Beux",
+    "G. Nicolescu"
+  ],
+  "abstract": "The development of optical neural networks (ONNs) has opened up new possibilities for high-speed and energy-efficient computing. However, the limited range of available optical activation functions poses a significant bottleneck. To address this, we propose an all-optical, reconfigurable activation function circuit based on semiconductor saturable absorber mirrors and Mach-Zehnder interferometers, capable of emulating activation functions such as ReLU, Sigmoid, and Tanh. The reprogrammability of the proposed design allows the same circuit to be reused for multiple tasks by dynamically adjusting the activation function, optimizing both space and energy efficiency in ONNs. Through extensive testing, we have identified the most critical parameters of the optical activation function for effective training of ONNs. We demonstrate via numerical simulation that this optical activation function achieves competitive results for the performance of ONNs, reaching up to 98.5% accuracy on the MNIST dataset.",
+  "date": "2025-04-23",
+  "year": 2025,
+  "venue": "IEEE International Symposium on Quality Electronic Design",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "neuro"
+  ],
+  "labMembers": [
+    "oceane-destras",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "29bc0ecb9d8b48c20e5a9f866d444781e72e2e62",
+  "doi": "10.1109/ISQED65160.2025.11014400",
+  "paperUrl": "https://doi.org/10.1109/ISQED65160.2025.11014400",
+  "pdfPath": null
+}

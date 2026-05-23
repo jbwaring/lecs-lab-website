@@ -1,0 +1,457 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import HomeHero from "../../components/HomeHero.astro";
+import PersonCard from "../../components/PersonCard.astro";
+import NewsCard from "../../components/NewsCard.astro";
+import PublicationRow from "../../components/PublicationRow.astro";
+import { researchAreas, rolesOrder, type Role, type NewsItem } from "../../data/lecs";
+import { getCollection } from "astro:content";
+import { getOrderedPeople } from "../../lib/people";
+import { detectLocale, t } from "../../lib/i18n";
+import type { StringKey } from "../../i18n/strings";
+
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+
+const people = await getOrderedPeople();
+const supervisor = people.find((p) => p.data.role === "supervisor");
+const others = people.filter((p) => p.data.role !== "supervisor");
+
+const roleCounts: Record<string, number> = { all: people.length };
+for (const r of rolesOrder) {
+  roleCounts[r] = people.filter((p) => p.data.role === r).length;
+}
+
+const publications = (await getCollection("publications")).sort(
+  (a, b) => (a.data.date < b.data.date ? 1 : -1)
+);
+
+const years = [...new Set(publications.map((p) => p.data.year))].sort(
+  (a, b) => b - a
+);
+const allAuthors = [...new Set(publications.flatMap((p) => p.data.authors))].sort();
+
+const pubsByYear = new Map<number, typeof publications>();
+for (const p of publications) {
+  if (!pubsByYear.has(p.data.year)) pubsByYear.set(p.data.year, []);
+  pubsByYear.get(p.data.year)!.push(p);
+}
+const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
+
+const totalPubs = publications.length;
+
+const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
+
+// Synthesize news from the 6 most recent papers.
+const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: string } => {
+  const first = p.data.abstract.split(/(?<=[.?!])\s+/)[0] ?? "";
+  const trimmed = first.length > 240 ? first.slice(0, 237).trimEnd() + "…" : first;
+  return {
+    date: p.data.date,
+    tag: "Paper",
+    title: p.data.title,
+    summary: trimmed,
+    href: `${pubBase}/${p.data.slug}`
+  };
+});
+
+const activeMembers = people.filter((p) => p.data.role !== "alumni").length;
+const yearsAtConcordia = new Date().getFullYear() - 2019;
+---
+
+<Layout activeNav="about" locale={lang}>
+  <HomeHero
+    publicationsCount={totalPubs}
+    activeMembers={activeMembers}
+    yearsAtConcordia={yearsAtConcordia}
+    locale={lang}
+  />
+
+  <section class="band" id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">{tt("about.eyebrow")}</div>
+          <h2 class="section-title">{tt("about.title")}</h2>
+        </div>
+        <p class="lede">{tt("about.lede")}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="research">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">{tt("research.eyebrow")}</div>
+          <h2 class="section-title">{tt("research.title")}</h2>
+        </div>
+        <p class="lede">{tt("research.lede")}</p>
+      </div>
+      <div class="areas">
+        {
+          researchAreas.map((a, i) => (
+            <div class="area">
+              <div class="num">{String(i + 1).padStart(2, "0")}</div>
+              <h3>{tt(`area.${a.key}` as StringKey)}</h3>
+              <p>{tt(`areaBlurb.${a.key}` as StringKey)}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="people">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">{tt("people.eyebrow")}</div>
+          <h2 class="section-title">{tt("people.title")}</h2>
+        </div>
+        <p class="lede">{tt("people.lede")}</p>
+      </div>
+
+      <div class="filter-bar" data-people-filter>
+        <span class="label">{tt("people.filterLabel")}</span>
+        <button class="chip active" data-role="all" type="button">
+          {tt("role.all")} <span class="count">{roleCounts.all}</span>
+        </button>
+        {
+          rolesOrder
+            .filter((r) => (roleCounts[r] ?? 0) > 0)
+            .map((r) => (
+              <button class="chip" data-role={r} type="button">
+                {tt(`role.${r}` as StringKey)} <span class="count">{roleCounts[r]}</span>
+              </button>
+            ))
+        }
+      </div>
+
+      <div class="people-grid" data-people-grid>
+        {supervisor && <PersonCard person={supervisor} featured locale={lang} />}
+        {supervisor && <div class="row-break" aria-hidden="true" data-row-break></div>}
+        {others.map((p) => <PersonCard person={p} locale={lang} />)}
+        <div class="people-empty" hidden>{tt("people.empty")}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="news">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">{tt("news.eyebrow")}</div>
+          <h2 class="section-title">{tt("news.title")}</h2>
+        </div>
+        <p class="lede">{tt("news.lede")}</p>
+      </div>
+      <div class="news-grid">
+        {newsFromPapers.map((n) => <NewsCard item={n} href={n.href} locale={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="publications">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">{tt("pubs.eyebrow")}</div>
+          <h2 class="section-title">{tt("pubs.title")}</h2>
+        </div>
+        <p class="lede">{tt("pubs.lede")}</p>
+      </div>
+
+      <div class="pubs-toolbar" data-pubs-toolbar>
+        <input
+          type="search"
+          placeholder={tt("pubs.searchPlaceholder")}
+          data-pubs-search
+          aria-label={tt("pubs.searchPlaceholder")}
+        />
+        <label class="cselect-native">
+          <span class="sr-only">{tt("pubs.year")}</span>
+          <select data-pubs-year>
+            <option value="all">{tt("pubs.allYears")}</option>
+            {years.map((y) => <option value={y}>{y}</option>)}
+          </select>
+        </label>
+        <label class="cselect-native">
+          <span class="sr-only">{tt("pubs.topic")}</span>
+          <select data-pubs-topic>
+            <option value="all">{tt("pubs.allTopics")}</option>
+            {researchAreas.map((a) => <option value={a.key}>{tt(`area.${a.key}` as StringKey)}</option>)}
+          </select>
+        </label>
+        <label class="cselect-native">
+          <span class="sr-only">{tt("pubs.author")}</span>
+          <select data-pubs-author>
+            <option value="all">{tt("pubs.allAuthors")}</option>
+            {allAuthors.map((a) => <option value={a}>{a}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <div class="pubs-summary">
+        <span
+          data-pubs-count
+          data-i18n-template={`{n} ${tt("pubs.countOf")} {total} ${tt("pubs.publications")}`}
+        >{publications.length} {tt("pubs.countOf")} {publications.length} {tt("pubs.publications")}</span>
+        <button type="button" class="chip" style="padding:6px 12px;" data-pubs-clear hidden>
+          {tt("pubs.clear")}
+        </button>
+      </div>
+
+      <div class="pubs-empty" hidden data-pubs-empty>{tt("pubs.empty")}</div>
+
+      <div data-pubs-list>
+        {
+          grouped.map(([yr, items]) => (
+            <div class="pub-year-group" data-pubs-year-group={yr}>
+              <div class="pub-year-header">
+                <span class="year">{yr}</span>
+                <span
+                  class="count"
+                  data-pubs-year-count
+                  data-i18n-one={tt("pubs.yearCountOne")}
+                  data-i18n-many={tt("pubs.yearCountMany")}
+                >
+                  {items.length} {items.length === 1 ? tt("pubs.yearCountOne") : tt("pubs.yearCountMany")}
+                </span>
+              </div>
+              {items.map((p) => <PublicationRow pub={p} locale={lang} />)}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="band dark" id="join">
+    <div class="wrap">
+      <div class="join-grid">
+        <div>
+          <div class="section-eyebrow">{tt("join.eyebrow")}</div>
+          <h2 class="section-title">{tt("join.title")}</h2>
+          <p style="color: rgba(255,255,255,.82); font-size: 18px; margin-top: 14px;">
+            {tt("join.body1")}
+          </p>
+          <p style="color: rgba(255,255,255,.82); font-size: 18px;">
+            {tt("join.body2Lead")}
+            <a href="mailto:slebeux@encs.concordia.ca" style="color: var(--gold);"
+              >slebeux (at) encs.concordia.ca</a
+            >.
+          </p>
+        </div>
+        <aside class="topics-card">
+          <h4>{tt("join.topicsHeading")}</h4>
+          <ul>
+            {researchAreas.map((a) => <li>{tt(`area.${a.key}` as StringKey)}</li>)}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .cselect-native { display: block; width: 100%; }
+  .cselect-native select {
+    width: 100%;
+    font: 400 15px/1 var(--sans);
+    padding: 11px 14px;
+    border: 1px solid var(--rule);
+    background: #fff;
+    color: var(--ink);
+    border-radius: 2px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%236a6a6a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+  .cselect-native select:focus {
+    outline: 2px solid var(--maroon);
+    outline-offset: 0;
+    border-color: var(--maroon);
+  }
+
+  .pubs-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ink-3);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .join-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .topics-card {
+    background: rgba(0, 0, 0, 0.18);
+    padding: 32px;
+    border-left: 3px solid var(--gold);
+  }
+  .topics-card h4 {
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .topics-card ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 22px;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 15px;
+  }
+  .topics-card li {
+    padding-left: 16px;
+    position: relative;
+  }
+  .topics-card li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 1px;
+    background: var(--gold);
+  }
+  @media (max-width: 1100px) {
+    .join-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .topics-card ul {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // People role filter — toggles a single visible role.
+  const filterBar = document.querySelector<HTMLElement>("[data-people-filter]");
+  const grid = document.querySelector<HTMLElement>("[data-people-grid]");
+
+  if (filterBar && grid) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".person-card"));
+    const empty = grid.querySelector<HTMLElement>(".people-empty");
+    const rowBreak = grid.querySelector<HTMLElement>("[data-row-break]");
+
+    filterBar.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest<HTMLButtonElement>("button.chip");
+      if (!btn) return;
+      const role = btn.dataset.role ?? "all";
+      filterBar
+        .querySelectorAll("button.chip")
+        .forEach((b) => b.classList.toggle("active", b === btn));
+
+      let visible = 0;
+      let hasSupervisor = false;
+      cards.forEach((card) => {
+        const r = card.dataset.role ?? "";
+        const show = role === "all" || r === role;
+        card.hidden = !show;
+        if (show) {
+          visible += 1;
+          if (r === "supervisor") hasSupervisor = true;
+        }
+      });
+
+      if (rowBreak) rowBreak.hidden = !hasSupervisor;
+      if (empty) empty.hidden = visible !== 0;
+    });
+  }
+</script>
+
+<script>
+  // Publications search/year/topic/author filter — locale-aware via data-i18n-* hooks.
+  const toolbar = document.querySelector<HTMLElement>("[data-pubs-toolbar]");
+  const list = document.querySelector<HTMLElement>("[data-pubs-list]");
+  if (toolbar && list) {
+    const search = toolbar.querySelector<HTMLInputElement>("[data-pubs-search]")!;
+    const yearSel = toolbar.querySelector<HTMLSelectElement>("[data-pubs-year]")!;
+    const topicSel = toolbar.querySelector<HTMLSelectElement>("[data-pubs-topic]")!;
+    const authorSel = toolbar.querySelector<HTMLSelectElement>("[data-pubs-author]")!;
+    const count = document.querySelector<HTMLElement>("[data-pubs-count]")!;
+    const clear = document.querySelector<HTMLButtonElement>("[data-pubs-clear]")!;
+    const empty = document.querySelector<HTMLElement>("[data-pubs-empty]")!;
+    const rows = Array.from(list.querySelectorAll<HTMLElement>(".pub-row"));
+    const groups = Array.from(list.querySelectorAll<HTMLElement>("[data-pubs-year-group]"));
+    const total = rows.length;
+    const tmpl = count.dataset.i18nTemplate ?? "{n} of {total} publications";
+
+    function apply() {
+      const q = search.value.trim().toLowerCase();
+      const year = yearSel.value;
+      const topic = topicSel.value;
+      const author = authorSel.value;
+
+      let visible = 0;
+      rows.forEach((row) => {
+        let ok = true;
+        if (year !== "all" && row.dataset.year !== year) ok = false;
+        if (topic !== "all" && !(row.dataset.topics ?? "").split(",").includes(topic)) ok = false;
+        if (author !== "all" && !(row.dataset.authors ?? "").split("|").includes(author)) ok = false;
+        if (ok && q) {
+          if (!(row.dataset.search ?? "").includes(q)) ok = false;
+        }
+        row.hidden = !ok;
+        if (ok) visible += 1;
+      });
+
+      groups.forEach((g) => {
+        const visRows = g.querySelectorAll<HTMLElement>(".pub-row:not([hidden])");
+        const c = visRows.length;
+        g.hidden = c === 0;
+        const yc = g.querySelector<HTMLElement>("[data-pubs-year-count]");
+        if (yc) {
+          const one = yc.dataset.i18nOne ?? "publication";
+          const many = yc.dataset.i18nMany ?? "publications";
+          yc.textContent = `${c} ${c === 1 ? one : many}`;
+        }
+      });
+
+      count.textContent = tmpl.replace("{n}", String(visible)).replace("{total}", String(total));
+      empty.hidden = visible !== 0;
+      const isFiltered = q !== "" || year !== "all" || topic !== "all" || author !== "all";
+      clear.hidden = !isFiltered;
+    }
+
+    search.addEventListener("input", apply);
+    [yearSel, topicSel, authorSel].forEach((el) =>
+      el.addEventListener("change", apply)
+    );
+    clear.addEventListener("click", () => {
+      search.value = "";
+      yearSel.value = "all";
+      topicSel.value = "all";
+      authorSel.value = "all";
+      apply();
+    });
+  }
+</script>

@@ -1,0 +1,31 @@
+{
+  "slug": "run-time-management-energy-performance-2018",
+  "title": "Run-Time management of energy-performance trade-off in Optical Network-on-Chip",
+  "authors": [
+    "Jiating Luo",
+    "V. Pham",
+    "C. Killian",
+    "D. Chillet",
+    "I. O’Connor",
+    "Olivier Sentieys",
+    "S. L. Beux"
+  ],
+  "abstract": "Optical Network-on-Chip is a promising technology to leverage the interconnection bottleneck in manycore architectures. Indeed, this technology offers high bandwidth and low latency for communications between cores or clusters of cores. However, the high static power consumption of Optical NoCs (ONoCs) calls for reconfiguration of the interconnect in order to meet the performance requirements while minimizing the required energy. This paper addresses this challenge and proposes a method allowing to define, at design time, a set of ONoC execution modes to be loaded, at run-time, according to the applications’ performance and energy requirements. The proposed methodology relies on a sequencer allowing to configure Optical Network Interfaces (ONI).",
+  "date": "2018-11-01",
+  "year": 2018,
+  "venue": "Conference on Design of Circuits and Integrated Systems",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "noc"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "db815396fefa5ce837d094a283289ec8f988680a",
+  "doi": "10.1109/DCIS.2018.8681477",
+  "paperUrl": "https://doi.org/10.1109/DCIS.2018.8681477",
+  "openAccessUrl": "https://hal.archives-ouvertes.fr/hal-01937350/file/DCS_2018_Dynamic_tradeoff.pdf",
+  "pdfPath": "/papers/run-time-management-energy-performance-2018.pdf"
+}

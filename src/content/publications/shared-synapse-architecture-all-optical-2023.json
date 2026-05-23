@@ -1,0 +1,25 @@
+{
+  "slug": "shared-synapse-architecture-all-optical-2023",
+  "title": "A Shared Synapse Architecture for All-Optical Spiking Neural Networks",
+  "authors": [
+    "Milad Eslaminia",
+    "S. L. Beux"
+  ],
+  "abstract": "Silicon photonics is a promising technology for the development of neuromorphic hardware and Spiking Neural Networks (SNN). These architectures rely on wavelength division multiplexing (WDM) and precise calibration of microring resonators (MRR). Implementing larger neural network models requires an increasingly larger number of MRRs and this makes the calibration process complex and untenable. We propose a shared synapse architecture to reduce the number of MRRs required to perform synaptic weighting. This architecture reduces the number of required MRRs by half. The attenuation on each phase-change material (PCM) cell is derived from the pre-trained weights of the model without the need for retraining. To this end, a flow for assigning wavelengths to the inputs and finding the desired attenuation for each waveguide with PCM cell is introduced. Our simulation tests suggest similar weighting accuracy compared with the baseline model despite using fewer resources.",
+  "date": "2023-06-26",
+  "year": 2023,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "neuro"
+  ],
+  "labMembers": [
+    "milad-eslaminia",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "b62c4ff70e0fd0d7074a4463d7d31d726724eaeb",
+  "doi": "10.1109/NEWCAS57931.2023.10198159",
+  "paperUrl": "https://doi.org/10.1109/NEWCAS57931.2023.10198159",
+  "pdfPath": null
+}

@@ -1,10 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Avatar from "../../components/Avatar.astro";
-import { areaTitle, roleLabel } from "../../data/lecs";
 import { articles } from "../../data/lecs";
 import { getCollection, type CollectionEntry } from "astro:content";
-import { fold, findPersonByAuthorTag } from "../../lib/people";
+import { findPersonByAuthorTag } from "../../lib/people";
+import { detectLocale, t } from "../../lib/i18n";
+import type { StringKey } from "../../i18n/strings";
 
 export async function getStaticPaths() {
   const pubs = await getCollection("publications");
@@ -15,11 +16,20 @@ type Props = { pub: CollectionEntry<"publications"> };
 const { pub } = Astro.props as Props;
 const data = pub.data;
 
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
+const profileBase = lang === "fr" ? "/fr/profile" : "/profile";
+const articleBase = lang === "fr" ? "/fr/article" : "/article";
+
 const people = await getCollection("people");
 
 function makeBibtex(p: typeof data): string {
-  const first = p.authors[0].split(/[\s,]/)[0].toLowerCase().replace(/[^a-z]/g, "");
-  return `@misc{${first}${p.year}${p.arxivId.replace(".", "")},
+  const first = p.authors[0]?.split(/[\s,]/)[0]?.toLowerCase().replace(/[^a-z]/g, "") ?? "anon";
+  const idTag = (p.arxivId ?? p.semanticScholarId ?? p.slug).replace(/[^a-zA-Z0-9]/g, "");
+  if (p.arxivId) {
+    return `@misc{${first}${p.year}${idTag},
   title         = {${p.title}},
   author        = {${p.authors.join(" and ")}},
   year          = {${p.year}},
@@ -27,26 +37,39 @@ function makeBibtex(p: typeof data): string {
   archivePrefix = {arXiv},
   primaryClass  = {${p.primaryCategory ?? "cs.AR"}}
 }`;
+  }
+  const venueLine = p.type === "Journal" ? "journal" : "booktitle";
+  return `@${p.type === "Journal" ? "article" : "inproceedings"}{${first}${p.year}${idTag},
+  title  = {${p.title}},
+  author = {${p.authors.join(" and ")}},
+  ${venueLine} = {${p.venue}},
+  year   = {${p.year}}${p.doi ? `,\n  doi    = {${p.doi}}` : ""}
+}`;
 }
 
 const bibtex = makeBibtex(data);
 
-// Related: other publications sharing at least one topic, exclude self, sorted by date.
 const allPubs = await getCollection("publications");
 const related = allPubs
-  .filter((p) => p.data.slug !== data.slug && p.data.topics.some((t) => data.topics.includes(t)))
+  .filter(
+    (p) => p.data.slug !== data.slug && p.data.topics.some((t) => data.topics.includes(t))
+  )
   .sort((a, b) => (a.data.date < b.data.date ? 1 : -1))
   .slice(0, 4);
 
-// Companion article (held set may not match; just skip if none)
 const relatedArticle = articles.find((a) => a.relatedPub === data.slug);
 
 const crumbs = [
-  { href: "https://www.concordia.ca", label: "Concordia University" },
-  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
-  { href: "/", label: "LECS" },
-  { label: "Publication", muted: true }
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
+  { href: langHome, label: "LECS" },
+  { label: tt("nav.publications"), muted: true }
 ];
+
+const pillLabel = data.arxivId
+  ? `arXiv ${data.primaryCategory ?? "preprint"}`
+  : data.type;
+const canonicalUrl = data.arxivAbs ?? data.paperUrl ?? data.openAccessUrl;
 ---
 
 <Layout
@@ -55,17 +78,18 @@ const crumbs = [
   activeNav="publications"
   crumbs={crumbs}
   condensedFooter
+  locale={lang}
 >
   <section class="paper-hero">
     <div class="wrap">
       <div class="breadcrumb-mini">
-        <a href="/">LECS</a>
+        <a href={langHome}>LECS</a>
         <span>›</span>
-        <a href="/#publications">Publications</a>
+        <a href={`${langHome}#publications`}>{tt("nav.publications")}</a>
         <span>›</span>
         <span>{data.year}</span>
       </div>
-      <div class="type-pill">arXiv {data.primaryCategory ?? "preprint"}</div>
+      <div class="type-pill">{pillLabel}</div>
       <h1>{data.title}</h1>
       <div class="authors-row">
         {
@@ -74,7 +98,7 @@ const crumbs = [
             return (
               <>
                 {person ? (
-                  <a href={`/profile/${person.id}`}>{a}</a>
+                  <a href={`${profileBase}/${person.id}`}>{a}</a>
                 ) : (
                   <span>{a}</span>
                 )}
@@ -85,10 +109,12 @@ const crumbs = [
         }
       </div>
       <div class="venue-row">
-        <strong>arXiv:{data.arxivId}</strong> · {data.year}
+        <strong>{data.venue}</strong> · {data.year}
+        {data.arxivId && <>  ·  arXiv:{data.arxivId}</>}
+        {!data.arxivId && data.doi && <>  ·  DOI: {data.doi}</>}
       </div>
       <div class="pill-row">
-        {data.topics.map((t) => <span class="topic-pill">{areaTitle[t]}</span>)}
+        {data.topics.map((tp) => <span class="topic-pill">{tt(`area.${tp}` as StringKey)}</span>)}
       </div>
     </div>
   </section>
@@ -96,28 +122,34 @@ const crumbs = [
   <div class="paper-actions">
     <div class="wrap">
       <div class="left">
-        <strong>arXiv {data.year}</strong>
+        <strong>{data.venue} {data.year}</strong>
         <span>{data.authors.join(", ")}</span>
       </div>
       <div class="actions">
         {
           data.pdfPath ? (
             <a class="btn solid" href={data.pdfPath} download>
-              ↓ Download PDF
+              {tt("pub.downloadPdf")}
             </a>
-          ) : (
-            <a class="btn solid" href={data.arxivPdf}>
-              ↓ PDF on arXiv
-            </a>
-          )
+          ) : data.arxivPdf ? (
+            <a class="btn solid" href={data.arxivPdf}>{tt("pub.pdfOnArxiv")}</a>
+          ) : data.openAccessUrl ? (
+            <a class="btn solid" href={data.openAccessUrl}>{tt("pub.downloadPdf")}</a>
+          ) : null
         }
-        <a class="btn outline" href={data.arxivAbs}>View on arXiv ↗</a>
-        {
-          data.arxivHtml && (
-            <a class="btn outline" href={data.arxivHtml}>HTML ↗</a>
-          )
-        }
-        <button class="btn outline" type="button" data-copy-bibtex>Copy BibTeX</button>
+        {data.arxivAbs && <a class="btn outline" href={data.arxivAbs}>{tt("pub.viewArxiv")}</a>}
+        {!data.arxivAbs && data.doi && (
+          <a class="btn outline" href={`https://doi.org/${data.doi}`}>{tt("pub.viewDoi")}</a>
+        )}
+        {data.semanticScholarId && (
+          <a
+            class="btn outline"
+            href={`https://www.semanticscholar.org/paper/${data.semanticScholarId}`}
+            >{tt("pub.viewSS")}</a
+          >
+        )}
+        {data.arxivHtml && <a class="btn outline" href={data.arxivHtml}>{tt("pub.html")}</a>}
+        <button class="btn outline" type="button" data-copy-bibtex data-copied-label={tt("pub.copied")}>{tt("pub.copyBibtex")}</button>
       </div>
     </div>
   </div>
@@ -126,59 +158,52 @@ const crumbs = [
     <div class="wrap">
       <div class="paper-main">
         <div class="abstract-block">
-          <div class="label">Abstract</div>
+          <div class="label">{tt("pub.abstract")}</div>
           <p>{data.abstract}</p>
         </div>
 
         {
           relatedArticle && (
             <div class="paper-section">
-              <h2>Companion article</h2>
-              <p style="max-width:36em;">
-                A research note from {relatedArticle.author} accompanies this paper and discusses
-                the motivating context and the open questions that follow from the result.
-              </p>
-              <a class="btn outline" href={`/article/${relatedArticle.slug}`}>
-                Read “{relatedArticle.title}” →
+              <h2>{tt("article.companionHeading")}</h2>
+              <a class="btn outline" href={`${articleBase}/${relatedArticle.slug}`}>
+                {relatedArticle.title} →
               </a>
             </div>
           )
         }
 
         <div class="paper-section">
-          <h2>Citation</h2>
-          <p style="max-width:36em;">
-            If you build on this work, please cite the arXiv preprint using the entry below. The
-            BibTeX can be copied to clipboard with the button at the top of this page.
-          </p>
+          <h2>{tt("pub.citationHeading")}</h2>
+          <p style="max-width:36em;">{tt("pub.citationBody")}</p>
           <pre class="citation-block" data-bibtex>{bibtex}</pre>
         </div>
 
         <div class="paper-section">
-          <h2>Acknowledgements</h2>
-          <p>
-            This work was supported in part by the Natural Sciences and Engineering Research
-            Council of Canada (NSERC) Discovery Grants programme and by the Fonds de recherche du
-            Québec — Nature et technologies (FRQNT).
-          </p>
+          <h2>{tt("pub.ackHeading")}</h2>
+          <p>{tt("pub.ackBody")}</p>
         </div>
       </div>
 
       <aside class="paper-sidebar">
         <div class="sidebar-card">
-          <h4>Paper details</h4>
-          <div class="meta-row">
-            <span class="k">arXiv ID</span><span class="v">{data.arxivId}</span>
-          </div>
-          <div class="meta-row"><span class="k">Year</span><span class="v">{data.year}</span></div>
-          <div class="meta-row">
-            <span class="k">Category</span><span class="v">{data.primaryCategory ?? "—"}</span>
-          </div>
-          <div class="meta-row"><span class="k">Venue</span><span class="v">{data.venue}</span></div>
+          <h4>{tt("pub.detailsHeading")}</h4>
+          <div class="meta-row"><span class="k">{tt("pub.venue")}</span><span class="v">{data.venue}</span></div>
+          <div class="meta-row"><span class="k">{tt("pub.year")}</span><span class="v">{data.year}</span></div>
+          <div class="meta-row"><span class="k">{tt("pub.type")}</span><span class="v">{data.type}</span></div>
+          {data.arxivId && (
+            <div class="meta-row"><span class="k">{tt("pub.arxivId")}</span><span class="v">{data.arxivId}</span></div>
+          )}
+          {data.primaryCategory && (
+            <div class="meta-row"><span class="k">{tt("pub.category")}</span><span class="v">{data.primaryCategory}</span></div>
+          )}
+          {data.doi && (
+            <div class="meta-row"><span class="k">{tt("pub.doi")}</span><span class="v">{data.doi}</span></div>
+          )}
         </div>
 
         <div class="sidebar-card">
-          <h4>Authors</h4>
+          <h4>{tt("pub.authors")}</h4>
           {
             data.authors.map((a) => {
               const p = findPersonByAuthorTag(a, people);
@@ -188,19 +213,17 @@ const crumbs = [
                     <div class="av" style="background: var(--paper-2);" />
                     <div class="info">
                       <span class="n">{a}</span>
-                      <span class="r">External collaborator</span>
+                      <span class="r">{tt("pub.externalAuthor")}</span>
                     </div>
                   </div>
                 );
               }
               return (
-                <a class="author-mini" href={`/profile/${p.id}`}>
-                  <div class="av">
-                    <Avatar name={p.data.name} />
-                  </div>
+                <a class="author-mini" href={`${profileBase}/${p.id}`}>
+                  <div class="av"><Avatar name={p.data.name} /></div>
                   <div class="info">
                     <span class="n">{p.data.name}</span>
-                    <span class="r">{roleLabel[p.data.role]}</span>
+                    <span class="r">{tt(`roleFull.${p.data.role}` as StringKey)}</span>
                   </div>
                 </a>
               );
@@ -211,14 +234,12 @@ const crumbs = [
         {
           related.length > 0 && (
             <div class="sidebar-card">
-              <h4>Related publications</h4>
+              <h4>{tt("pub.related")}</h4>
               <div class="related-papers">
                 {related.map((r) => (
-                  <a href={`/publication/${r.data.slug}`}>
+                  <a href={`${pubBase}/${r.data.slug}`}>
                     <div class="t">{r.data.title}</div>
-                    <div class="v">
-                      <strong>arXiv</strong> · {r.data.year}
-                    </div>
+                    <div class="v"><strong>{r.data.venue}</strong> · {r.data.year}</div>
                   </a>
                 ))}
               </div>
@@ -227,8 +248,8 @@ const crumbs = [
         }
 
         <div style="margin-top:24px;">
-          <a class="btn outline" href="/#publications" style="width:100%; justify-content:center;"
-            >← All publications</a
+          <a class="btn outline" href={`${langHome}#publications`} style="width:100%; justify-content:center;"
+            >{tt("pub.backAll")}</a
           >
         </div>
       </aside>
@@ -240,11 +261,12 @@ const crumbs = [
   const btn = document.querySelector<HTMLButtonElement>("[data-copy-bibtex]");
   const pre = document.querySelector<HTMLPreElement>("[data-bibtex]");
   if (btn && pre) {
+    const orig = btn.textContent;
+    const copied = btn.dataset.copiedLabel ?? "✓ Copied";
     btn.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(pre.textContent ?? "");
-        const orig = btn.textContent;
-        btn.textContent = "✓ Copied";
+        btn.textContent = copied;
         setTimeout(() => (btn.textContent = orig), 2000);
       } catch {
         /* clipboard unavailable */
@@ -252,9 +274,3 @@ const crumbs = [
     });
   }
 </script>
-
-<style>
-  .pubs-empty {
-    /* unused on this page but referenced indirectly via shared layout */
-  }
-</style>

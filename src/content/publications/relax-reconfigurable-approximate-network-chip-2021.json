@@ -1,0 +1,25 @@
+{
+  "slug": "relax-reconfigurable-approximate-network-chip-2021",
+  "title": "RELAX: a REconfigurabLe Approximate Network-on-Chip",
+  "authors": [
+    "Richard Fenster",
+    "S. L. Beux"
+  ],
+  "abstract": "The high error-resilience of numerous applications such as neural networks and signal processing led to new optimization opportunities in manycore systems. Indeed, approximate computing enable the reduction of data bit size, which allows to relax design constraints of computing resources and memory. However, on-chip interconnects can hardly take advantage of the reduced data size since they also need to transmit plain sized data. Consequently, existing approximate networks-on-chip (NoCs) either involve additional physical layers dedicated to approximate data or significantly increase the energy to transfer non-approximate data. To solve this challenge, we propose RELAX, a reconfigurable network-on-chip that can operate in an accurate data only mode or a mixed mode. The mixed mode allows for concurrent accurate and approximate data transactions using the same physical layer, hence allowing the efficient transmission of approximate data while reducing the resources overhead. Synthesis and simulation results show that RELAX improves communication latency of approximate data up to 44.2% when compared to an accurate data only, baseline 2D-Mesh NoC.",
+  "date": "2021-12-01",
+  "year": 2021,
+  "venue": "International Symposium on Embedded Multicore/Many-core Systems-on-Chip",
+  "type": "Journal",
+  "topics": [
+    "reconfig",
+    "noc",
+    "edge-ai"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "c4dfc1060b60cf538b3c632bd6a695edb375da2d",
+  "doi": "10.1109/MCSoC51149.2021.00063",
+  "paperUrl": "https://doi.org/10.1109/MCSoC51149.2021.00063",
+  "pdfPath": null
+}

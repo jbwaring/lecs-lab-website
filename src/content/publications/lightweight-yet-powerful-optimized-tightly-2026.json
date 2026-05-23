@@ -1,0 +1,26 @@
+{
+  "slug": "lightweight-yet-powerful-optimized-tightly-2026",
+  "title": "Lightweight Yet Powerful: Optimized Tightly Coupled Hyperdimensional Computing Accelerators",
+  "authors": [
+    "M. Asghari",
+    "S. L. Beux",
+    "Ron Mankarious"
+  ],
+  "abstract": "Hyperdimensional Computing (HDC) is a hardware-friendly machine learning paradigm that encodes data into high-dimensional binary hypervectors, enabling efficient computation through lightweight bitwise operations. Existing HDC accelerators, often implemented on FPGAs, typically rely on custom instruction sets and co-processor designs to optimize performance. However, these architectures face programmability challenges and incur significant control overhead when interacting with the main processor. To overcome these limitations, we present a methodology for designing and optimizing tightly coupled HDC accelerators. The proposed method produces accelerators enhanced with a controller capable of decoding instructions corresponding to key HDC kernels, thereby reducing communication overhead and improving throughput. To validate the approach, we implemented the accelerator at the RTL level and modeled the entire system in SystemVerilog. Experimental results demonstrate that, compared to state-of-the-art architectures, the proposed method reduces software code size by up to 98% while achieving a $(3 \\times$) speedup.",
+  "date": "2026-02-24",
+  "year": 2026,
+  "venue": "Latin American Symposium on Circuits and Systems",
+  "type": "Article",
+  "topics": [
+    "reconfig",
+    "edge-ai",
+    "fpga"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "135353a5ad610eb4786d905c76a894ea9906dcd4",
+  "doi": "10.1109/LASCAS67804.2026.11457074",
+  "paperUrl": "https://doi.org/10.1109/LASCAS67804.2026.11457074",
+  "pdfPath": null
+}

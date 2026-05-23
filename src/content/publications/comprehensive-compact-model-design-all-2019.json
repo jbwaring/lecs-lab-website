@@ -1,0 +1,26 @@
+{
+  "slug": "comprehensive-compact-model-design-all-2019",
+  "title": "A comprehensive compact model for the design of all-spin-logic based circuits",
+  "authors": [
+    "Q. An",
+    "S. L. Beux",
+    "I. O’Connor",
+    "Jacques-Olivier Klein"
+  ],
+  "abstract": "Abstract By relying on pure spin transmission, low-frequency charge-spin conversion, and neuron-like mechanism, All Spin Logic (ASL) has the potential to outperform CMOS technology in logic design and especially in neuromorphic computing, with improved fabrication process and material technology in the future. As ASL technology is gaining in maturity, compact models are needed to fill the gap between application requirements and circuit fabrication. However, defining such a model is a tedious task due to the numerous physical parameters to consider and the need for flexibility to explore design tradeoffs. In this paper, we propose an accurate, generic, scalable, and easy-to-use compact model for ASL devices. The model has been validated by comparing with experimental results, which allows investigating the impact of device characteristics such as channel length and channel width on the propagation delay. The model has been implemented in Cadence using in Verilog-A, which allows running transient simulations and comparing the implementations of 4-bit adder and multiplier circuits regarding the area, energy and delay metrics.",
+  "date": "2019-10-01",
+  "year": 2019,
+  "venue": "Microelectronics Journal",
+  "type": "Journal",
+  "topics": [
+    "neuro"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "1ab1cf2fa3398d99f4c131b99acb3cc93ff5199a",
+  "doi": "10.1016/J.MEJO.2018.11.003",
+  "paperUrl": "https://doi.org/10.1016/J.MEJO.2018.11.003",
+  "openAccessUrl": "https://www.sciencedirect.com/science/article/am/pii/S0026269218303665",
+  "pdfPath": null
+}

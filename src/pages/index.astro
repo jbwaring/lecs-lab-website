@@ -4,16 +4,15 @@ import HomeHero from "../components/HomeHero.astro";
 import PersonCard from "../components/PersonCard.astro";
 import NewsCard from "../components/NewsCard.astro";
 import PublicationRow from "../components/PublicationRow.astro";
-import {
-  researchAreas,
-  rolesOrder,
-  roleShortLabel,
-  fmtDate,
-  type Role,
-  type NewsItem
-} from "../data/lecs";
+import { researchAreas, rolesOrder, type Role, type NewsItem } from "../data/lecs";
 import { getCollection } from "astro:content";
 import { getOrderedPeople } from "../lib/people";
+import { detectLocale, t } from "../lib/i18n";
+import type { StringKey } from "../i18n/strings";
+
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
 
 const people = await getOrderedPeople();
 const supervisor = people.find((p) => p.data.role === "supervisor");
@@ -31,9 +30,7 @@ const publications = (await getCollection("publications")).sort(
 const years = [...new Set(publications.map((p) => p.data.year))].sort(
   (a, b) => b - a
 );
-const allAuthors = [
-  ...new Set(publications.flatMap((p) => p.data.authors))
-].sort();
+const allAuthors = [...new Set(publications.flatMap((p) => p.data.authors))].sort();
 
 const pubsByYear = new Map<number, typeof publications>();
 for (const p of publications) {
@@ -44,7 +41,9 @@ const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
 
 const totalPubs = publications.length;
 
-// News: synthesized from the 6 most recent arXiv papers.
+const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
+
+// Synthesize news from the 6 most recent papers.
 const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: string } => {
   const first = p.data.abstract.split(/(?<=[.?!])\s+/)[0] ?? "";
   const trimmed = first.length > 240 ? first.slice(0, 237).trimEnd() + "…" : first;
@@ -53,7 +52,7 @@ const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: stri
     tag: "Paper",
     title: p.data.title,
     summary: trimmed,
-    href: `/publication/${p.data.slug}`
+    href: `${pubBase}/${p.data.slug}`
   };
 });
 
@@ -61,26 +60,22 @@ const activeMembers = people.filter((p) => p.data.role !== "alumni").length;
 const yearsAtConcordia = new Date().getFullYear() - 2019;
 ---
 
-<Layout activeNav="about">
+<Layout activeNav="about" locale={lang}>
   <HomeHero
     publicationsCount={totalPubs}
     activeMembers={activeMembers}
     yearsAtConcordia={yearsAtConcordia}
+    locale={lang}
   />
 
   <section class="band" id="about">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">About the lab</div>
-          <h2 class="section-title">Design methods for emerging hardware.</h2>
+          <div class="section-eyebrow">{tt("about.eyebrow")}</div>
+          <h2 class="section-title">{tt("about.title")}</h2>
         </div>
-        <p class="lede">
-          LECS investigates the architectural foundations of post-CMOS computing — from silicon
-          photonic interconnects and reconfigurable arrays to near-term quantum processors. Our
-          work spans device-level modelling, system-level simulation, and FPGA prototyping, in
-          close collaboration with industry and partner institutions across Montréal and Europe.
-        </p>
+        <p class="lede">{tt("about.lede")}</p>
       </div>
     </div>
   </section>
@@ -89,22 +84,18 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">Research</div>
-          <h2 class="section-title">Nine intertwined research directions.</h2>
+          <div class="section-eyebrow">{tt("research.eyebrow")}</div>
+          <h2 class="section-title">{tt("research.title")}</h2>
         </div>
-        <p class="lede">
-          Each direction is led by a graduate researcher or postdoctoral fellow. Together they
-          form a coherent agenda on emerging computing systems, from the physical layer to the
-          toolchain.
-        </p>
+        <p class="lede">{tt("research.lede")}</p>
       </div>
       <div class="areas">
         {
           researchAreas.map((a, i) => (
             <div class="area">
               <div class="num">{String(i + 1).padStart(2, "0")}</div>
-              <h3>{a.title}</h3>
-              <p>{a.blurb}</p>
+              <h3>{tt(`area.${a.key}` as StringKey)}</h3>
+              <p>{tt(`areaBlurb.${a.key}` as StringKey)}</p>
             </div>
           ))
         }
@@ -116,39 +107,33 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">People</div>
-          <h2 class="section-title">A small group, broad interests.</h2>
+          <div class="section-eyebrow">{tt("people.eyebrow")}</div>
+          <h2 class="section-title">{tt("people.title")}</h2>
         </div>
-        <p class="lede">
-          The group is led by Prof. Sébastien Le Beux and currently comprises one postdoctoral
-          fellow, four doctoral candidates, two master&apos;s students, and one visiting
-          researcher, with active alumni in industry.
-        </p>
+        <p class="lede">{tt("people.lede")}</p>
       </div>
 
       <div class="filter-bar" data-people-filter>
-        <span class="label">Filter by role</span>
+        <span class="label">{tt("people.filterLabel")}</span>
         <button class="chip active" data-role="all" type="button">
-          {roleShortLabel.all} <span class="count">{roleCounts.all}</span>
+          {tt("role.all")} <span class="count">{roleCounts.all}</span>
         </button>
         {
           rolesOrder
             .filter((r) => (roleCounts[r] ?? 0) > 0)
             .map((r) => (
               <button class="chip" data-role={r} type="button">
-                {roleShortLabel[r as Role]} <span class="count">{roleCounts[r]}</span>
+                {tt(`role.${r}` as StringKey)} <span class="count">{roleCounts[r]}</span>
               </button>
             ))
         }
       </div>
 
       <div class="people-grid" data-people-grid>
-        {supervisor && <PersonCard person={supervisor} featured />}
+        {supervisor && <PersonCard person={supervisor} featured locale={lang} />}
         {supervisor && <div class="row-break" aria-hidden="true" data-row-break></div>}
-        {others.map((p) => <PersonCard person={p} />)}
-        <div class="people-empty" hidden>
-          No members in this category.
-        </div>
+        {others.map((p) => <PersonCard person={p} locale={lang} />)}
+        <div class="people-empty" hidden>{tt("people.empty")}</div>
       </div>
     </div>
   </section>
@@ -157,16 +142,13 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">Recent papers</div>
-          <h2 class="section-title">New on arXiv.</h2>
+          <div class="section-eyebrow">{tt("news.eyebrow")}</div>
+          <h2 class="section-title">{tt("news.title")}</h2>
         </div>
-        <p class="lede">
-          The latest preprints from members of the lab. Click through for the full abstract,
-          authors, and a direct link to arXiv.
-        </p>
+        <p class="lede">{tt("news.lede")}</p>
       </div>
       <div class="news-grid">
-        {newsFromPapers.map((n) => <NewsCard item={n} href={n.href} />)}
+        {newsFromPapers.map((n) => <NewsCard item={n} href={n.href} locale={lang} />)}
       </div>
     </div>
   </section>
@@ -175,55 +157,53 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">Publications</div>
-          <h2 class="section-title">Selected publications.</h2>
+          <div class="section-eyebrow">{tt("pubs.eyebrow")}</div>
+          <h2 class="section-title">{tt("pubs.title")}</h2>
         </div>
-        <p class="lede">
-          Filter by year, topic, author, or search across titles and venues. The supervisor&apos;s
-          name is highlighted in each row. All papers are mirrored from arXiv.
-        </p>
+        <p class="lede">{tt("pubs.lede")}</p>
       </div>
 
       <div class="pubs-toolbar" data-pubs-toolbar>
         <input
           type="search"
-          placeholder="Search title, author, venue…"
+          placeholder={tt("pubs.searchPlaceholder")}
           data-pubs-search
-          aria-label="Search publications"
+          aria-label={tt("pubs.searchPlaceholder")}
         />
         <label class="cselect-native">
-          <span class="sr-only">Year</span>
+          <span class="sr-only">{tt("pubs.year")}</span>
           <select data-pubs-year>
-            <option value="all">All years</option>
+            <option value="all">{tt("pubs.allYears")}</option>
             {years.map((y) => <option value={y}>{y}</option>)}
           </select>
         </label>
         <label class="cselect-native">
-          <span class="sr-only">Topic</span>
+          <span class="sr-only">{tt("pubs.topic")}</span>
           <select data-pubs-topic>
-            <option value="all">All topics</option>
-            {researchAreas.map((a) => <option value={a.key}>{a.title}</option>)}
+            <option value="all">{tt("pubs.allTopics")}</option>
+            {researchAreas.map((a) => <option value={a.key}>{tt(`area.${a.key}` as StringKey)}</option>)}
           </select>
         </label>
         <label class="cselect-native">
-          <span class="sr-only">Author</span>
+          <span class="sr-only">{tt("pubs.author")}</span>
           <select data-pubs-author>
-            <option value="all">All authors</option>
+            <option value="all">{tt("pubs.allAuthors")}</option>
             {allAuthors.map((a) => <option value={a}>{a}</option>)}
           </select>
         </label>
       </div>
 
       <div class="pubs-summary">
-        <span data-pubs-count>{publications.length} of {publications.length} publications</span>
+        <span
+          data-pubs-count
+          data-i18n-template={`{n} ${tt("pubs.countOf")} {total} ${tt("pubs.publications")}`}
+        >{publications.length} {tt("pubs.countOf")} {publications.length} {tt("pubs.publications")}</span>
         <button type="button" class="chip" style="padding:6px 12px;" data-pubs-clear hidden>
-          Clear filters ✕
+          {tt("pubs.clear")}
         </button>
       </div>
 
-      <div class="pubs-empty" hidden data-pubs-empty>
-        No publications match these filters.
-      </div>
+      <div class="pubs-empty" hidden data-pubs-empty>{tt("pubs.empty")}</div>
 
       <div data-pubs-list>
         {
@@ -231,11 +211,16 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
             <div class="pub-year-group" data-pubs-year-group={yr}>
               <div class="pub-year-header">
                 <span class="year">{yr}</span>
-                <span class="count" data-pubs-year-count>
-                  {items.length} publication{items.length !== 1 ? "s" : ""}
+                <span
+                  class="count"
+                  data-pubs-year-count
+                  data-i18n-one={tt("pubs.yearCountOne")}
+                  data-i18n-many={tt("pubs.yearCountMany")}
+                >
+                  {items.length} {items.length === 1 ? tt("pubs.yearCountOne") : tt("pubs.yearCountMany")}
                 </span>
               </div>
-              {items.map((p) => <PublicationRow pub={p} />)}
+              {items.map((p) => <PublicationRow pub={p} locale={lang} />)}
             </div>
           ))
         }
@@ -247,26 +232,22 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     <div class="wrap">
       <div class="join-grid">
         <div>
-          <div class="section-eyebrow">Join the group</div>
-          <h2 class="section-title">Open positions — MSc &amp; PhD.</h2>
+          <div class="section-eyebrow">{tt("join.eyebrow")}</div>
+          <h2 class="section-title">{tt("join.title")}</h2>
           <p style="color: rgba(255,255,255,.82); font-size: 18px; margin-top: 14px;">
-            We are actively recruiting motivated students at the MSc and PhD levels to work on
-            hardware architectures using emerging technologies. Candidates with backgrounds in
-            computer architecture, hardware programming (VHDL/Verilog), system-level simulation,
-            optimization, or neural networks are particularly encouraged to apply.
+            {tt("join.body1")}
           </p>
           <p style="color: rgba(255,255,255,.82); font-size: 18px;">
-            Women and minorities are strongly encouraged to apply. Send a CV, transcripts, and a
-            brief statement of motivation to
+            {tt("join.body2Lead")}
             <a href="mailto:slebeux@encs.concordia.ca" style="color: var(--gold);"
               >slebeux (at) encs.concordia.ca</a
             >.
           </p>
         </div>
         <aside class="topics-card">
-          <h4>Topics we cover</h4>
+          <h4>{tt("join.topicsHeading")}</h4>
           <ul>
-            {researchAreas.map((a) => <li>{a.title}</li>)}
+            {researchAreas.map((a) => <li>{tt(`area.${a.key}` as StringKey)}</li>)}
           </ul>
         </aside>
       </div>
@@ -286,10 +267,7 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     white-space: nowrap;
     border: 0;
   }
-  .cselect-native {
-    display: block;
-    width: 100%;
-  }
+  .cselect-native { display: block; width: 100%; }
   .cselect-native select {
     width: 100%;
     font: 400 15px/1 var(--sans);
@@ -411,7 +389,7 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
 </script>
 
 <script>
-  // Publications search/year/topic/author filter.
+  // Publications search/year/topic/author filter — locale-aware via data-i18n-* hooks.
   const toolbar = document.querySelector<HTMLElement>("[data-pubs-toolbar]");
   const list = document.querySelector<HTMLElement>("[data-pubs-list]");
   if (toolbar && list) {
@@ -425,6 +403,7 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
     const rows = Array.from(list.querySelectorAll<HTMLElement>(".pub-row"));
     const groups = Array.from(list.querySelectorAll<HTMLElement>("[data-pubs-year-group]"));
     const total = rows.length;
+    const tmpl = count.dataset.i18nTemplate ?? "{n} of {total} publications";
 
     function apply() {
       const q = search.value.trim().toLowerCase();
@@ -450,10 +429,14 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
         const c = visRows.length;
         g.hidden = c === 0;
         const yc = g.querySelector<HTMLElement>("[data-pubs-year-count]");
-        if (yc) yc.textContent = `${c} publication${c !== 1 ? "s" : ""}`;
+        if (yc) {
+          const one = yc.dataset.i18nOne ?? "publication";
+          const many = yc.dataset.i18nMany ?? "publications";
+          yc.textContent = `${c} ${c === 1 ? one : many}`;
+        }
       });
 
-      count.textContent = `${visible} of ${total} publications`;
+      count.textContent = tmpl.replace("{n}", String(visible)).replace("{total}", String(total));
       empty.hidden = visible !== 0;
       const isFiltered = q !== "" || year !== "all" || topic !== "all" || author !== "all";
       clear.hidden = !isFiltered;

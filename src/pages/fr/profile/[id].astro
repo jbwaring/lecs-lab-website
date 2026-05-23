@@ -1,0 +1,211 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Avatar from "../../../components/Avatar.astro";
+import PublicationRow from "../../../components/PublicationRow.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { detectLocale, t } from "../../../lib/i18n";
+import type { StringKey } from "../../../i18n/strings";
+
+export async function getStaticPaths() {
+  const people = await getCollection("people");
+  return people.map((p) => ({ params: { id: p.id }, props: { person: p } }));
+}
+
+type Props = { person: CollectionEntry<"people"> };
+const { person } = Astro.props as Props;
+const data = person.data;
+const id = person.id;
+
+const lang = detectLocale(Astro.url.pathname);
+const tt = (k: StringKey) => t(lang, k);
+const langHome = lang === "fr" ? "/fr/" : "/";
+
+const publications = await getCollection("publications");
+const myPubs = publications
+  .filter((p) => p.data.labMembers.includes(id as never))
+  .sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+
+const lastName = (data.sortKey ?? data.name.split(" ").slice(-1)[0]).split(/\s+/).pop() ?? "";
+
+const grouped = new Map<number, typeof myPubs>();
+for (const p of myPubs) {
+  if (!grouped.has(p.data.year)) grouped.set(p.data.year, []);
+  grouped.get(p.data.year)!.push(p);
+}
+const groupedEntries = [...grouped.entries()].sort((a, b) => b[0] - a[0]);
+
+const emailMailto = (data.email ?? "").replace(" (at) ", "@");
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
+  { href: "https://www.concordia.ca/ginacody.html", label: tt("util.breadcrumb.gcs") },
+  { href: langHome, label: "LECS" },
+  { label: tt("nav.people"), muted: true }
+];
+---
+
+<Layout
+  title={`${data.name} — LECS · Concordia University`}
+  description={data.bio}
+  activeNav="people"
+  crumbs={crumbs}
+  condensedFooter
+  locale={lang}
+>
+  <section class="profile-hero">
+    <div class="wrap">
+      <div class="portrait">
+        <Avatar name={data.name} />
+      </div>
+      <div class="head">
+        <div class="breadcrumb-mini">
+          <a href={langHome}>LECS</a>
+          <span>›</span>
+          <a href={`${langHome}#people`}>{tt("nav.people")}</a>
+          <span>›</span>
+          <span>{tt(`roleFull.${data.role}` as StringKey)}</span>
+        </div>
+        <h1>{data.name}</h1>
+        <div class="position">{data.title}</div>
+        <div class="affil">{data.affiliation}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-body">
+    <div class="wrap">
+      <div class="main-col">
+        <div class="bio">
+          <h2>{tt("profile.bioHeading")}</h2>
+          <p>{data.bio}</p>
+        </div>
+
+        {
+          data.role === "supervisor" && data.projects && (
+            <div class="projects" style="margin-top:48px;">
+              <h2>{tt("profile.currentProjects")}</h2>
+              <ul>{data.projects.map((proj) => <li>{proj}</li>)}</ul>
+            </div>
+          )
+        }
+        {
+          data.role !== "supervisor" && data.thesis && (
+            <div class="projects" style="margin-top:48px;">
+              <h2>{tt("profile.researchProject")}</h2>
+              <p
+                style="color: var(--ink-2); font-size: 17px; padding-left: 28px; position: relative;"
+              >
+                <span style="position: absolute; left:0; top:14px; width:16px; height:1px; background: var(--maroon);" />
+                {data.thesis}
+              </p>
+            </div>
+          )
+        }
+
+        <div class="pubs-section profile-pubs" style="margin-top:56px;">
+          <h2>
+            {tt("profile.pubsHeading")}
+            {
+              myPubs.length > 0 && (
+                <span style="color: var(--ink-3); font-family: var(--sans); font-size:14px; font-weight:400;">
+                  · {myPubs.length} {lang === "fr" ? "au total" : "total"}
+                </span>
+              )
+            }
+          </h2>
+          {myPubs.length === 0 && <p style="color: var(--ink-3);">{tt("profile.pubsEmpty")}</p>}
+          {
+            groupedEntries.map(([yr, items]) => (
+              <div class="pub-year-group">
+                <div class="pub-year-header">
+                  <span class="year">{yr}</span>
+                  <span class="count">
+                    {items.length} {items.length !== 1 ? tt("pubs.yearCountMany") : tt("pubs.yearCountOne")}
+                  </span>
+                </div>
+                {items.map((p) => (
+                  <PublicationRow pub={p} highlightAuthor={lastName} locale={lang} />
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <aside>
+        <div class="side-rail">
+          <div class="group">
+            <div class="label">{tt("profile.role")}</div>
+            <div class="value">{tt(`roleFull.${data.role}` as StringKey)}</div>
+          </div>
+          {
+            data.since && (
+              <div class="group">
+                <div class="label">
+                  {data.role === "alumni" ? tt("profile.atLecs") : tt("profile.since")}
+                </div>
+                <div class="value">
+                  {data.role === "alumni" ? `${data.since}–${data.until}` : data.since}
+                </div>
+              </div>
+            )
+          }
+          <div class="group">
+            <div class="label">{tt("profile.contact")}</div>
+            <div class="value">
+              <a href={`mailto:${emailMailto}`}>{data.email}</a>
+            </div>
+          </div>
+          {
+            data.phone && (
+              <div class="group">
+                <div class="label">{tt("profile.phone")}</div>
+                <div class="value">{data.phone}</div>
+              </div>
+            )
+          }
+          {
+            data.office && (
+              <div class="group">
+                <div class="label">{tt("profile.office")}</div>
+                <div class="value">{data.office}</div>
+              </div>
+            )
+          }
+          {
+            data.areas && data.areas.length > 0 && (
+              <div class="group">
+                <div class="label">{tt("profile.researchAreas")}</div>
+                <div class="areas-list">
+                  {data.areas.map((a) => (
+                    <span>{tt(`area.${a}` as StringKey)}</span>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+          {
+            data.links && (
+              <div class="group">
+                <div class="label">{tt("profile.profiles")}</div>
+                <div class="value" style="display:flex; flex-direction:column; gap:6px;">
+                  {data.links.scholar && <a href={data.links.scholar}>{tt("profile.googleScholar")}</a>}
+                  {data.links.dblp && <a href={data.links.dblp}>{tt("profile.dblp")}</a>}
+                  {data.links.site && <a href={data.links.site}>{tt("profile.personalSite")}</a>}
+                </div>
+              </div>
+            )
+          }
+          <div
+            class="group"
+            style="border-top:1px solid var(--rule); padding-top:16px; margin-top:24px;"
+          >
+            <a class="btn outline" href={`${langHome}#people`} style="width:100%; justify-content:center;"
+              >{tt("profile.backToPeople")}</a
+            >
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>

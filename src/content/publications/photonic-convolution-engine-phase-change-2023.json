@@ -1,0 +1,32 @@
+{
+  "slug": "photonic-convolution-engine-phase-change-2023",
+  "title": "Photonic Convolution Engine Based on Phase-Change Materials and Stochastic Computing",
+  "authors": [
+    "Raphael Cardoso",
+    "Clément Zrounba",
+    "M.F. Abdalla",
+    "Paul Jiménez",
+    "Mauricio Gomes de Queiroz",
+    "B. Charbonnier",
+    "Fabio Pavanello",
+    "Ian O'Connor",
+    "S. L. Beux"
+  ],
+  "abstract": "The last wave of AI developments sparked a global surge in computing resources allocated to neural network models. Even though such models solve complex problems, their mathematical foundations are simple, with the multiply-accumulate (MAC) operation standing out as one of the most important. However, improvements in traditional CMOS technologies fail to match the ever-increasing performance requirements of AI applications, therefore new technologies, as well as disruptive computing architectures must be explored. In this paper, we propose a novel in-memory implementation of a MAC operator based on stochastic computing and optical phase-change memories (oPCMs), leveraging their proven non-volatility and multi-level capabilities to achieve convolution. We show that resorting to the stochastic computing paradigm allows one to exploit the dynamic mechanisms of oPCMs to naturally compute and store MAC results with less noise sensitivity. Under similar conditions, we demonstrate an improvement of up to $64\\times$ and $10\\times$ in the applications that we evaluated.",
+  "date": "2023-06-20",
+  "year": 2023,
+  "venue": "IEEE Computer Society Annual Symposium on VLSI",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "neuro",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "70863d7a5fb57032d6f34ae4960ee1f1f77e5ec2",
+  "doi": "10.1109/ISVLSI59464.2023.10238608",
+  "paperUrl": "https://doi.org/10.1109/ISVLSI59464.2023.10238608",
+  "pdfPath": null
+}

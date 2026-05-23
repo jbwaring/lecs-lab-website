@@ -1,0 +1,25 @@
+{
+  "slug": "full-adder-circuit-design-all-2015",
+  "title": "Full-adder circuit design based on all-spin logic device",
+  "authors": [
+    "Q. An",
+    "Li Su",
+    "Jacques-Olivier Klein",
+    "S. L. Beux",
+    "I. O’Connor",
+    "Weisheng Zhao"
+  ],
+  "abstract": "Limiting or reducing the power consumption of the digital circuits for calculation is now the main concern in nanoelectronic domain. For this purpose, spintronic devices are proposed to combine or even replace complementary metal-oxide semiconductor (CMOS) technology for the implementation of integrated circuits. One of the most promising solutions is all spin logic (ASL) device, due to a low power consumption, high switching speed and the compatibility with CMOS. In this paper, we propose a one-bit full-adder and a multi-bits adder circuits relying on ASL devices. The performances of the circuits are evaluated with transient simulation using a compact model of ASL devices developed in Cadence. Finally, ASL device parameters are explored for optimization.",
+  "date": "2015-07-01",
+  "year": 2015,
+  "venue": "IEEE/ACM International Symposium on Nanoscale Architectures",
+  "type": "Journal",
+  "topics": [],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "8b35de9254b7f269ae923188d96593be883d2d3d",
+  "doi": "10.1109/NANOARCH.2015.7180606",
+  "paperUrl": "https://doi.org/10.1109/NANOARCH.2015.7180606",
+  "pdfPath": null
+}

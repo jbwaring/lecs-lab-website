@@ -1,0 +1,25 @@
+{
+  "slug": "general-purpose-hyperdimensional-computing-accelerator-2024",
+  "title": "A General Purpose Hyperdimensional Computing Accelerator for Edge Computing",
+  "authors": [
+    "M. Asghari",
+    "S. L. Beux"
+  ],
+  "abstract": "Hyperdimensional computing (HDC) is a lightweight machine learning paradigm. Since HDC relies on bitwise operations instead of matrix multiplications, it is commonly used for classification tasks in edge computing devices. For this purpose, numerous hardware architectures have been proposed to accelerate HDC applications. However, existing solutions suffer from a lack of flexibility, which prevents from a deployment of HDC for a wide range of applications. In this paper, we propose a general-purpose HDC accelerator, called GP-HDCA, which is suitable for FPGAs implementation. To enable the efficient implementation of encoders, which is the most critical component in HDC, we define an instruction set tailored to ease the use of the accelerator as a coprocessor. Synthesis results show that our accelerator, configured with a 32-bit integer size and 32-bit vector slice, requires only 7% of the resources available in a Zedboard. Finally, our results show that a 12x speedup is achieved when processing a language detection application, demonstrating the suitability of the architecture for edge computing.",
+  "date": "2024-06-16",
+  "year": 2024,
+  "venue": "IEEE International New Circuits and Systems Conference",
+  "type": "Journal",
+  "topics": [
+    "reconfig",
+    "edge-ai",
+    "fpga"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "6362d970c5db693c76b96b0e3e5746bd75788602",
+  "doi": "10.1109/NewCAS58973.2024.10666335",
+  "paperUrl": "https://doi.org/10.1109/NewCAS58973.2024.10666335",
+  "pdfPath": null
+}

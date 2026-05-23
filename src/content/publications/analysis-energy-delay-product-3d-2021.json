@@ -1,0 +1,33 @@
+{
+  "slug": "analysis-energy-delay-product-3d-2021",
+  "title": "Analysis of Energy-Delay-Product of a 3D Vertical Nanowire FET Technology",
+  "authors": [
+    "I. O’Connor",
+    "A. Poittevin",
+    "S. Le Beux",
+    "A. Bosio",
+    "Z. Stanojevic",
+    "O. Baumgartner",
+    "C. Mukherjee",
+    "C. Maneux",
+    "J. Trommer",
+    "T. Mikolajick",
+    "G. Larrieu"
+  ],
+  "abstract": "To sustain transistor scaling beyond lateral 7nm devices, gate-all-around (GAA) junction-less vertical nanowire field effect transistors (VNWFET) are a promising alternative. This work analyses the energy-delay-product (EDP) for a junction-less 3D vertical gate-all-around nanowire FET technology, with a physical channel length of 14nm. Comparisons with the EDP of a baseline 7nm FinFET technology are carried out. The analysis motivates a new 3D neural network compute cube (N2C2) concept. Our results show that a 10x gain in EDP can be achieved for a physical VNWFET gate length of 14nm.",
+  "date": "2021-09-01",
+  "year": 2021,
+  "venue": "Joint International EUROSOI Workshop and International Conference on Ultimate Integration on Silicon",
+  "type": "Conference",
+  "topics": [
+    "neuro"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "cedf6aba407f585d9183c20e22fa3aef9a7ad2c6",
+  "doi": "10.1109/EuroSOI-ULIS53016.2021.9560180",
+  "paperUrl": "https://doi.org/10.1109/EuroSOI-ULIS53016.2021.9560180",
+  "openAccessUrl": "https://hal.archives-ouvertes.fr/hal-03407210/file/EUROSOI21_EDP_VF.pdf",
+  "pdfPath": "/papers/analysis-energy-delay-product-3d-2021.pdf"
+}

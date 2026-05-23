@@ -1,0 +1,26 @@
+{
+  "slug": "toward-large-scale-all-optical-2022",
+  "title": "Toward Large Scale All-Optical Spiking Neural Networks",
+  "authors": [
+    "Milad Eslaminia",
+    "S. L. Beux"
+  ],
+  "abstract": "Silicon Photonics is a promising technology to develop neuromorphic hardware accelerators. Most optical neural networks rely on wavelength division multiplexing (WDM), which calls for power hungry calibration to compensate for non-uniformity fabrication process and thermal variations of microring resonators (MRR). This imposes practical limits on neuromorphic photonic hardware since only a small number of synaptic connections per neuron can be implemented. As a result, the mapping of neural networks (NN) on a hardware platform require pruning of synaptic connections, which drastically affects the accuracy. In this work, we propose a method to efficiently map pre-trained NN on an all-optical spiking neural network (SNN), with the aim to optimize hardware utilization while minimizing accuracy loss. The method relies on weight partitioning and unrolling to reduce synaptic connections. The resulting neural networks are mapped on an architecture we propose, allowing to estimate accuracy and power consumption. Results show the capability of weight partitioning to implement a realistic NN while attaining 58% reduction in energy consumption compared with unrolling.",
+  "date": "2022-10-03",
+  "year": 2022,
+  "venue": "IEEE/IFIP International Conference on Very Large Scale Integration of System-on-Chip",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "neuro",
+    "soc"
+  ],
+  "labMembers": [
+    "milad-eslaminia",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "03a1337412aabc0de749f85c6bc6fbb111939698",
+  "doi": "10.1109/VLSI-SoC54400.2022.9939647",
+  "paperUrl": "https://doi.org/10.1109/VLSI-SoC54400.2022.9939647",
+  "pdfPath": null
+}

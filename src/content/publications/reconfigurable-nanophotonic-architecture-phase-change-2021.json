@@ -1,0 +1,26 @@
+{
+  "slug": "reconfigurable-nanophotonic-architecture-phase-change-2021",
+  "title": "A Reconfigurable Nanophotonic Architecture based on Phase Change Material",
+  "authors": [
+    "Parya Zolfaghari",
+    "S. L. Beux"
+  ],
+  "abstract": "Silicon photonics is an emerging technology allowing to take the advantage of high-speed light propagation to accelerate computing kernels in integrated systems. Micrometer-scale optical devices call for reconfigurable architectures to maximize resources utilization. Typical reconfigurable optical computing architectures involve micro-ring resonators for electro-optic modulation. However, such devices require voltage and thermal tuning to compensate for fabrication process variability and thermal sensitivity. This power-hungry calibration leads to significant static power overhead, thus limiting the scalability of optical architectures. In this paper, we propose to use non-volatile Phase Change Materials (PCM) elements to route optical signals only through the required resonators, hence saving calibration energy of bypassed resonators. The non-volatility of PCM elements allows maintaining the optical path. We investigate the efficiency of the PCM elements on the Reconfigurable Directed Logic (RDL) architecture. Results show that the static power is reduced by 32.8% on average and that 30% power saving is obtained from 158kHz reconfiguration frequency.",
+  "date": "2021-10-04",
+  "year": 2021,
+  "venue": "IEEE/IFIP International Conference on Very Large Scale Integration of System-on-Chip",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "reconfig",
+    "soc"
+  ],
+  "labMembers": [
+    "paria-zolfaghari",
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "13e32086bceba5ea70be07b6327ab686313251e0",
+  "doi": "10.1109/VLSI-SoC53125.2021.9606967",
+  "paperUrl": "https://doi.org/10.1109/VLSI-SoC53125.2021.9606967",
+  "pdfPath": null
+}

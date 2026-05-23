@@ -1,0 +1,28 @@
+{
+  "slug": "approximate-nanophotonic-interconnects-2019",
+  "title": "Approximate nanophotonic interconnects",
+  "authors": [
+    "Jaechul Lee",
+    "C. Killian",
+    "S. L. Beux",
+    "D. Chillet"
+  ],
+  "abstract": "The energy consumption of manycore is dominated by data movement, which calls for energy-efficient and high-bandwidth interconnects. Integrated optics is promising technology to overcome the bandwidth limitations of electrical interconnects. However, it suffers from high power overhead related to low efficiency lasers, which calls for the use of approximate communications for error tolerant applications. In this context, this paper investigates the design of an Optical NoC supporting the transmission of approximate data. For this purpose, the least significant bits of floating point numbers are transmitted with low power optical signals. A transmission model allows estimating the laser power according to the targeted BER and a micro-architecture allows configuring, at run-time, the number of approximated bits and the laser output powers. Simulations results show that, compared to an interconnect involving only robust communications, approximations in the optical transmission lead to up to 42% laser power reduction for image processing application with a limited degradation at the application level.",
+  "date": "2019-10-17",
+  "year": 2019,
+  "venue": "ACM/IEEE International Symposium on Networks-on-Chips",
+  "type": "Journal",
+  "topics": [
+    "photonics",
+    "noc",
+    "approx"
+  ],
+  "labMembers": [
+    "sebastien-le-beux"
+  ],
+  "semanticScholarId": "8ecec9d24bdd622a47a7da18b928da317b88e8c7",
+  "doi": "10.1145/3313231.3352365",
+  "paperUrl": "https://doi.org/10.1145/3313231.3352365",
+  "openAccessUrl": "https://hal.archives-ouvertes.fr/hal-02341667/file/Approx_ONoC_for_HAL.pdf",
+  "pdfPath": "/papers/approximate-nanophotonic-interconnects-2019.pdf"
+}
