@@ -3,29 +3,31 @@ import Layout from "../../layouts/Layout.astro";
 import Avatar from "../../components/Avatar.astro";
 import {
   articles,
-  people,
-  publications,
   areaTitle,
   roleLabel,
   fmtDate,
   fmtDateLong,
   readingTime
 } from "../../data/lecs";
+import { getCollection } from "astro:content";
 
 export function getStaticPaths() {
   return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
 }
 
 const { article } = Astro.props;
-const author = people.find((p) => p.name === article.author);
+const people = await getCollection("people");
+const publications = await getCollection("publications");
+
+const author = people.find((p) => p.data.name === article.author);
 const pub = article.relatedPub
-  ? publications.find((p) => p.slug === article.relatedPub)
+  ? publications.find((p) => p.data.slug === article.relatedPub)
   : undefined;
 const related = articles
   .filter((a) => a.slug !== article.slug && a.topics.some((t) => article.topics.includes(t)))
   .slice(0, 3);
 
-const emailMailto = author ? (author.email ?? "").replace(" (at) ", "@") : null;
+const emailMailto = author ? (author.data.email ?? "").replace(" (at) ", "@") : null;
 
 const crumbs = [
   { href: "https://www.concordia.ca", label: "Concordia University" },
@@ -92,14 +94,14 @@ const crumbs = [
                   <div
                     style="font-family: var(--accent); font-weight:500; font-size:18px; color: var(--ink); margin-bottom:4px;"
                   >
-                    {pub.title}
+                    {pub.data.title}
                   </div>
                   <div style="font-size:14px; color: var(--ink-3);">
-                    <strong style="color: var(--maroon); font-weight:500;">{pub.venue}</strong>
-                    · {pub.year} · {pub.authors.join(", ")}
+                    <strong style="color: var(--maroon); font-weight:500;">arXiv:{pub.data.arxivId}</strong>
+                    · {pub.data.year} · {pub.data.authors.join(", ")}
                   </div>
                 </div>
-                <a class="btn solid" href={`/publication/${pub.slug}`} style="flex-shrink:0;">
+                <a class="btn solid" href={`/publication/${pub.data.slug}`} style="flex-shrink:0;">
                   Open paper →
                 </a>
               </div>
@@ -129,11 +131,11 @@ const crumbs = [
             author ? (
               <a class="author-mini" href={`/profile/${author.id}`}>
                 <div class="av">
-                  <Avatar name={author.name} />
+                  <Avatar name={author.data.name} />
                 </div>
                 <div class="info">
-                  <span class="n">{author.name}</span>
-                  <span class="r">{roleLabel[author.role]}</span>
+                  <span class="n">{author.data.name}</span>
+                  <span class="r">{roleLabel[author.data.role]}</span>
                 </div>
               </a>
             ) : (

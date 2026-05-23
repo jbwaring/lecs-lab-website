@@ -1,0 +1,18 @@
+{
+  "arxivId": "1512.07492",
+  "slug": "optical-crossbars-worst-case-losses-2015",
+  "title": "Optical Crossbars on Chip: a comparative study based on worst-case losses",
+  "authors": ["Hui Li", "Sébastien Le Beux", "Gabriela Nicolescu", "Jelena Trajkovic", "Ian O 'Connor"],
+  "abstract": "The many cores design research community have shown high interest in optical crossbars on chip for more than a decade. Key properties of optical crossbars, namely a) contention free data routing b) low latency communication and c) potential for high bandwidth through the use of WDM, motivate several implementations of this type of interconnect. These implementations demonstrate very different scalability and power efficiency ability depending on three key design factors: a) the network topology, b) the considered layout and the c) the injection losses induced by the fabrication process. In this paper, the worst-case optical losses of crossbar implementations are compared according to the factors mentioned above. The comparison results has the potential to help many cores system designer to select the most appropriate crossbar implementation according, for instance, to the number of IP cores and the chip die size.",
+  "date": "2015-12-23",
+  "year": 2015,
+  "primaryCategory": "cs.ET",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["photonics", "noc"],
+  "pdfPath": "/papers/1512.07492.pdf",
+  "arxivAbs": "https://arxiv.org/abs/1512.07492",
+  "arxivPdf": "https://arxiv.org/pdf/1512.07492",
+  "arxivHtml": "https://arxiv.org/html/1512.07492",
+  "labMembers": ["sebastien-le-beux"]
+}

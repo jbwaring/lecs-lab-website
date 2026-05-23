@@ -1,0 +1,12 @@
+{
+  "name": "Frédéric Gagné",
+  "role": "msc",
+  "title": "MSc Student",
+  "affiliation": "LECS, Concordia University",
+  "email": "frederic.gagne (at) mail.concordia.ca",
+  "areas": ["edge-ai", "neuro"],
+  "since": 2024,
+  "thesis": "Energy-proportional inference on spiking accelerators",
+  "bio": "Frédéric Gagné works on event-driven inference for resource-constrained edge devices, with a focus on neuromorphic dataflow accelerators.",
+  "sortKey": "Gagné"
+}

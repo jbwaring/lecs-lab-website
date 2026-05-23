@@ -1,5 +1,9 @@
 // LECS — Laboratory for Emerging Computing Systems
-// Source of truth for lab content. Replace photos, bios, and publications with real content.
+// Static content that isn't yet in a content collection: research areas, news,
+// articles (held for now), and shared formatting helpers.
+//
+// People and publications are content collections — see src/content.config.ts
+// and src/content/{people,publications}/.
 
 export type Role =
   | "supervisor"
@@ -16,43 +20,11 @@ export interface ResearchArea {
   blurb: string;
 }
 
-export interface Person {
-  id: string;
-  name: string;
-  role: Role;
-  title: string;
-  affiliation: string;
-  email: string;
-  phone?: string;
-  office?: string;
-  areas: string[];
-  since?: number;
-  until?: number;
-  thesis?: string;
-  bio: string;
-  links?: { scholar?: string; dblp?: string; site?: string };
-  projects?: string[];
-}
-
 export interface NewsItem {
   date: string;
   tag: string;
   title: string;
   summary: string;
-}
-
-export interface Publication {
-  slug: string;
-  year: number;
-  venue: string;
-  type: "Conference" | "Journal";
-  topics: string[];
-  authors: string[];
-  title: string;
-  abstract?: string;
-  contributions?: string[];
-  bibtex?: string;
-  doi?: string;
 }
 
 export interface Article {
@@ -70,8 +42,10 @@ export interface Article {
 export const lab = {
   name: "Laboratory for Emerging Computing Systems",
   acronym: "LECS",
-  tagline: "Design methods for emerging hardware: silicon photonics, reconfigurable architectures, and the systems they enable.",
-  address: "Department of Electrical and Computer Engineering · Gina Cody School of Engineering and Computer Science · Concordia University · Montréal, Québec",
+  tagline:
+    "Design methods for emerging hardware: silicon photonics, reconfigurable architectures, and the systems they enable.",
+  address:
+    "Department of Electrical and Computer Engineering · Gina Cody School of Engineering and Computer Science · Concordia University · Montréal, Québec",
   phone: "+1 514-848-2424 ×3004",
   email: "slebeux (at) encs.concordia.ca",
   building: "EV Building, 1515 Saint-Catherine St. W."
@@ -87,126 +61,6 @@ export const researchAreas: ResearchArea[] = [
   { key: "soc", title: "Manycore SoCs", blurb: "Architecture and design-space exploration of heterogeneous many-core processors." },
   { key: "approx", title: "Approximate computing", blurb: "Quality-configurable arithmetic and memory for energy-proportional computation." },
   { key: "fpga", title: "FPGA prototyping", blurb: "Hardware-in-the-loop validation of novel architectures on contemporary FPGAs." }
-];
-
-export const people: Person[] = [
-  {
-    id: "sebastien-le-beux",
-    name: "Sébastien Le Beux",
-    role: "supervisor",
-    title: "Associate Professor — Principal Investigator",
-    affiliation: "Dept. of Electrical and Computer Engineering, Concordia University",
-    email: "slebeux (at) encs.concordia.ca",
-    phone: "+1 514-848-2424 ×3004",
-    office: "EV 5.139",
-    areas: ["photonics", "reconfig", "noc", "quantum", "edge-ai", "neuro", "soc", "approx"],
-    since: 2019,
-    links: {
-      scholar: "https://scholar.google.com/citations?user=n2zWgXkAAAAJ",
-      dblp: "http://dblp.uni-trier.de/pers/hd/b/Beux:S=eacute=bastien_Le",
-      site: "https://sites.google.com/site/lebeux/"
-    },
-    bio: "Sébastien Le Beux is Associate Professor in the Department of Electrical and Computer Engineering at Concordia University. From 2010 to 2019 he was associate professor at École Centrale de Lyon, where he led nanoprocessors research activities at the Lyon Institute of Nanotechnology (CNRS). He obtained his PhD in computer science from the University of Sciences and Technology of Lille in 2007, followed by a postdoctoral fellowship at École Polytechnique de Montréal (2008–2010) and a visiting scholar appointment at HKUST in 2013. His research concerns design methods for emerging (nano)technologies and embedded systems, with particular emphasis on silicon photonic interconnects and reconfigurable architectures. He has authored or co-authored over 100 scientific publications and serves on the steering, organizing and technical program committees of international conferences including DATE, CODES+ISSS, NOCS and NanoArch.",
-    projects: ["ARGON: photonic NoC compilation flow", "ReCAP: reconfigurable accelerator platform", "Quantum control-stack co-design"]
-  },
-  {
-    id: "jean-baptiste-waring",
-    name: "Jean-Baptiste Waring",
-    role: "postdoc",
-    title: "Postdoctoral Fellow",
-    affiliation: "LECS, Concordia University",
-    email: "jean.baptiste.waring (at) me.com",
-    office: "EV 5.137",
-    areas: ["photonics", "noc"],
-    since: 2023,
-    thesis: "Adaptive control of silicon photonic interconnects under thermal drift",
-    bio: "Jean-Baptiste Waring is a postdoctoral fellow at LECS, working on closed-loop calibration of silicon photonic links. His research combines device-level characterisation with system-level architectural support for runtime adaptation."
-  },
-  {
-    id: "masoud-rahimi",
-    name: "Masoud Rahimi",
-    role: "phd",
-    title: "PhD Candidate",
-    affiliation: "LECS, Concordia University",
-    email: "masoud.rahimi (at) mail.concordia.ca",
-    areas: ["noc", "soc"],
-    since: 2022,
-    thesis: "Scalable hybrid electrical–optical networks for kilo-core SoCs",
-    bio: "Masoud Rahimi investigates routing, arbitration and floor-planning strategies for hybrid electrical–optical NoCs at scales beyond one thousand cores."
-  },
-  {
-    id: "ismael-ridha",
-    name: "Ismael Ridha",
-    role: "phd",
-    title: "PhD Candidate",
-    affiliation: "LECS, Concordia University",
-    email: "ismael.ridha (at) mail.concordia.ca",
-    areas: ["reconfig", "fpga"],
-    since: 2022,
-    thesis: "Compilation flows for coarse-grained reconfigurable arrays",
-    bio: "Ismael Ridha designs compilation and mapping toolchains for coarse-grained reconfigurable accelerators, with hardware-in-the-loop validation on FPGA prototypes."
-  },
-  {
-    id: "milad-eslaminia",
-    name: "Milad Eslaminia",
-    role: "phd",
-    title: "PhD Candidate",
-    affiliation: "LECS, Concordia University",
-    email: "milad.eslaminia (at) concordia.ca",
-    areas: ["quantum"],
-    since: 2023,
-    thesis: "Resource-aware mapping for near-term quantum processors",
-    bio: "Milad Eslaminia studies qubit mapping, scheduling and error-aware compilation for noisy intermediate-scale quantum devices."
-  },
-  {
-    id: "frederic-gagne",
-    name: "Frédéric Gagné",
-    role: "msc",
-    title: "MSc Student",
-    affiliation: "LECS, Concordia University",
-    email: "frederic.gagne (at) mail.concordia.ca",
-    areas: ["edge-ai", "neuro"],
-    since: 2024,
-    thesis: "Energy-proportional inference on spiking accelerators",
-    bio: "Frédéric Gagné works on event-driven inference for resource-constrained edge devices, with a focus on neuromorphic dataflow accelerators."
-  },
-  {
-    id: "paria-zolfaghari",
-    name: "Paria Zolfaghari",
-    role: "msc",
-    title: "MSc Student",
-    affiliation: "LECS, Concordia University",
-    email: "pariazolfaghari (at) gmail.com",
-    areas: ["approx", "edge-ai"],
-    since: 2024,
-    thesis: "Quality-configurable arithmetic for embedded neural inference",
-    bio: "Paria Zolfaghari develops approximate-arithmetic units and quality-control schemes for embedded neural-network inference."
-  },
-  {
-    id: "oceane-destras",
-    name: "Océane Destras",
-    role: "visiting",
-    title: "Visiting PhD Researcher",
-    affiliation: "Polytechnique Montréal — visiting LECS",
-    email: "oceane.destras (at) etud.polymtl.ca",
-    areas: ["photonics"],
-    since: 2024,
-    thesis: "Variability-aware design of silicon photonic interconnects (co-supervised, Polytechnique Montréal)",
-    bio: "Océane Destras is a PhD researcher at Polytechnique Montréal, visiting LECS to study variability-aware design of silicon photonic links."
-  },
-  {
-    id: "mohsen-asghari",
-    name: "Mohsen Asghari",
-    role: "alumni",
-    title: "Alumnus · PhD 2024 — now at PolarSat Inc.",
-    affiliation: "Formerly LECS, Concordia University",
-    email: "mohsen.asghari (at) polarsat.com",
-    areas: ["soc", "reconfig"],
-    since: 2020,
-    until: 2024,
-    thesis: "PhD (2024): Reconfigurable SoCs for satellite payload processing",
-    bio: "Mohsen Asghari completed his PhD at LECS in 2024 on reconfigurable system-on-chip platforms for satellite payload processing, and now leads on-board processing development at PolarSat Inc."
-  }
 ];
 
 export const news: NewsItem[] = [
@@ -248,42 +102,12 @@ export const news: NewsItem[] = [
   }
 ];
 
-export const publications: Publication[] = [
-  {
-    slug: "variability-aware-mapping-2026",
-    year: 2026,
-    venue: "DATE",
-    type: "Conference",
-    topics: ["photonics", "noc"],
-    authors: ["Rahimi, M.", "Le Beux, S."],
-    title: "Variability-aware mapping for silicon photonic networks-on-chip",
-    abstract: "Process variation in silicon-photonic foundries causes resonance-wavelength drift on the order of nanometres across a single wafer, large enough to detune microring filters from their assigned channels. We propose a statistical mapping flow that takes per-die variability profiles as input and assigns wavelengths, rings and floorplan positions to minimise expected crosstalk and laser power across the population of fabricated dies. On a 256-node photonic NoC the proposed flow reduces post-fabrication tuning power by 37 % at iso-throughput, and improves yield at 1 dB power penalty from 41 % to 88 %.",
-    contributions: [
-      "A statistical variability model derived from measurement campaigns on a multi-project wafer run.",
-      "An ILP-based mapping formulation with a yield objective, solved on hierarchically partitioned NoC tiles.",
-      "A 256-node design-space exploration showing 37 % tuning-power reduction and 2.1× yield improvement at 1 dB penalty."
-    ],
-    bibtex: "@inproceedings{rahimi2026variability,\n  title  = {Variability-aware mapping for silicon photonic networks-on-chip},\n  author = {Rahimi, Masoud and Le Beux, S{\\'e}bastien},\n  booktitle = {Design, Automation and Test in Europe (DATE)},\n  year   = {2026}\n}",
-    doi: "10.1109/DATE.2026.001234"
-  },
-  { slug: "cgra-compilation-2026", year: 2026, venue: "IEEE TCAD", type: "Journal", topics: ["reconfig", "fpga"], authors: ["Ridha, I.", "Le Beux, S."], title: "A compilation flow for coarse-grained reconfigurable arrays with heterogeneous PEs", abstract: "Heterogeneous coarse-grained reconfigurable arrays (CGRAs) promise the area efficiency of ASICs with the flexibility of FPGAs, but their compilation toolchains have lagged behind. We describe an end-to-end flow that maps dataflow IR onto arrays of mixed-precision, mixed-function processing elements, integrating placement, routing and timing closure in a single ILP relaxation." },
-  { slug: "qubit-mapping-2026", year: 2026, venue: "QCE", type: "Conference", topics: ["quantum"], authors: ["Eslaminia, M.", "Le Beux, S."], title: "Error-aware qubit mapping for noisy intermediate-scale quantum processors", abstract: "Two-qubit gates on contemporary superconducting hardware exhibit error rates that vary by more than an order of magnitude across the chip. We exploit this spatial heterogeneity in a qubit-mapping pass that minimises expected logical error under realistic noise profiles." },
-  { slug: "thermal-calibration-2025", year: 2025, venue: "DATE", type: "Conference", topics: ["photonics"], authors: ["Waring, J.-B.", "Destras, O.", "Le Beux, S."], title: "Closed-loop thermal calibration of microring-based photonic interconnects", abstract: "Microring resonators are exquisitely sensitive to local temperature: a 1 °C drift shifts the resonance by ≈ 0.1 nm, enough to break a wavelength-division-multiplexed link. We present a closed-loop calibration scheme that combines in-band photodetector feedback with a predictive controller, achieving sub-microsecond convergence after thermal disturbances." },
-  { slug: "satellite-reconfig-2025", year: 2025, venue: "IEEE TC", type: "Journal", topics: ["soc", "reconfig"], authors: ["Asghari, M.", "Le Beux, S."], title: "Reconfigurable SoC architectures for satellite payload processing" },
-  { slug: "kilo-core-routing-2025", year: 2025, venue: "NOCS", type: "Conference", topics: ["noc", "photonics"], authors: ["Rahimi, M.", "Waring, J.-B.", "Le Beux, S."], title: "Routing for hybrid electrical–optical networks-on-chip at kilo-core scale" },
-  { slug: "quality-arith-2025", year: 2025, venue: "IEEE TVLSI", type: "Journal", topics: ["approx", "edge-ai"], authors: ["Zolfaghari, P.", "Le Beux, S."], title: "Quality-configurable arithmetic units for embedded neural inference" },
-  { slug: "spiking-dataflow-2024", year: 2024, venue: "CODES+ISSS", type: "Conference", topics: ["edge-ai", "neuro"], authors: ["Gagné, F.", "Le Beux, S."], title: "Dataflow scheduling for spiking neural accelerators on the edge" },
-  { slug: "runtime-adapt-2024", year: 2024, venue: "IEEE TCAD", type: "Journal", topics: ["photonics", "noc"], authors: ["Waring, J.-B.", "Le Beux, S."], title: "Architectural support for runtime adaptation of silicon photonic links" },
-  { slug: "approx-neuro-2024", year: 2024, venue: "NanoArch", type: "Conference", topics: ["neuro", "approx"], authors: ["Gagné, F.", "Zolfaghari, P.", "Le Beux, S."], title: "Approximate event-driven inference on neuromorphic substrates" },
-  { slug: "cgra-hil-2024", year: 2024, venue: "FPL", type: "Conference", topics: ["reconfig", "fpga"], authors: ["Ridha, I.", "Asghari, M.", "Le Beux, S."], title: "Hardware-in-the-loop validation of CGRA mapping decisions" },
-  { slug: "ring-variability-2023", year: 2023, venue: "IEEE JSSC", type: "Journal", topics: ["photonics"], authors: ["Destras, O.", "Le Beux, S."], title: "Variability characterisation of integrated microring resonators" },
-  { slug: "kilo-floorplan-2023", year: 2023, venue: "DAC", type: "Conference", topics: ["soc", "noc"], authors: ["Rahimi, M.", "Le Beux, S."], title: "Floor-planning strategies for kilo-core hybrid SoCs" },
-  { slug: "energy-mac-2023", year: 2023, venue: "ISLPED", type: "Conference", topics: ["edge-ai", "approx"], authors: ["Zolfaghari, P.", "Le Beux, S."], title: "Energy-proportional inference through quality-tunable MACs" },
-  { slug: "spaceborne-2022", year: 2022, venue: "DATE", type: "Conference", topics: ["reconfig"], authors: ["Asghari, M.", "Le Beux, S."], title: "A reconfigurable accelerator platform for spaceborne signal processing" },
-  { slug: "photonic-scale-2022", year: 2022, venue: "IEEE TPDS", type: "Journal", topics: ["noc"], authors: ["Le Beux, S.", "Rahimi, M."], title: "On the scalability of photonic networks for chip multiprocessors" },
-  { slug: "quantum-compile-2021", year: 2021, venue: "ICCAD", type: "Conference", topics: ["quantum"], authors: ["Le Beux, S."], title: "Compilation challenges for near-term quantum processors" }
-];
-
+/**
+ * Long-form research notes by lab members. HELD for now — these are not yet
+ * regenerated against the real arXiv corpus. `relatedPub` slugs from the
+ * earlier synthetic dataset may not resolve; pages handle missing links
+ * gracefully.
+ */
 export const articles: Article[] = [
   {
     slug: "yield-from-the-foundry",

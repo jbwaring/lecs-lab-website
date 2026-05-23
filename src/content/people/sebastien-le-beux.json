@@ -1,0 +1,23 @@
+{
+  "name": "Sébastien Le Beux",
+  "role": "supervisor",
+  "title": "Associate Professor — Principal Investigator",
+  "affiliation": "Dept. of Electrical and Computer Engineering, Concordia University",
+  "email": "slebeux (at) encs.concordia.ca",
+  "phone": "+1 514-848-2424 ×3004",
+  "office": "EV 5.139",
+  "areas": ["photonics", "noc", "quantum", "approx", "soc", "reconfig", "edge-ai"],
+  "since": 2019,
+  "links": {
+    "scholar": "https://scholar.google.com/citations?user=n2zWgXkAAAAJ",
+    "dblp": "http://dblp.uni-trier.de/pers/hd/b/Beux:S=eacute=bastien_Le",
+    "site": "https://sites.google.com/site/lebeux/"
+  },
+  "bio": "Sébastien Le Beux is Associate Professor in the Department of Electrical and Computer Engineering at Concordia University. From 2010 to 2019 he was associate professor at École Centrale de Lyon, where he led nanoprocessors research activities at the Lyon Institute of Nanotechnology (CNRS). He obtained his PhD in computer science from the University of Sciences and Technology of Lille in 2007, followed by a postdoctoral fellowship at École Polytechnique de Montréal (2008–2010) and a visiting scholar appointment at HKUST in 2013. His research concerns design methods for emerging (nano)technologies and embedded systems, with particular emphasis on silicon photonic interconnects and reconfigurable architectures. He has authored or co-authored over 100 scientific publications and serves on the steering, organizing and technical program committees of international conferences including DATE, CODES+ISSS, NOCS and NanoArch.",
+  "projects": [
+    "ARGON: photonic NoC compilation flow",
+    "ReCAP: reconfigurable accelerator platform",
+    "Quantum control-stack co-design"
+  ],
+  "sortKey": "Le Beux"
+}

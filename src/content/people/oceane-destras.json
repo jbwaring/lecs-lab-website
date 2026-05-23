@@ -1,0 +1,12 @@
+{
+  "name": "Océane Destras",
+  "role": "visiting",
+  "title": "Visiting PhD Researcher",
+  "affiliation": "Polytechnique Montréal — visiting LECS",
+  "email": "oceane.destras (at) etud.polymtl.ca",
+  "areas": ["photonics"],
+  "since": 2024,
+  "thesis": "Variability-aware design of silicon photonic interconnects (co-supervised, Polytechnique Montréal)",
+  "bio": "Océane Destras is a PhD researcher at Polytechnique Montréal, visiting LECS to study variability-aware design of silicon photonic links.",
+  "sortKey": "Destras"
+}

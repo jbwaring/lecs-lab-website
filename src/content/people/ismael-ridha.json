@@ -1,0 +1,12 @@
+{
+  "name": "Ismael Ridha",
+  "role": "phd",
+  "title": "PhD Candidate",
+  "affiliation": "LECS, Concordia University",
+  "email": "ismael.ridha (at) mail.concordia.ca",
+  "areas": ["reconfig", "fpga"],
+  "since": 2022,
+  "thesis": "Compilation flows for coarse-grained reconfigurable arrays",
+  "bio": "Ismael Ridha designs compilation and mapping toolchains for coarse-grained reconfigurable accelerators, with hardware-in-the-loop validation on FPGA prototypes.",
+  "sortKey": "Ridha"
+}

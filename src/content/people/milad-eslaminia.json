@@ -1,0 +1,12 @@
+{
+  "name": "Milad Eslaminia",
+  "role": "phd",
+  "title": "PhD Candidate",
+  "affiliation": "LECS, Concordia University",
+  "email": "milad.eslaminia (at) concordia.ca",
+  "areas": ["quantum"],
+  "since": 2023,
+  "thesis": "Resource-aware mapping for near-term quantum processors",
+  "bio": "Milad Eslaminia studies qubit mapping, scheduling and error-aware compilation for noisy intermediate-scale quantum devices.",
+  "sortKey": "Eslaminia"
+}

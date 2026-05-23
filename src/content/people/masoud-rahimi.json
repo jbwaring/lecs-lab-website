@@ -1,0 +1,12 @@
+{
+  "name": "Masoud Rahimi",
+  "role": "phd",
+  "title": "PhD Candidate",
+  "affiliation": "LECS, Concordia University",
+  "email": "masoud.rahimi (at) mail.concordia.ca",
+  "areas": ["reconfig", "edge-ai"],
+  "since": 2022,
+  "thesis": "Reconfigurable graph accelerators for sparse and recurrent workloads",
+  "bio": "Masoud Rahimi works on reconfigurable accelerators for graph workloads — exploiting recurrence and locality in irregular access patterns to drive down energy on programmable substrates.",
+  "sortKey": "Rahimi"
+}

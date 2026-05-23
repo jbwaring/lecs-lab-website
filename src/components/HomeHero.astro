@@ -1,9 +1,15 @@
 ---
 import { Image } from "astro:assets";
 import heroImg from "../assets/hero/laura-ockel-pGVr8YRtQ80-unsplash.jpg";
-import { lab, people } from "../data/lecs";
+import { lab } from "../data/lecs";
 
-const activeMembers = people.filter((p) => p.role !== "alumni").length;
+interface Props {
+  publicationsCount: number;
+  activeMembers: number;
+  yearsAtConcordia: number;
+}
+
+const { publicationsCount, activeMembers, yearsAtConcordia } = Astro.props;
 ---
 
 <section class="hero">
@@ -32,10 +38,22 @@ const activeMembers = people.filter((p) => p.role !== "alumni").length;
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="num">100+</div><div class="lbl">Publications</div></div>
-      <div class="stat"><div class="num">9</div><div class="lbl">Research themes</div></div>
-      <div class="stat"><div class="num">{activeMembers}</div><div class="lbl">Active members</div></div>
-      <div class="stat"><div class="num">15+</div><div class="lbl">Years of research</div></div>
+      <div class="stat">
+        <div class="num">{publicationsCount}</div>
+        <div class="lbl">arXiv preprints</div>
+      </div>
+      <div class="stat">
+        <div class="num">9</div>
+        <div class="lbl">Research themes</div>
+      </div>
+      <div class="stat">
+        <div class="num">{activeMembers}</div>
+        <div class="lbl">Active members</div>
+      </div>
+      <div class="stat">
+        <div class="num">{yearsAtConcordia}+</div>
+        <div class="lbl">Years at Concordia</div>
+      </div>
     </div>
   </div>
 </section>

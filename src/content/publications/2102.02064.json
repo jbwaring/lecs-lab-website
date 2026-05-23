@@ -1,0 +1,18 @@
+{
+  "arxivId": "2102.02064",
+  "slug": "optical-stochastic-photonic-crystal-nanocavities-2021",
+  "title": "Optical Stochastic Computing Architectures Using Photonic Crystal Nanocavities",
+  "authors": ["Hassnaa El-Derhalli", "Lea Constans", "Sebastien Le Beux", "Alfredo De Rossi", "Fabrice Raineri", "Sofiene Tahar"],
+  "abstract": "Stochastic computing allows a drastic reduction in hardware complexity using serial processing of bit streams. While the induced high computing latency can be overcome using integrated optics technology, the design of realistic optical stochastic computing architectures calls for energy efficient switching devices. Photonics Crystal (PhC) nanocavities are $μm^2$ scale devices offering 100fJ switching operation under picoseconds-scale switching speed. Fabrication process allows controlling the Quality factor of each nanocavity resonance, leading to opportunities to implement architectures involving cascaded gates and multi-wavelength signaling. In this report, we investigate the design of cascaded gates architecture using nanocavities in the context of stochastic computing. We propose a transmission model considering key nanocavity device parameters, such as Quality factors, resonance wavelength and switching efficiency. The model is calibrated with experimental measurements. We propose the design of XOR gate and multiplexer. We illustrate the use of the gates to design an edge detection filter. System-level exploration of laser power, bit-stream length and bit-error rate is carried out for the processing of gray-scale images. The results show that the proposed architecture leads to 8.5nJ/pixel energy consumption and 512ns/pixel processing time.",
+  "date": "2021-02-03",
+  "year": 2021,
+  "primaryCategory": "cs.ET",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["photonics", "approx"],
+  "pdfPath": "/papers/2102.02064.pdf",
+  "arxivAbs": "https://arxiv.org/abs/2102.02064",
+  "arxivPdf": "https://arxiv.org/pdf/2102.02064",
+  "arxivHtml": "https://arxiv.org/html/2102.02064",
+  "labMembers": ["sebastien-le-beux"]
+}

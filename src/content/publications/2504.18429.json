@@ -1,0 +1,18 @@
+{
+  "arxivId": "2504.18429",
+  "slug": "chsh-violations-dynamic-circuits-2025",
+  "title": "CHSH Violations using Dynamic Circuits",
+  "authors": ["Jean-Baptiste Waring", "Christophe Pere", "Sébastien Le Beux"],
+  "abstract": "Scalable quantum computing relies on high-quality, long-range entanglement, a challenge on noisy, near-term devices. The need for practical insights for near-term algorithm design calls for trade-offs exploration in implementing dynamic circuits on current hardware. In this work, we experimentally compare three CNOT implementations for generating Bell states across varying qubit separations on a 127-qubit IBM Quantum Eagle processor (ibm_quebec): a unitary (SWAP-based) approach, a dynamic approach with mid-circuit measurements and classical feedforward, and a post-processed approach. We use Clauser-Horne-Shimony-Holt (CHSH) inequality violations to quantify entanglement quality. We observe that, beyond 10 qubits, dynamic circuits lead to higher |S| values than the unitary approach, demonstrating improved distance-dependent entanglement preservation. The post-processed approach yields the highest CHSH values, reaching |S| > 2 up to 13 qubits. Our results underscore the critical need for faster classical feedforward and higher readout fidelity.",
+  "date": "2025-04-25",
+  "year": 2025,
+  "primaryCategory": "quant-ph",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["quantum"],
+  "pdfPath": "/papers/2504.18429.pdf",
+  "arxivAbs": "https://arxiv.org/abs/2504.18429",
+  "arxivPdf": "https://arxiv.org/pdf/2504.18429",
+  "arxivHtml": "https://arxiv.org/html/2504.18429",
+  "labMembers": ["jean-baptiste-waring", "sebastien-le-beux"]
+}

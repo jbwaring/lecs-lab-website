@@ -1,0 +1,13 @@
+{
+  "name": "Jean-Baptiste Waring",
+  "role": "postdoc",
+  "title": "Postdoctoral Fellow",
+  "affiliation": "LECS, Concordia University",
+  "email": "jean.baptiste.waring (at) me.com",
+  "office": "EV 5.137",
+  "areas": ["quantum"],
+  "since": 2023,
+  "thesis": "Compilation, routing, and noise-aware optimization for near-term quantum processors",
+  "bio": "Jean-Baptiste Waring is a postdoctoral fellow at LECS, working on compilation flows and error-aware optimisation for noisy intermediate-scale quantum (NISQ) processors. Recent contributions include XGSwap (gradient-boosted swap insertion for routing), noise-aware utility optimisation, and dynamic-circuit experiments on CHSH inequality violations.",
+  "sortKey": "Waring"
+}

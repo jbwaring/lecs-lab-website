@@ -1,0 +1,18 @@
+{
+  "arxivId": "1512.07493",
+  "slug": "optical-crossbars-multilayer-silicon-2015",
+  "title": "Energy-efficient optical crossbars on chip with multi-layer deposited silicon",
+  "authors": ["Hui Li", "Sébastien Le Beux", "Gabriela Nicolescu", "Ian O 'Connor"],
+  "abstract": "The many cores design research community have shown high interest in optical crossbars on chip for more than a decade. Key properties of optical crossbars, namely a) contention-free data routing b) low-latency communication and c) potential for high bandwidth through the use of WDM, motivate several implementations. These implementations demonstrate very different scalability and power efficiency ability depending on three key design factors: a) the network topology, b) the considered layout and c) the insertion losses induced by the fabrication process. The emerging design technique relying on multi-layer deposited silicon allows reducing optical losses, which may lead to significant reduction of the power consumption. In this paper, multi-layer deposited silicon based crossbars are proposed and compared. The results indicate that the proposed ring-based network exhibits, on average, 22% and 51.4% improvement for worst-case and average losses respectively compared to the most power-efficient related crossbars.",
+  "date": "2015-12-23",
+  "year": 2015,
+  "primaryCategory": "cs.ET",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["photonics", "noc"],
+  "pdfPath": "/papers/1512.07493.pdf",
+  "arxivAbs": "https://arxiv.org/abs/1512.07493",
+  "arxivPdf": "https://arxiv.org/pdf/1512.07493",
+  "arxivHtml": "https://arxiv.org/html/1512.07493",
+  "labMembers": ["sebastien-le-beux"]
+}

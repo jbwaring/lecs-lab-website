@@ -1,0 +1,18 @@
+{
+  "arxivId": "2512.01193",
+  "slug": "recurrent-patterns-graph-accelerators-2025",
+  "title": "Leveraging Recurrent Patterns in Graph Accelerators",
+  "authors": ["Masoud Rahimi", "Sébastien Le Beux"],
+  "abstract": "Graph accelerators have emerged as a promising solution for processing large-scale sparse graphs, leveraging the in-situ compu-tation of ReRAM-based crossbars to maximize computational efficiency. However, existing designs suffer from memristor access overhead due to the large number of graph partitions. This leads to increased execution time, higher energy consumption, and re-duced circuit lifetime. This paper proposes a graph processing method that minimizes memristor write operations by identifying frequent subgraph patterns and assigning them to graph engines, referred to as static, allowing most subgraphs to be processed without a need for crossbar reconfiguration. Experimental results show speed up to 2.38x speedup and 7.23x energy savings com-pared to state-of-the-art accelerators. Furthermore, our method extends the circuit lifetime by 2x compared to state-of-the-art ReRAM graph accelerators.",
+  "date": "2025-12-01",
+  "year": 2025,
+  "primaryCategory": "cs.AR",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["reconfig", "edge-ai"],
+  "pdfPath": "/papers/2512.01193.pdf",
+  "arxivAbs": "https://arxiv.org/abs/2512.01193",
+  "arxivPdf": "https://arxiv.org/pdf/2512.01193",
+  "arxivHtml": "https://arxiv.org/html/2512.01193",
+  "labMembers": ["sebastien-le-beux", "masoud-rahimi"]
+}

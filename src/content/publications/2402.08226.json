@@ -1,0 +1,18 @@
+{
+  "arxivId": "2402.08226",
+  "slug": "noise-aware-utility-nisq-2024",
+  "title": "Noise Aware Utility Optimization of NISQ Devices",
+  "authors": ["Jean-Baptiste Waring", "Christophe Pere", "Sebastien Le Beux"],
+  "abstract": "In order to enter the era of utility, noisy intermediate-scale quantum (NISQ) devices need to enable long-range entanglement of large qubit chains. However, due to the limited connectivity of superconducting NISQ devices, long-range entangling gates are realized in linear depth. Furthermore, a time-dependent degradation of the average CNOT gate fidelity is observed. Likely due to aging, this phenomenon further degrades entanglement capabilities. Our aim is to help in the current efforts to achieve utility and provide an opportunity to extend the utility lifespan of current devices --albeit by selecting fewer, high quality resources. To achieve this, we provide a method to transform user-provided CNOT and readout error requirements into a compliant partition onto which circuits can be executed. We demonstrate an improvement of up to 52% in fidelity for a random CNOT chain of length 50 qubits and consistent improvements between 11.8% and 47.7% for chains between 10 and 40 in varying in increments of 10, respectively.",
+  "date": "2024-02-13",
+  "year": 2024,
+  "primaryCategory": "quant-ph",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["quantum"],
+  "pdfPath": "/papers/2402.08226.pdf",
+  "arxivAbs": "https://arxiv.org/abs/2402.08226",
+  "arxivPdf": "https://arxiv.org/pdf/2402.08226",
+  "arxivHtml": "https://arxiv.org/html/2402.08226",
+  "labMembers": ["jean-baptiste-waring", "sebastien-le-beux"]
+}

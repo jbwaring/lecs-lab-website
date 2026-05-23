@@ -2,31 +2,34 @@
 import Layout from "../../layouts/Layout.astro";
 import Avatar from "../../components/Avatar.astro";
 import PublicationRow from "../../components/PublicationRow.astro";
-import {
-  people,
-  publications,
-  roleLabel,
-  areaTitle
-} from "../../data/lecs";
+import { roleLabel, areaTitle } from "../../data/lecs";
+import { getCollection, type CollectionEntry } from "astro:content";
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const people = await getCollection("people");
   return people.map((p) => ({ params: { id: p.id }, props: { person: p } }));
 }
 
-const { person } = Astro.props;
-const lastName = person.name.split(" ").slice(-1)[0];
-const myPubs = publications
-  .filter((p) => p.authors.some((a) => a.includes(lastName)))
-  .sort((a, b) => b.year - a.year);
+type Props = { person: CollectionEntry<"people"> };
+const { person } = Astro.props as Props;
+const data = person.data;
+const id = person.id;
 
-const grouped = new Map<number, typeof publications>();
+const publications = await getCollection("publications");
+const myPubs = publications
+  .filter((p) => p.data.labMembers.includes(id as never))
+  .sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+
+const lastName = (data.sortKey ?? data.name.split(" ").slice(-1)[0]).split(/\s+/).pop() ?? "";
+
+const grouped = new Map<number, typeof myPubs>();
 for (const p of myPubs) {
-  if (!grouped.has(p.year)) grouped.set(p.year, []);
-  grouped.get(p.year)!.push(p);
+  if (!grouped.has(p.data.year)) grouped.set(p.data.year, []);
+  grouped.get(p.data.year)!.push(p);
 }
 const groupedEntries = [...grouped.entries()].sort((a, b) => b[0] - a[0]);
 
-const emailMailto = (person.email ?? "").replace(" (at) ", "@");
+const emailMailto = (data.email ?? "").replace(" (at) ", "@");
 
 const crumbs = [
   { href: "https://www.concordia.ca", label: "Concordia University" },
@@ -37,8 +40,8 @@ const crumbs = [
 ---
 
 <Layout
-  title={`${person.name} — LECS · Concordia University`}
-  description={person.bio}
+  title={`${data.name} — LECS · Concordia University`}
+  description={data.bio}
   activeNav="people"
   crumbs={crumbs}
   condensedFooter
@@ -46,7 +49,7 @@ const crumbs = [
   <section class="profile-hero">
     <div class="wrap">
       <div class="portrait">
-        <Avatar name={person.name} />
+        <Avatar name={data.name} />
       </div>
       <div class="head">
         <div class="breadcrumb-mini">
@@ -54,11 +57,11 @@ const crumbs = [
           <span>›</span>
           <a href="/#people">People</a>
           <span>›</span>
-          <span>{roleLabel[person.role]}</span>
+          <span>{roleLabel[data.role]}</span>
         </div>
-        <h1>{person.name}</h1>
-        <div class="position">{person.title}</div>
-        <div class="affil">{person.affiliation}</div>
+        <h1>{data.name}</h1>
+        <div class="position">{data.title}</div>
+        <div class="affil">{data.affiliation}</div>
       </div>
     </div>
   </section>
@@ -68,15 +71,15 @@ const crumbs = [
       <div class="main-col">
         <div class="bio">
           <h2>Biography</h2>
-          <p>{person.bio}</p>
+          <p>{data.bio}</p>
         </div>
 
         {
-          person.role === "supervisor" && person.projects && (
+          data.role === "supervisor" && data.projects && (
             <div class="projects" style="margin-top:48px;">
               <h2>Current projects</h2>
               <ul>
-                {person.projects.map((proj) => (
+                {data.projects.map((proj) => (
                   <li>{proj}</li>
                 ))}
               </ul>
@@ -84,14 +87,14 @@ const crumbs = [
           )
         }
         {
-          person.role !== "supervisor" && person.thesis && (
+          data.role !== "supervisor" && data.thesis && (
             <div class="projects" style="margin-top:48px;">
               <h2>Research project</h2>
               <p
                 style="color: var(--ink-2); font-size: 17px; padding-left: 28px; position: relative;"
               >
                 <span style="position: absolute; left:0; top:14px; width:16px; height:1px; background: var(--maroon);" />
-                {person.thesis}
+                {data.thesis}
               </p>
             </div>
           )
@@ -108,7 +111,7 @@ const crumbs = [
               )
             }
           </h2>
-          {myPubs.length === 0 && <p style="color: var(--ink-3);">No publications listed yet.</p>}
+          {myPubs.length === 0 && <p style="color: var(--ink-3);">No arXiv publications yet.</p>}
           {
             groupedEntries.map(([yr, items]) => (
               <div class="pub-year-group">
@@ -131,18 +134,18 @@ const crumbs = [
         <div class="side-rail">
           <div class="group">
             <div class="label">Role</div>
-            <div class="value">{roleLabel[person.role]}</div>
+            <div class="value">{roleLabel[data.role]}</div>
           </div>
           {
-            person.since && (
+            data.since && (
               <div class="group">
                 <div class="label">
-                  {person.role === "alumni" ? "At LECS" : "Since"}
+                  {data.role === "alumni" ? "At LECS" : "Since"}
                 </div>
                 <div class="value">
-                  {person.role === "alumni"
-                    ? `${person.since}–${person.until}`
-                    : person.since}
+                  {data.role === "alumni"
+                    ? `${data.since}–${data.until}`
+                    : data.since}
                 </div>
               </div>
             )
@@ -150,31 +153,31 @@ const crumbs = [
           <div class="group">
             <div class="label">Contact</div>
             <div class="value">
-              <a href={`mailto:${emailMailto}`}>{person.email}</a>
+              <a href={`mailto:${emailMailto}`}>{data.email}</a>
             </div>
           </div>
           {
-            person.phone && (
+            data.phone && (
               <div class="group">
                 <div class="label">Phone</div>
-                <div class="value">{person.phone}</div>
+                <div class="value">{data.phone}</div>
               </div>
             )
           }
           {
-            person.office && (
+            data.office && (
               <div class="group">
                 <div class="label">Office</div>
-                <div class="value">{person.office}</div>
+                <div class="value">{data.office}</div>
               </div>
             )
           }
           {
-            person.areas && person.areas.length > 0 && (
+            data.areas && data.areas.length > 0 && (
               <div class="group">
                 <div class="label">Research areas</div>
                 <div class="areas-list">
-                  {person.areas.map((a) => (
+                  {data.areas.map((a) => (
                     <span>{areaTitle[a]}</span>
                   ))}
                 </div>
@@ -182,16 +185,16 @@ const crumbs = [
             )
           }
           {
-            person.links && (
+            data.links && (
               <div class="group">
                 <div class="label">Profiles</div>
                 <div class="value" style="display:flex; flex-direction:column; gap:6px;">
-                  {person.links.scholar && (
-                    <a href={person.links.scholar}>Google Scholar ↗</a>
+                  {data.links.scholar && (
+                    <a href={data.links.scholar}>Google Scholar ↗</a>
                   )}
-                  {person.links.dblp && <a href={person.links.dblp}>DBLP ↗</a>}
-                  {person.links.site && (
-                    <a href={person.links.site}>Personal site ↗</a>
+                  {data.links.dblp && <a href={data.links.dblp}>DBLP ↗</a>}
+                  {data.links.site && (
+                    <a href={data.links.site}>Personal site ↗</a>
                   )}
                 </div>
               </div>

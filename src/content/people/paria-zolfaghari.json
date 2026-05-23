@@ -1,0 +1,12 @@
+{
+  "name": "Paria Zolfaghari",
+  "role": "msc",
+  "title": "MSc Student",
+  "affiliation": "LECS, Concordia University",
+  "email": "pariazolfaghari (at) gmail.com",
+  "areas": ["approx", "edge-ai"],
+  "since": 2024,
+  "thesis": "Quality-configurable arithmetic for embedded neural inference",
+  "bio": "Paria Zolfaghari develops approximate-arithmetic units and quality-control schemes for embedded neural-network inference.",
+  "sortKey": "Zolfaghari"
+}

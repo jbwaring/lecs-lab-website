@@ -1,0 +1,13 @@
+{
+  "name": "Mohsen Asghari",
+  "role": "alumni",
+  "title": "Alumnus · PhD 2024 — now at PolarSat Inc.",
+  "affiliation": "Formerly LECS, Concordia University",
+  "email": "mohsen.asghari (at) polarsat.com",
+  "areas": ["soc", "reconfig"],
+  "since": 2020,
+  "until": 2024,
+  "thesis": "PhD (2024): Reconfigurable SoCs for satellite payload processing",
+  "bio": "Mohsen Asghari completed his PhD at LECS in 2024 on reconfigurable system-on-chip platforms for satellite payload processing, and now leads on-board processing development at PolarSat Inc.",
+  "sortKey": "Asghari"
+}

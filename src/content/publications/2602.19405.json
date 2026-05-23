@@ -1,0 +1,18 @@
+{
+  "arxivId": "2602.19405",
+  "slug": "robust-ghz-state-majority-voted-2026",
+  "title": "Robust GHZ State Preparation via Majority-Voted Boundary Measurements",
+  "authors": ["Jean-Baptiste Waring", "Sébastien Le Beux", "Christophe Pere"],
+  "abstract": "Preparing high-fidelity Greenberger-Horne-Zeilinger (GHZ) states on noisy quantum hardware remains challenging due to cumulative gate errors and decoherence. We introduce Group-Majority-Voting (Group-MV), a dynamic-circuit protocol that partitions arbitrary coupling graphs, prepares local GHZ states in parallel, and fuses them via majority-voted mid-circuit measurements. The majority vote over redundant boundary links mitigates measurement errors that would otherwise propagate through classical feedforward. We evaluate Group-MV on simulated Heavy-hex and Grid topologies for 30 through 60 qubits under a realistic noise regime. Group-MV generalizes to arbitrary GHZ sizes on arbitrary coupling topologies, achieving 2.4x higher fidelity than the Line Dynamic method while tracking the unitary baseline within 3%.",
+  "date": "2026-02-23",
+  "year": 2026,
+  "primaryCategory": "quant-ph",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["quantum"],
+  "pdfPath": "/papers/2602.19405.pdf",
+  "arxivAbs": "https://arxiv.org/abs/2602.19405",
+  "arxivPdf": "https://arxiv.org/pdf/2602.19405",
+  "arxivHtml": "https://arxiv.org/html/2602.19405",
+  "labMembers": ["jean-baptiste-waring", "sebastien-le-beux"]
+}

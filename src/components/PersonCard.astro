@@ -1,37 +1,46 @@
 ---
 import Avatar from "./Avatar.astro";
-import { areaTitle, roleLabel, type Person } from "../data/lecs";
+import { areaTitle, roleLabel } from "../data/lecs";
+import type { PersonEntry } from "../lib/people";
 
 interface Props {
-  person: Person;
+  person?: PersonEntry;
   featured?: boolean;
 }
 
 const { person, featured = false } = Astro.props;
-const label = roleLabel[person.role];
+
+// Defensive: skip rendering if the parent passed nothing (e.g., supervisor lookup miss).
+const data = person?.data;
+const id = person?.id;
+const label = data ? roleLabel[data.role] : "";
 const bioSnippet =
-  featured && person.bio
-    ? person.bio.split(". ").slice(0, 2).join(". ") + "."
-    : null;
-const visibleAreas = (person.areas ?? []).slice(0, featured ? 6 : 2);
+  featured && data?.bio ? data.bio.split(". ").slice(0, 2).join(". ") + "." : null;
+const visibleAreas = (data?.areas ?? []).slice(0, featured ? 6 : 2);
 ---
 
-<a
-  class:list={["person-card", featured && "featured"]}
-  href={`/profile/${person.id}`}
-  data-role={person.role}
->
-  <div class="portrait">
-    <Avatar name={person.name} />
-  </div>
-  <div class="body">
-    <span class:list={["role-tag", person.role]}>{label}</span>
-    <div class="name">{person.name}</div>
-    <div class="pos">{person.title}</div>
-    {bioSnippet && <p class="bio-snip">{bioSnippet}</p>}
-    <div class="areas">
-      {visibleAreas.map((a) => <span>{areaTitle[a]}</span>)}
-    </div>
-    <span class="arrow">View profile →</span>
-  </div>
-</a>
+{
+  person && data && (
+    <a
+      class:list={["person-card", featured && "featured"]}
+      href={`/profile/${id}`}
+      data-role={data.role}
+    >
+      <div class="portrait">
+        <Avatar name={data.name} />
+      </div>
+      <div class="body">
+        <span class:list={["role-tag", data.role]}>{label}</span>
+        <div class="name">{data.name}</div>
+        <div class="pos">{data.title}</div>
+        {bioSnippet && <p class="bio-snip">{bioSnippet}</p>}
+        <div class="areas">
+          {visibleAreas.map((a) => (
+            <span>{areaTitle[a]}</span>
+          ))}
+        </div>
+        <span class="arrow">View profile →</span>
+      </div>
+    </a>
+  )
+}

@@ -6,37 +6,67 @@ import NewsCard from "../components/NewsCard.astro";
 import PublicationRow from "../components/PublicationRow.astro";
 import {
   researchAreas,
-  people,
-  news,
-  publications,
   rolesOrder,
   roleShortLabel,
-  type Role
+  fmtDate,
+  type Role,
+  type NewsItem
 } from "../data/lecs";
+import { getCollection } from "astro:content";
+import { getOrderedPeople } from "../lib/people";
 
-const supervisor = people.find((p) => p.role === "supervisor")!;
-const others = people.filter((p) => p.role !== "supervisor");
+const people = await getOrderedPeople();
+const supervisor = people.find((p) => p.data.role === "supervisor");
+const others = people.filter((p) => p.data.role !== "supervisor");
 
 const roleCounts: Record<string, number> = { all: people.length };
 for (const r of rolesOrder) {
-  roleCounts[r] = people.filter((p) => p.role === r).length;
+  roleCounts[r] = people.filter((p) => p.data.role === r).length;
 }
 
-const years = [...new Set(publications.map((p) => p.year))].sort((a, b) => b - a);
+const publications = (await getCollection("publications")).sort(
+  (a, b) => (a.data.date < b.data.date ? 1 : -1)
+);
+
+const years = [...new Set(publications.map((p) => p.data.year))].sort(
+  (a, b) => b - a
+);
 const allAuthors = [
-  ...new Set(publications.flatMap((p) => p.authors))
+  ...new Set(publications.flatMap((p) => p.data.authors))
 ].sort();
 
 const pubsByYear = new Map<number, typeof publications>();
 for (const p of publications) {
-  if (!pubsByYear.has(p.year)) pubsByYear.set(p.year, []);
-  pubsByYear.get(p.year)!.push(p);
+  if (!pubsByYear.has(p.data.year)) pubsByYear.set(p.data.year, []);
+  pubsByYear.get(p.data.year)!.push(p);
 }
 const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
+
+const totalPubs = publications.length;
+
+// News: synthesized from the 6 most recent arXiv papers.
+const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: string } => {
+  const first = p.data.abstract.split(/(?<=[.?!])\s+/)[0] ?? "";
+  const trimmed = first.length > 240 ? first.slice(0, 237).trimEnd() + "…" : first;
+  return {
+    date: p.data.date,
+    tag: "Paper",
+    title: p.data.title,
+    summary: trimmed,
+    href: `/publication/${p.data.slug}`
+  };
+});
+
+const activeMembers = people.filter((p) => p.data.role !== "alumni").length;
+const yearsAtConcordia = new Date().getFullYear() - 2019;
 ---
 
 <Layout activeNav="about">
-  <HomeHero />
+  <HomeHero
+    publicationsCount={totalPubs}
+    activeMembers={activeMembers}
+    yearsAtConcordia={yearsAtConcordia}
+  />
 
   <section class="band" id="about">
     <div class="wrap">
@@ -113,8 +143,8 @@ const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
       </div>
 
       <div class="people-grid" data-people-grid>
-        <PersonCard person={supervisor} featured />
-        <div class="row-break" aria-hidden="true" data-row-break></div>
+        {supervisor && <PersonCard person={supervisor} featured />}
+        {supervisor && <div class="row-break" aria-hidden="true" data-row-break></div>}
         {others.map((p) => <PersonCard person={p} />)}
         <div class="people-empty" hidden>
           No members in this category.
@@ -127,15 +157,16 @@ const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
     <div class="wrap">
       <div class="section-head">
         <div>
-          <div class="section-eyebrow">News</div>
-          <h2 class="section-title">Latest from the group.</h2>
+          <div class="section-eyebrow">Recent papers</div>
+          <h2 class="section-title">New on arXiv.</h2>
         </div>
         <p class="lede">
-          Recent publications, awards, defences, and collaborations. Updated as events occur.
+          The latest preprints from members of the lab. Click through for the full abstract,
+          authors, and a direct link to arXiv.
         </p>
       </div>
       <div class="news-grid">
-        {news.slice(0, 6).map((n) => <NewsCard item={n} />)}
+        {newsFromPapers.map((n) => <NewsCard item={n} href={n.href} />)}
       </div>
     </div>
   </section>
@@ -149,7 +180,7 @@ const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
         </div>
         <p class="lede">
           Filter by year, topic, author, or search across titles and venues. The supervisor&apos;s
-          name is highlighted in each row.
+          name is highlighted in each row. All papers are mirrored from arXiv.
         </p>
       </div>
 
@@ -415,14 +446,11 @@ const grouped = [...pubsByYear.entries()].sort((a, b) => b[0] - a[0]);
       });
 
       groups.forEach((g) => {
-        const yearGroup = g.dataset.pubsYearGroup;
         const visRows = g.querySelectorAll<HTMLElement>(".pub-row:not([hidden])");
         const c = visRows.length;
         g.hidden = c === 0;
         const yc = g.querySelector<HTMLElement>("[data-pubs-year-count]");
         if (yc) yc.textContent = `${c} publication${c !== 1 ? "s" : ""}`;
-        // year group is hidden if no rows, but keep the year/header in sync
-        void yearGroup;
       });
 
       count.textContent = `${visible} of ${total} publications`;

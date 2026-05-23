@@ -1,0 +1,18 @@
+{
+  "arxivId": "1903.11060",
+  "slug": "stochastic-computing-integrated-optics-2019",
+  "title": "Stochastic Computing with Integrated Optics",
+  "authors": ["Hassnaa El-Derhalli", "Sébastien Le Beux", "Sofiene Tahar"],
+  "abstract": "Stochastic computing (SC) allows reducing hardware complexity and improving energy efficiency of error resilient applications. However, a main limitation of the computing paradigm is the low throughput induced by the intrinsic serial computing of bit-streams. In this paper, we address the implementation of SC in the optical domain, with the aim to improve the computation speed. We implement a generic optical architecture allowing the execution of polynomial functions. We propose design methods to explore the design space in order to optimize key metrics such as circuit robustness and power consumption. We show that a circuit implementing a 2 nd order polynomial degree function and operating at 1Ghz leads to 20.1pJ laser consumption per computed bit.",
+  "date": "2019-03-26",
+  "year": 2019,
+  "primaryCategory": "physics.optics",
+  "venue": "arXiv",
+  "type": "Preprint",
+  "topics": ["photonics", "approx"],
+  "pdfPath": "/papers/1903.11060.pdf",
+  "arxivAbs": "https://arxiv.org/abs/1903.11060",
+  "arxivPdf": "https://arxiv.org/pdf/1903.11060",
+  "arxivHtml": "https://arxiv.org/html/1903.11060",
+  "labMembers": ["sebastien-le-beux"]
+}

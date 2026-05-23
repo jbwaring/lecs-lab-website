@@ -1,57 +1,45 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Avatar from "../../components/Avatar.astro";
-import {
-  publications,
-  people,
-  articles,
-  areaTitle,
-  roleLabel,
-  type Publication
-} from "../../data/lecs";
+import { areaTitle, roleLabel } from "../../data/lecs";
+import { articles } from "../../data/lecs";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { fold, findPersonByAuthorTag } from "../../lib/people";
 
-export function getStaticPaths() {
-  return publications.map((p) => ({ params: { slug: p.slug }, props: { pub: p } }));
+export async function getStaticPaths() {
+  const pubs = await getCollection("publications");
+  return pubs.map((p) => ({ params: { slug: p.data.slug }, props: { pub: p } }));
 }
 
-const { pub } = Astro.props;
+type Props = { pub: CollectionEntry<"publications"> };
+const { pub } = Astro.props as Props;
+const data = pub.data;
 
-function findPersonByAuthorTag(tag: string) {
-  const lastName = tag.split(",")[0].trim();
-  return people.find((p) => p.name.endsWith(lastName));
+const people = await getCollection("people");
+
+function makeBibtex(p: typeof data): string {
+  const first = p.authors[0].split(/[\s,]/)[0].toLowerCase().replace(/[^a-z]/g, "");
+  return `@misc{${first}${p.year}${p.arxivId.replace(".", "")},
+  title         = {${p.title}},
+  author        = {${p.authors.join(" and ")}},
+  year          = {${p.year}},
+  eprint        = {${p.arxivId}},
+  archivePrefix = {arXiv},
+  primaryClass  = {${p.primaryCategory ?? "cs.AR"}}
+}`;
 }
 
-function fallbackAbstract(p: Publication): string {
-  return `This paper, presented at ${p.venue} in ${p.year}, contributes to the lab's research on ${p.topics
-    .map((t) => areaTitle[t].toLowerCase())
-    .join(" and ")}. A full abstract has not yet been published on this page; please refer to the venue proceedings or contact the corresponding author for the camera-ready text.`;
-}
+const bibtex = makeBibtex(data);
 
-function fallbackContributions(p: Publication): string[] {
-  return [
-    `An architectural treatment of ${areaTitle[p.topics[0]].toLowerCase()} in the context of ${p.venue}'s scope.`,
-    "Evaluation across representative workloads with quantitative comparisons to the prior state of the art.",
-    "A discussion of implementation trade-offs and open questions for follow-on work."
-  ];
-}
-
-function fallbackBibtex(p: Publication): string {
-  const first = p.authors[0].split(",")[0].toLowerCase().replace(/[^a-z]/g, "");
-  return `@${p.type === "Journal" ? "article" : "inproceedings"}{${first}${p.year}${p.slug.split("-")[0]},\n  title  = {${p.title}},\n  author = {${p.authors.join(" and ")}},\n  ${
-    p.type === "Journal" ? "journal" : "booktitle"
-  } = {${p.venue}},\n  year   = {${p.year}}\n}`;
-}
-
-const abstract = pub.abstract ?? fallbackAbstract(pub);
-const contributions = pub.contributions ?? fallbackContributions(pub);
-const bibtex = pub.bibtex ?? fallbackBibtex(pub);
-
-const related = publications
-  .filter((p) => p.slug !== pub.slug && p.topics.some((t) => pub.topics.includes(t)))
-  .sort((a, b) => b.year - a.year)
+// Related: other publications sharing at least one topic, exclude self, sorted by date.
+const allPubs = await getCollection("publications");
+const related = allPubs
+  .filter((p) => p.data.slug !== data.slug && p.data.topics.some((t) => data.topics.includes(t)))
+  .sort((a, b) => (a.data.date < b.data.date ? 1 : -1))
   .slice(0, 4);
 
-const relatedArticle = articles.find((a) => a.relatedPub === pub.slug);
+// Companion article (held set may not match; just skip if none)
+const relatedArticle = articles.find((a) => a.relatedPub === data.slug);
 
 const crumbs = [
   { href: "https://www.concordia.ca", label: "Concordia University" },
@@ -62,8 +50,8 @@ const crumbs = [
 ---
 
 <Layout
-  title={`${pub.title} — LECS · Concordia University`}
-  description={abstract.slice(0, 220)}
+  title={`${data.title} — LECS · Concordia University`}
+  description={data.abstract.slice(0, 220)}
   activeNav="publications"
   crumbs={crumbs}
   condensedFooter
@@ -75,14 +63,14 @@ const crumbs = [
         <span>›</span>
         <a href="/#publications">Publications</a>
         <span>›</span>
-        <span>{pub.year}</span>
+        <span>{data.year}</span>
       </div>
-      <div class="type-pill">{pub.type} paper</div>
-      <h1>{pub.title}</h1>
+      <div class="type-pill">arXiv {data.primaryCategory ?? "preprint"}</div>
+      <h1>{data.title}</h1>
       <div class="authors-row">
         {
-          pub.authors.map((a, i) => {
-            const person = findPersonByAuthorTag(a);
+          data.authors.map((a, i) => {
+            const person = findPersonByAuthorTag(a, people);
             return (
               <>
                 {person ? (
@@ -90,18 +78,17 @@ const crumbs = [
                 ) : (
                   <span>{a}</span>
                 )}
-                {i < pub.authors.length - 1 ? <span>, </span> : null}
+                {i < data.authors.length - 1 ? <span>, </span> : null}
               </>
             );
           })
         }
       </div>
       <div class="venue-row">
-        <strong>{pub.venue}</strong> · {pub.year}
-        {pub.doi && <>  ·  DOI: {pub.doi}</>}
+        <strong>arXiv:{data.arxivId}</strong> · {data.year}
       </div>
       <div class="pill-row">
-        {pub.topics.map((t) => <span class="topic-pill">{areaTitle[t]}</span>)}
+        {data.topics.map((t) => <span class="topic-pill">{areaTitle[t]}</span>)}
       </div>
     </div>
   </section>
@@ -109,13 +96,28 @@ const crumbs = [
   <div class="paper-actions">
     <div class="wrap">
       <div class="left">
-        <strong>{pub.venue} {pub.year}</strong>
-        <span>{pub.authors.join(", ")}</span>
+        <strong>arXiv {data.year}</strong>
+        <span>{data.authors.join(", ")}</span>
       </div>
       <div class="actions">
-        <a class="btn solid" href="#" onclick="event.preventDefault()">↓ Download PDF</a>
+        {
+          data.pdfPath ? (
+            <a class="btn solid" href={data.pdfPath} download>
+              ↓ Download PDF
+            </a>
+          ) : (
+            <a class="btn solid" href={data.arxivPdf}>
+              ↓ PDF on arXiv
+            </a>
+          )
+        }
+        <a class="btn outline" href={data.arxivAbs}>View on arXiv ↗</a>
+        {
+          data.arxivHtml && (
+            <a class="btn outline" href={data.arxivHtml}>HTML ↗</a>
+          )
+        }
         <button class="btn outline" type="button" data-copy-bibtex>Copy BibTeX</button>
-        {pub.doi && <a class="btn outline" href={`https://doi.org/${pub.doi}`}>View on DOI ↗</a>}
       </div>
     </div>
   </div>
@@ -125,21 +127,8 @@ const crumbs = [
       <div class="paper-main">
         <div class="abstract-block">
           <div class="label">Abstract</div>
-          <p>{abstract}</p>
+          <p>{data.abstract}</p>
         </div>
-
-        {
-          contributions && contributions.length > 0 && (
-            <div class="key-points">
-              <div class="label">Key contributions</div>
-              <ol>
-                {contributions.map((c) => (
-                  <li>{c}</li>
-                ))}
-              </ol>
-            </div>
-          )
-        }
 
         {
           relatedArticle && (
@@ -159,8 +148,8 @@ const crumbs = [
         <div class="paper-section">
           <h2>Citation</h2>
           <p style="max-width:36em;">
-            If you build on this work, please cite the paper using the entry below. The BibTeX can
-            be copied to clipboard with the button at the top of this page.
+            If you build on this work, please cite the arXiv preprint using the entry below. The
+            BibTeX can be copied to clipboard with the button at the top of this page.
           </p>
           <pre class="citation-block" data-bibtex>{bibtex}</pre>
         </div>
@@ -170,8 +159,7 @@ const crumbs = [
           <p>
             This work was supported in part by the Natural Sciences and Engineering Research
             Council of Canada (NSERC) Discovery Grants programme and by the Fonds de recherche du
-            Québec — Nature et technologies (FRQNT). The authors thank colleagues at the Lyon
-            Institute of Nanotechnology and at Polytechnique Montréal for fruitful discussions.
+            Québec — Nature et technologies (FRQNT).
           </p>
         </div>
       </div>
@@ -179,19 +167,21 @@ const crumbs = [
       <aside class="paper-sidebar">
         <div class="sidebar-card">
           <h4>Paper details</h4>
-          <div class="meta-row"><span class="k">Venue</span><span class="v">{pub.venue}</span></div>
-          <div class="meta-row"><span class="k">Year</span><span class="v">{pub.year}</span></div>
-          <div class="meta-row"><span class="k">Type</span><span class="v">{pub.type}</span></div>
-          {pub.doi && (
-            <div class="meta-row"><span class="k">DOI</span><span class="v">{pub.doi}</span></div>
-          )}
+          <div class="meta-row">
+            <span class="k">arXiv ID</span><span class="v">{data.arxivId}</span>
+          </div>
+          <div class="meta-row"><span class="k">Year</span><span class="v">{data.year}</span></div>
+          <div class="meta-row">
+            <span class="k">Category</span><span class="v">{data.primaryCategory ?? "—"}</span>
+          </div>
+          <div class="meta-row"><span class="k">Venue</span><span class="v">{data.venue}</span></div>
         </div>
 
         <div class="sidebar-card">
           <h4>Authors</h4>
           {
-            pub.authors.map((a) => {
-              const p = findPersonByAuthorTag(a);
+            data.authors.map((a) => {
+              const p = findPersonByAuthorTag(a, people);
               if (!p) {
                 return (
                   <div class="author-mini" style="cursor:default;">
@@ -206,11 +196,11 @@ const crumbs = [
               return (
                 <a class="author-mini" href={`/profile/${p.id}`}>
                   <div class="av">
-                    <Avatar name={p.name} />
+                    <Avatar name={p.data.name} />
                   </div>
                   <div class="info">
-                    <span class="n">{p.name}</span>
-                    <span class="r">{roleLabel[p.role]}</span>
+                    <span class="n">{p.data.name}</span>
+                    <span class="r">{roleLabel[p.data.role]}</span>
                   </div>
                 </a>
               );
@@ -224,10 +214,10 @@ const crumbs = [
               <h4>Related publications</h4>
               <div class="related-papers">
                 {related.map((r) => (
-                  <a href={`/publication/${r.slug}`}>
-                    <div class="t">{r.title}</div>
+                  <a href={`/publication/${r.data.slug}`}>
+                    <div class="t">{r.data.title}</div>
                     <div class="v">
-                      <strong>{r.venue}</strong> · {r.year}
+                      <strong>arXiv</strong> · {r.data.year}
                     </div>
                   </a>
                 ))}
@@ -262,3 +252,9 @@ const crumbs = [
     });
   }
 </script>
+
+<style>
+  .pubs-empty {
+    /* unused on this page but referenced indirectly via shared layout */
+  }
+</style>

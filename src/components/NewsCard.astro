@@ -4,11 +4,18 @@ import { fmtDate, type NewsItem } from "../data/lecs";
 
 interface Props {
   item: NewsItem;
+  /** Optional click-through link. When omitted the card is non-interactive. */
+  href?: string;
 }
-const { item } = Astro.props;
+const { item, href } = Astro.props;
+const interactive = Boolean(href);
 ---
 
-<a class="news-card" href="#" onclick="event.preventDefault()">
+<a
+  class="news-card"
+  href={href ?? "#"}
+  {...(!interactive ? { onclick: "event.preventDefault()" } : {})}
+>
   <div class="thumb">
     <NewsThumb tag={item.tag} title={item.title} />
   </div>
