@@ -1,0 +1,212 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Avatar from "../../components/Avatar.astro";
+import PublicationRow from "../../components/PublicationRow.astro";
+import {
+  people,
+  publications,
+  roleLabel,
+  areaTitle
+} from "../../data/lecs";
+
+export function getStaticPaths() {
+  return people.map((p) => ({ params: { id: p.id }, props: { person: p } }));
+}
+
+const { person } = Astro.props;
+const lastName = person.name.split(" ").slice(-1)[0];
+const myPubs = publications
+  .filter((p) => p.authors.some((a) => a.includes(lastName)))
+  .sort((a, b) => b.year - a.year);
+
+const grouped = new Map<number, typeof publications>();
+for (const p of myPubs) {
+  if (!grouped.has(p.year)) grouped.set(p.year, []);
+  grouped.get(p.year)!.push(p);
+}
+const groupedEntries = [...grouped.entries()].sort((a, b) => b[0] - a[0]);
+
+const emailMailto = (person.email ?? "").replace(" (at) ", "@");
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: "Concordia University" },
+  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  { href: "/", label: "LECS" },
+  { label: "People", muted: true }
+];
+---
+
+<Layout
+  title={`${person.name} — LECS · Concordia University`}
+  description={person.bio}
+  activeNav="people"
+  crumbs={crumbs}
+  condensedFooter
+>
+  <section class="profile-hero">
+    <div class="wrap">
+      <div class="portrait">
+        <Avatar name={person.name} />
+      </div>
+      <div class="head">
+        <div class="breadcrumb-mini">
+          <a href="/">LECS</a>
+          <span>›</span>
+          <a href="/#people">People</a>
+          <span>›</span>
+          <span>{roleLabel[person.role]}</span>
+        </div>
+        <h1>{person.name}</h1>
+        <div class="position">{person.title}</div>
+        <div class="affil">{person.affiliation}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-body">
+    <div class="wrap">
+      <div class="main-col">
+        <div class="bio">
+          <h2>Biography</h2>
+          <p>{person.bio}</p>
+        </div>
+
+        {
+          person.role === "supervisor" && person.projects && (
+            <div class="projects" style="margin-top:48px;">
+              <h2>Current projects</h2>
+              <ul>
+                {person.projects.map((proj) => (
+                  <li>{proj}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        {
+          person.role !== "supervisor" && person.thesis && (
+            <div class="projects" style="margin-top:48px;">
+              <h2>Research project</h2>
+              <p
+                style="color: var(--ink-2); font-size: 17px; padding-left: 28px; position: relative;"
+              >
+                <span style="position: absolute; left:0; top:14px; width:16px; height:1px; background: var(--maroon);" />
+                {person.thesis}
+              </p>
+            </div>
+          )
+        }
+
+        <div class="pubs-section profile-pubs" style="margin-top:56px;">
+          <h2>
+            Publications
+            {
+              myPubs.length > 0 && (
+                <span style="color: var(--ink-3); font-family: var(--sans); font-size:14px; font-weight:400;">
+                  · {myPubs.length} total
+                </span>
+              )
+            }
+          </h2>
+          {myPubs.length === 0 && <p style="color: var(--ink-3);">No publications listed yet.</p>}
+          {
+            groupedEntries.map(([yr, items]) => (
+              <div class="pub-year-group">
+                <div class="pub-year-header">
+                  <span class="year">{yr}</span>
+                  <span class="count">
+                    {items.length} publication{items.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                {items.map((p) => (
+                  <PublicationRow pub={p} highlightAuthor={lastName} />
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <aside>
+        <div class="side-rail">
+          <div class="group">
+            <div class="label">Role</div>
+            <div class="value">{roleLabel[person.role]}</div>
+          </div>
+          {
+            person.since && (
+              <div class="group">
+                <div class="label">
+                  {person.role === "alumni" ? "At LECS" : "Since"}
+                </div>
+                <div class="value">
+                  {person.role === "alumni"
+                    ? `${person.since}–${person.until}`
+                    : person.since}
+                </div>
+              </div>
+            )
+          }
+          <div class="group">
+            <div class="label">Contact</div>
+            <div class="value">
+              <a href={`mailto:${emailMailto}`}>{person.email}</a>
+            </div>
+          </div>
+          {
+            person.phone && (
+              <div class="group">
+                <div class="label">Phone</div>
+                <div class="value">{person.phone}</div>
+              </div>
+            )
+          }
+          {
+            person.office && (
+              <div class="group">
+                <div class="label">Office</div>
+                <div class="value">{person.office}</div>
+              </div>
+            )
+          }
+          {
+            person.areas && person.areas.length > 0 && (
+              <div class="group">
+                <div class="label">Research areas</div>
+                <div class="areas-list">
+                  {person.areas.map((a) => (
+                    <span>{areaTitle[a]}</span>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+          {
+            person.links && (
+              <div class="group">
+                <div class="label">Profiles</div>
+                <div class="value" style="display:flex; flex-direction:column; gap:6px;">
+                  {person.links.scholar && (
+                    <a href={person.links.scholar}>Google Scholar ↗</a>
+                  )}
+                  {person.links.dblp && <a href={person.links.dblp}>DBLP ↗</a>}
+                  {person.links.site && (
+                    <a href={person.links.site}>Personal site ↗</a>
+                  )}
+                </div>
+              </div>
+            )
+          }
+          <div
+            class="group"
+            style="border-top:1px solid var(--rule); padding-top:16px; margin-top:24px;"
+          >
+            <a class="btn outline" href="/#people" style="width:100%; justify-content:center;"
+              >← Back to people</a
+            >
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>

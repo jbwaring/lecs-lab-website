@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+import heroImg from "../assets/hero/laura-ockel-pGVr8YRtQ80-unsplash.jpg";
+import { lab, people } from "../data/lecs";
+
+const activeMembers = people.filter((p) => p.role !== "alumni").length;
+---
+
+<section class="hero">
+  <div class="bg-img-wrap" aria-hidden="true">
+    <Image
+      src={heroImg}
+      alt=""
+      class="bg-img"
+      widths={[960, 1440, 1920, 2400]}
+      sizes="100vw"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+    <div class="bg-tint"></div>
+  </div>
+  <div class="wrap">
+    <div class="glass">
+      <div class="eyebrow">Concordia University · Gina Cody School</div>
+      <h1>Architectures for the <em>next</em> generation of computing.</h1>
+      <p class="lede">{lab.tagline}</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#research">Our research →</a>
+        <a class="btn ghost" href="#people">Meet the group</a>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">100+</div><div class="lbl">Publications</div></div>
+      <div class="stat"><div class="num">9</div><div class="lbl">Research themes</div></div>
+      <div class="stat"><div class="num">{activeMembers}</div><div class="lbl">Active members</div></div>
+      <div class="stat"><div class="num">15+</div><div class="lbl">Years of research</div></div>
+    </div>
+  </div>
+</section>
+<div class="hero-spacer"></div>
+
+<style>
+  .hero .bg-img-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+  }
+  .hero .bg-img-wrap :global(.bg-img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.72) saturate(0.9);
+  }
+  .hero .bg-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      rgba(74, 18, 30, 0.78) 0%,
+      rgba(74, 18, 30, 0.35) 55%,
+      rgba(26, 8, 12, 0.55) 100%
+    );
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import Avatar from "./Avatar.astro";
+import { areaTitle, roleLabel, type Person } from "../data/lecs";
+
+interface Props {
+  person: Person;
+  featured?: boolean;
+}
+
+const { person, featured = false } = Astro.props;
+const label = roleLabel[person.role];
+const bioSnippet =
+  featured && person.bio
+    ? person.bio.split(". ").slice(0, 2).join(". ") + "."
+    : null;
+const visibleAreas = (person.areas ?? []).slice(0, featured ? 6 : 2);
+---
+
+<a
+  class:list={["person-card", featured && "featured"]}
+  href={`/profile/${person.id}`}
+  data-role={person.role}
+>
+  <div class="portrait">
+    <Avatar name={person.name} />
+  </div>
+  <div class="body">
+    <span class:list={["role-tag", person.role]}>{label}</span>
+    <div class="name">{person.name}</div>
+    <div class="pos">{person.title}</div>
+    {bioSnippet && <p class="bio-snip">{bioSnippet}</p>}
+    <div class="areas">
+      {visibleAreas.map((a) => <span>{areaTitle[a]}</span>)}
+    </div>
+    <span class="arrow">View profile →</span>
+  </div>
+</a>

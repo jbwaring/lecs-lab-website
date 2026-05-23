@@ -1,46 +1,33 @@
-# Astro Starter Kit: Basics
+# LECS — Laboratory for Emerging Computing Systems
 
-```sh
-npm create astro@latest -- --template basics
-```
+Astro v6 site for the [Laboratory for Emerging Computing Systems](https://sites.google.com/site/lebeux/)
+at Concordia University, in the visual language of [concordia.ca](https://www.concordia.ca).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Pages
 
-## 🚀 Project Structure
+- `/` — landing page (hero, about, research, people, news, publications, join)
+- `/profile/[id]` — individual profile per person
+- `/articles` — long-form research notes listing
+- `/article/[slug]` — article detail
+- `/publication/[slug]` — paper detail (IBM-research-style)
 
-Inside of your Astro project, you'll see the following folders and files:
+Lab content lives in [`src/data/lecs.ts`](src/data/lecs.ts) — edit that one file to
+update people, news, publications, and articles.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Commands
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+| Command            | Action                                       |
+| ------------------ | -------------------------------------------- |
+| `npm install`      | Install dependencies                         |
+| `npm run dev`      | Local dev server at `localhost:4321`         |
+| `npm run build`    | Build to `./dist/`                           |
+| `npm run preview`  | Preview the production build locally         |
 
-## 🧞 Commands
+## Stack
 
-All commands are run from the root of the project, from a terminal:
+- [Astro 6](https://astro.build/) — static rendering with islands for the people / publications filters
+- `astro:assets` — responsive WebP for the hero photo
+- [`@vercel/analytics`](https://vercel.com/docs/analytics) — page-view analytics on Vercel
+- Plain CSS in `src/styles/global.css` (no framework) — Concordia maroon `#912338`, Inter for body, Gill Sans for accents
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Hero photograph: silicon wafer macro by [Laura Ockel](https://unsplash.com/@viazavier), via Unsplash.

@@ -1,0 +1,25 @@
+---
+import NewsThumb from "./NewsThumb.astro";
+
+interface Props {
+  topic: string;
+  title: string;
+}
+const { topic, title } = Astro.props;
+
+const tagMap: Record<string, string> = {
+  photonics: "Talk",
+  reconfig: "Funding",
+  noc: "Paper",
+  quantum: "Award",
+  "edge-ai": "Collaboration",
+  neuro: "Talk",
+  soc: "Funding",
+  approx: "Defence",
+  fpga: "Paper"
+};
+
+const tag = tagMap[topic] ?? "Paper";
+---
+
+<NewsThumb tag={tag} title={title} />

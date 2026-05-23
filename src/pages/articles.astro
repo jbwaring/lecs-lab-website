@@ -1,0 +1,143 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleThumb from "../components/ArticleThumb.astro";
+import { articles, areaTitle, fmtDate, readingTime } from "../data/lecs";
+
+const sorted = [...articles].sort((a, b) => (a.date < b.date ? 1 : -1));
+const [feature, ...rest] = sorted;
+
+const topicKeys = [...new Set(sorted.flatMap((a) => a.topics))];
+const topicCounts: Record<string, number> = { all: sorted.length };
+for (const k of topicKeys) {
+  topicCounts[k] = sorted.filter((a) => a.topics.includes(k)).length;
+}
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: "Concordia University" },
+  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  { href: "/", label: "LECS" },
+  { label: "Articles", muted: true }
+];
+---
+
+<Layout
+  title="Articles — LECS · Concordia University"
+  description="Long-form writing from members of the lab — research notes, engineering write-ups, and reflections on running an architecture group."
+  activeNav="articles"
+  crumbs={crumbs}
+  condensedFooter
+>
+  <section class="articles-hero">
+    <div class="wrap">
+      <div class="breadcrumb-mini">
+        <a href="/">LECS</a>
+        <span>›</span>
+        <span>Articles</span>
+      </div>
+      <h1>Articles &amp; research notes.</h1>
+      <p class="lede">
+        Long-form writing from members of the lab — research notes accompanying recent papers,
+        engineering write-ups, and the occasional reflection on the practice of running an
+        architecture group.
+      </p>
+    </div>
+  </section>
+
+  <section class="articles-body">
+    <div class="wrap">
+      <div class="articles-filter" data-articles-filter>
+        <span class="label">Filter by topic</span>
+        <button class="chip active" data-topic="all" type="button">
+          All <span class="count">{topicCounts.all}</span>
+        </button>
+        {
+          topicKeys.map((k) => (
+            <button class="chip" data-topic={k} type="button">
+              {areaTitle[k]} <span class="count">{topicCounts[k]}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="articles-empty pubs-empty" hidden data-articles-empty>
+        No articles match this filter.
+      </div>
+
+      {
+        feature && (
+          <article class="article-feature" data-article-item data-topics={feature.topics.join(",")}>
+            <a href={`/article/${feature.slug}`} class="thumb-wrap" aria-label={feature.title}>
+              <ArticleThumb topic={feature.topics[0]} title={feature.title} />
+            </a>
+            <div>
+              <div class="meta">
+                <span>{fmtDate(feature.date)}</span>
+                <span class="tag">{feature.tag}</span>
+              </div>
+              <h2><a href={`/article/${feature.slug}`}>{feature.title}</a></h2>
+              <p>{feature.excerpt}</p>
+              <div class="byline">
+                By <strong>{feature.author}</strong> · {readingTime(feature.body)} min read
+              </div>
+            </div>
+          </article>
+        )
+      }
+
+      {
+        rest.length > 0 && (
+          <div class="article-grid">
+            {rest.map((a) => (
+              <a
+                class="article-card"
+                href={`/article/${a.slug}`}
+                data-article-item
+                data-topics={a.topics.join(",")}
+              >
+                <div class="thumb-wrap">
+                  <ArticleThumb topic={a.topics[0]} title={a.title} />
+                </div>
+                <div class="meta">
+                  <span>{fmtDate(a.date)}</span>
+                  <span class="tag">{a.tag}</span>
+                </div>
+                <h3>{a.title}</h3>
+                <p>{a.excerpt}</p>
+                <div class="byline">
+                  By <strong>{a.author}</strong>
+                </div>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const filterBar = document.querySelector<HTMLElement>("[data-articles-filter]");
+  const items = Array.from(document.querySelectorAll<HTMLElement>("[data-article-item]"));
+  const empty = document.querySelector<HTMLElement>("[data-articles-empty]");
+
+  if (filterBar) {
+    filterBar.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest<HTMLButtonElement>("button.chip");
+      if (!btn) return;
+      const topic = btn.dataset.topic ?? "all";
+      filterBar
+        .querySelectorAll("button.chip")
+        .forEach((b) => b.classList.toggle("active", b === btn));
+
+      let visible = 0;
+      items.forEach((item) => {
+        const t = (item.dataset.topics ?? "").split(",");
+        const show = topic === "all" || t.includes(topic);
+        item.hidden = !show;
+        if (show) visible += 1;
+      });
+      if (empty) empty.hidden = visible !== 0;
+    });
+  }
+</script>

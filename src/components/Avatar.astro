@@ -1,0 +1,87 @@
+---
+interface Props {
+  name: string;
+  /** Optional ARIA label fallback if no name is provided. */
+  ariaLabel?: string;
+}
+const { name, ariaLabel } = Astro.props;
+
+// Deterministic hash from the name → seed (djb2-ish).
+const seed = [...name].reduce((a, c) => (a * 33 + c.charCodeAt(0)) >>> 0, 5381);
+const rand = (mod: number, off = 0) => ((seed >> off) & 0xff) % mod;
+
+const palettes: [string, string, string][] = [
+  ["#912338", "#c8a64a", "#f6f3ec"],
+  ["#4a121e", "#e9c89a", "#efeae0"],
+  ["#6e1a2b", "#d8b85a", "#ece8df"],
+  ["#1a1a1a", "#c8a64a", "#f6f3ec"],
+  ["#912338", "#1a1a1a", "#ece8df"],
+  ["#4a121e", "#c8a64a", "#efeae0"]
+];
+
+const palette = palettes[rand(palettes.length)];
+const initials = name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+
+const variant = rand(4, 8);
+---
+
+<svg
+  viewBox="0 0 100 125"
+  preserveAspectRatio="xMidYMid slice"
+  role="img"
+  aria-label={ariaLabel ?? `Portrait of ${name}`}
+>
+  <rect width="100" height="125" fill={palette[2]} />
+
+  {
+    variant === 0 && (
+      <>
+        <circle cx="50" cy="48" r="30" fill={palette[0]} />
+        <rect x="14" y="78" width="72" height="60" fill={palette[1]} />
+      </>
+    )
+  }
+  {
+    variant === 1 && (
+      <>
+        <polygon points="0,0 100,0 100,80 0,40" fill={palette[1]} opacity="0.4" />
+        <circle cx="50" cy="56" r="28" fill={palette[0]} />
+        <polygon points="0,125 100,125 100,85 0,110" fill={palette[0]} opacity="0.85" />
+      </>
+    )
+  }
+  {
+    variant === 2 && (
+      <>
+        <rect x="0" y="0" width="100" height="62" fill={palette[1]} opacity="0.5" />
+        <circle cx="50" cy="50" r="26" fill={palette[0]} />
+        <rect x="20" y="76" width="60" height="60" fill={palette[0]} opacity="0.9" />
+      </>
+    )
+  }
+  {
+    variant === 3 && (
+      <>
+        <circle cx="50" cy="50" r="48" fill={palette[1]} opacity="0.35" />
+        <circle cx="50" cy="52" r="26" fill={palette[0]} />
+        <ellipse cx="50" cy="115" rx="46" ry="30" fill={palette[0]} opacity="0.85" />
+      </>
+    )
+  }
+
+  <text
+    x="50"
+    y="55"
+    text-anchor="middle"
+    font-family="Gill Sans, Gill Sans Nova, Gill Sans MT, Seravek, Optima, sans-serif"
+    font-size="22"
+    font-weight="600"
+    fill={palette[2]}
+    dy=".15em"
+  >{initials}</text>
+</svg>

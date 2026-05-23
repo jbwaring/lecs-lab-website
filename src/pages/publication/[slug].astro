@@ -1,0 +1,264 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Avatar from "../../components/Avatar.astro";
+import {
+  publications,
+  people,
+  articles,
+  areaTitle,
+  roleLabel,
+  type Publication
+} from "../../data/lecs";
+
+export function getStaticPaths() {
+  return publications.map((p) => ({ params: { slug: p.slug }, props: { pub: p } }));
+}
+
+const { pub } = Astro.props;
+
+function findPersonByAuthorTag(tag: string) {
+  const lastName = tag.split(",")[0].trim();
+  return people.find((p) => p.name.endsWith(lastName));
+}
+
+function fallbackAbstract(p: Publication): string {
+  return `This paper, presented at ${p.venue} in ${p.year}, contributes to the lab's research on ${p.topics
+    .map((t) => areaTitle[t].toLowerCase())
+    .join(" and ")}. A full abstract has not yet been published on this page; please refer to the venue proceedings or contact the corresponding author for the camera-ready text.`;
+}
+
+function fallbackContributions(p: Publication): string[] {
+  return [
+    `An architectural treatment of ${areaTitle[p.topics[0]].toLowerCase()} in the context of ${p.venue}'s scope.`,
+    "Evaluation across representative workloads with quantitative comparisons to the prior state of the art.",
+    "A discussion of implementation trade-offs and open questions for follow-on work."
+  ];
+}
+
+function fallbackBibtex(p: Publication): string {
+  const first = p.authors[0].split(",")[0].toLowerCase().replace(/[^a-z]/g, "");
+  return `@${p.type === "Journal" ? "article" : "inproceedings"}{${first}${p.year}${p.slug.split("-")[0]},\n  title  = {${p.title}},\n  author = {${p.authors.join(" and ")}},\n  ${
+    p.type === "Journal" ? "journal" : "booktitle"
+  } = {${p.venue}},\n  year   = {${p.year}}\n}`;
+}
+
+const abstract = pub.abstract ?? fallbackAbstract(pub);
+const contributions = pub.contributions ?? fallbackContributions(pub);
+const bibtex = pub.bibtex ?? fallbackBibtex(pub);
+
+const related = publications
+  .filter((p) => p.slug !== pub.slug && p.topics.some((t) => pub.topics.includes(t)))
+  .sort((a, b) => b.year - a.year)
+  .slice(0, 4);
+
+const relatedArticle = articles.find((a) => a.relatedPub === pub.slug);
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: "Concordia University" },
+  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  { href: "/", label: "LECS" },
+  { label: "Publication", muted: true }
+];
+---
+
+<Layout
+  title={`${pub.title} — LECS · Concordia University`}
+  description={abstract.slice(0, 220)}
+  activeNav="publications"
+  crumbs={crumbs}
+  condensedFooter
+>
+  <section class="paper-hero">
+    <div class="wrap">
+      <div class="breadcrumb-mini">
+        <a href="/">LECS</a>
+        <span>›</span>
+        <a href="/#publications">Publications</a>
+        <span>›</span>
+        <span>{pub.year}</span>
+      </div>
+      <div class="type-pill">{pub.type} paper</div>
+      <h1>{pub.title}</h1>
+      <div class="authors-row">
+        {
+          pub.authors.map((a, i) => {
+            const person = findPersonByAuthorTag(a);
+            return (
+              <>
+                {person ? (
+                  <a href={`/profile/${person.id}`}>{a}</a>
+                ) : (
+                  <span>{a}</span>
+                )}
+                {i < pub.authors.length - 1 ? <span>, </span> : null}
+              </>
+            );
+          })
+        }
+      </div>
+      <div class="venue-row">
+        <strong>{pub.venue}</strong> · {pub.year}
+        {pub.doi && <>  ·  DOI: {pub.doi}</>}
+      </div>
+      <div class="pill-row">
+        {pub.topics.map((t) => <span class="topic-pill">{areaTitle[t]}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <div class="paper-actions">
+    <div class="wrap">
+      <div class="left">
+        <strong>{pub.venue} {pub.year}</strong>
+        <span>{pub.authors.join(", ")}</span>
+      </div>
+      <div class="actions">
+        <a class="btn solid" href="#" onclick="event.preventDefault()">↓ Download PDF</a>
+        <button class="btn outline" type="button" data-copy-bibtex>Copy BibTeX</button>
+        {pub.doi && <a class="btn outline" href={`https://doi.org/${pub.doi}`}>View on DOI ↗</a>}
+      </div>
+    </div>
+  </div>
+
+  <section class="paper-body">
+    <div class="wrap">
+      <div class="paper-main">
+        <div class="abstract-block">
+          <div class="label">Abstract</div>
+          <p>{abstract}</p>
+        </div>
+
+        {
+          contributions && contributions.length > 0 && (
+            <div class="key-points">
+              <div class="label">Key contributions</div>
+              <ol>
+                {contributions.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ol>
+            </div>
+          )
+        }
+
+        {
+          relatedArticle && (
+            <div class="paper-section">
+              <h2>Companion article</h2>
+              <p style="max-width:36em;">
+                A research note from {relatedArticle.author} accompanies this paper and discusses
+                the motivating context and the open questions that follow from the result.
+              </p>
+              <a class="btn outline" href={`/article/${relatedArticle.slug}`}>
+                Read “{relatedArticle.title}” →
+              </a>
+            </div>
+          )
+        }
+
+        <div class="paper-section">
+          <h2>Citation</h2>
+          <p style="max-width:36em;">
+            If you build on this work, please cite the paper using the entry below. The BibTeX can
+            be copied to clipboard with the button at the top of this page.
+          </p>
+          <pre class="citation-block" data-bibtex>{bibtex}</pre>
+        </div>
+
+        <div class="paper-section">
+          <h2>Acknowledgements</h2>
+          <p>
+            This work was supported in part by the Natural Sciences and Engineering Research
+            Council of Canada (NSERC) Discovery Grants programme and by the Fonds de recherche du
+            Québec — Nature et technologies (FRQNT). The authors thank colleagues at the Lyon
+            Institute of Nanotechnology and at Polytechnique Montréal for fruitful discussions.
+          </p>
+        </div>
+      </div>
+
+      <aside class="paper-sidebar">
+        <div class="sidebar-card">
+          <h4>Paper details</h4>
+          <div class="meta-row"><span class="k">Venue</span><span class="v">{pub.venue}</span></div>
+          <div class="meta-row"><span class="k">Year</span><span class="v">{pub.year}</span></div>
+          <div class="meta-row"><span class="k">Type</span><span class="v">{pub.type}</span></div>
+          {pub.doi && (
+            <div class="meta-row"><span class="k">DOI</span><span class="v">{pub.doi}</span></div>
+          )}
+        </div>
+
+        <div class="sidebar-card">
+          <h4>Authors</h4>
+          {
+            pub.authors.map((a) => {
+              const p = findPersonByAuthorTag(a);
+              if (!p) {
+                return (
+                  <div class="author-mini" style="cursor:default;">
+                    <div class="av" style="background: var(--paper-2);" />
+                    <div class="info">
+                      <span class="n">{a}</span>
+                      <span class="r">External collaborator</span>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <a class="author-mini" href={`/profile/${p.id}`}>
+                  <div class="av">
+                    <Avatar name={p.name} />
+                  </div>
+                  <div class="info">
+                    <span class="n">{p.name}</span>
+                    <span class="r">{roleLabel[p.role]}</span>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+
+        {
+          related.length > 0 && (
+            <div class="sidebar-card">
+              <h4>Related publications</h4>
+              <div class="related-papers">
+                {related.map((r) => (
+                  <a href={`/publication/${r.slug}`}>
+                    <div class="t">{r.title}</div>
+                    <div class="v">
+                      <strong>{r.venue}</strong> · {r.year}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <div style="margin-top:24px;">
+          <a class="btn outline" href="/#publications" style="width:100%; justify-content:center;"
+            >← All publications</a
+          >
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>("[data-copy-bibtex]");
+  const pre = document.querySelector<HTMLPreElement>("[data-bibtex]");
+  if (btn && pre) {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(pre.textContent ?? "");
+        const orig = btn.textContent;
+        btn.textContent = "✓ Copied";
+        setTimeout(() => (btn.textContent = orig), 2000);
+      } catch {
+        /* clipboard unavailable */
+      }
+    });
+  }
+</script>

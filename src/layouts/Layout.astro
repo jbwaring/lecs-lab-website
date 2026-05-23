@@ -1,23 +1,229 @@
+---
+import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+
+interface Crumb {
+  href?: string;
+  label: string;
+  muted?: boolean;
+}
+
+interface Props {
+  title?: string;
+  description?: string;
+  activeNav?:
+    | "about"
+    | "research"
+    | "people"
+    | "news"
+    | "articles"
+    | "publications"
+    | "join"
+    | null;
+  /** Optional override of the top utility-bar crumb trail. */
+  crumbs?: Crumb[];
+  /** Drop the territorial acknowledgement + extended footer columns on sub-pages. */
+  condensedFooter?: boolean;
+}
+
+const {
+  title = "LECS — Laboratory for Emerging Computing Systems · Concordia University",
+  description = "The Laboratory for Emerging Computing Systems (LECS) at Concordia University, led by Prof. Sébastien Le Beux. Research on silicon photonic interconnects, reconfigurable architectures, and emerging computing.",
+  activeNav = "about",
+  crumbs,
+  condensedFooter = false,
+} = Astro.props;
+
+const defaultCrumbs: Crumb[] = [
+  { href: "https://www.concordia.ca", label: "Concordia University" },
+  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  {
+    href: "https://www.concordia.ca/ginacody/electrical-computer-eng.html",
+    label: "Electrical & Computer Engineering",
+  },
+  { label: "LECS", muted: true },
+];
+const crumbsToShow = crumbs ?? defaultCrumbs;
+
+const nav = [
+  { href: "/#about", label: "About", key: "about" },
+  { href: "/#research", label: "Research", key: "research" },
+  { href: "/#people", label: "People", key: "people" },
+  { href: "/#news", label: "News", key: "news" },
+  { href: "/articles", label: "Articles", key: "articles" },
+  { href: "/#publications", label: "Publications", key: "publications" },
+  { href: "/#join", label: "Join us", key: "join" },
+] as const;
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="theme-color" content="#912338" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="util">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          {
+            crumbsToShow.map((c, i) => (
+              <>
+                {c.href ? (
+                  <a href={c.href}>{c.label}</a>
+                ) : (
+                  <span style={c.muted ? "opacity:.7" : undefined}>{c.label}</span>
+                )}
+                {i < crumbsToShow.length - 1 && <span class="sep">›</span>}
+              </>
+            ))
+          }
+        </nav>
+        <div class="actions">
+          <a href="mailto:slebeux@encs.concordia.ca">Contact</a>
+          <a href="/#join">Open positions</a>
+          <span class="lang">EN · FR</span>
+        </div>
+      </div>
+    </div>
+
+    <header class="header">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <div class="mark">LECS</div>
+          <div class="word">
+            <div class="lab">
+              Laboratory <span class="lab-for">for</span> Emerging Computing Systems
+            </div>
+            <div class="uni">Concordia University · Montréal</div>
+          </div>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          {
+            nav.map((n) => (
+              <a href={n.href} class={n.key === activeNav ? "active" : undefined}>
+                {n.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="wrap">
+        {
+          !condensedFooter && (
+            <p class="land-ack">
+              <strong>Territorial acknowledgement.</strong> Concordia University is located on
+              unceded Indigenous lands. The Kanien&rsquo;keh&aacute;:ka Nation is recognized as the
+              custodians of Tiohtià:ke / Montréal.
+            </p>
+          )
+        }
+
+        <div class="cols">
+          <div>
+            <h4>Laboratory for Emerging Computing Systems</h4>
+            <p style="margin-top:0; color:rgba(255,255,255,.78); font-size:14px; max-width:34em;">
+              Dept. of Electrical &amp; Computer Engineering · Gina Cody School of Engineering and
+              Computer Science · Concordia University. EV Building, 1515 Sainte-Catherine St. W.,
+              Montréal, Québec.
+            </p>
+            {
+              !condensedFooter && (
+                <p style="font-size:14px; color:rgba(255,255,255,.78); margin:8px 0 0;">
+                  +1 514-848-2424 ×3004 · slebeux (at) encs.concordia.ca
+                </p>
+              )
+            }
+          </div>
+
+          <div>
+            <h4>The lab</h4>
+            <ul>
+              <li><a href="/#about">About</a></li>
+              <li><a href="/#research">Research</a></li>
+              <li><a href="/#people">People</a></li>
+              <li><a href="/#publications">Publications</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>Resources</h4>
+            <ul>
+              <li>
+                <a href="https://scholar.google.com/citations?user=n2zWgXkAAAAJ">Google Scholar</a>
+              </li>
+              <li><a href="http://dblp.uni-trier.de/pers/hd/b/Beux:S=eacute=bastien_Le">DBLP</a></li>
+              {
+                !condensedFooter && (
+                  <li>
+                    <a href="https://sites.google.com/site/lebeux/">Supervisor’s site</a>
+                  </li>
+                )
+              }
+              {!condensedFooter && <li><a href="/#join">Open positions</a></li>}
+            </ul>
+          </div>
+
+          <div>
+            <h4>Concordia</h4>
+            <ul>
+              <li><a href="https://www.concordia.ca/ginacody.html">Gina Cody School</a></li>
+              <li>
+                <a href="https://www.concordia.ca/ginacody/electrical-computer-eng.html"
+                  >ECE Department</a
+                >
+              </li>
+              {
+                !condensedFooter && (
+                  <li>
+                    <a href="https://www.concordia.ca/research.html">Research at Concordia</a>
+                  </li>
+                )
+              }
+              {
+                !condensedFooter && (
+                  <li>
+                    <a href="https://www.concordia.ca/admissions/graduate.html">
+                      Graduate admissions
+                    </a>
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div class="meta">
+          <span>© 2026 Laboratory for Emerging Computing Systems · Concordia University</span>
+          <span>
+            <a href="https://www.concordia.ca/web/accessibility.html">Accessibility</a> ·
+            <a href="https://www.concordia.ca/privacy.html">Privacy</a> ·
+            <a href="https://www.concordia.ca/web/terms.html">Terms</a>
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <Analytics />
+  </body>
+</html>

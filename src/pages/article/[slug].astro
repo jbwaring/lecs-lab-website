@@ -1,0 +1,184 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Avatar from "../../components/Avatar.astro";
+import {
+  articles,
+  people,
+  publications,
+  areaTitle,
+  roleLabel,
+  fmtDate,
+  fmtDateLong,
+  readingTime
+} from "../../data/lecs";
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+const author = people.find((p) => p.name === article.author);
+const pub = article.relatedPub
+  ? publications.find((p) => p.slug === article.relatedPub)
+  : undefined;
+const related = articles
+  .filter((a) => a.slug !== article.slug && a.topics.some((t) => article.topics.includes(t)))
+  .slice(0, 3);
+
+const emailMailto = author ? (author.email ?? "").replace(" (at) ", "@") : null;
+
+const crumbs = [
+  { href: "https://www.concordia.ca", label: "Concordia University" },
+  { href: "https://www.concordia.ca/ginacody.html", label: "Gina Cody School" },
+  { href: "/", label: "LECS" },
+  { href: "/articles", label: "Articles" }
+];
+---
+
+<Layout
+  title={`${article.title} — LECS · Concordia University`}
+  description={article.excerpt}
+  activeNav="articles"
+  crumbs={crumbs}
+  condensedFooter
+>
+  <section class="paper-hero">
+    <div class="wrap">
+      <div class="breadcrumb-mini">
+        <a href="/articles">Articles</a>
+        <span>›</span>
+        <span>{fmtDateLong(article.date)}</span>
+      </div>
+      <div class="type-pill">{article.tag}</div>
+      <h1>{article.title}</h1>
+      <div class="authors-row">
+        By {
+          author ? (
+            <a href={`/profile/${author.id}`}>{article.author}</a>
+          ) : (
+            <span>{article.author}</span>
+          )
+        }
+      </div>
+      <div class="venue-row">
+        {fmtDateLong(article.date)} · {readingTime(article.body)} min read
+      </div>
+      <div class="pill-row">
+        {article.topics.map((t) => <span class="topic-pill">{areaTitle[t]}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="paper-body">
+    <div class="wrap">
+      <div class="paper-main">
+        <div class="abstract-block">
+          <div class="label">In brief</div>
+          <p>{article.excerpt}</p>
+        </div>
+
+        <div class="paper-section">
+          {article.body.map((para) => <p>{para}</p>)}
+        </div>
+
+        {
+          pub && (
+            <div class="key-points">
+              <div class="label">Read the paper</div>
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; gap:24px; padding-top:6px;"
+              >
+                <div>
+                  <div
+                    style="font-family: var(--accent); font-weight:500; font-size:18px; color: var(--ink); margin-bottom:4px;"
+                  >
+                    {pub.title}
+                  </div>
+                  <div style="font-size:14px; color: var(--ink-3);">
+                    <strong style="color: var(--maroon); font-weight:500;">{pub.venue}</strong>
+                    · {pub.year} · {pub.authors.join(", ")}
+                  </div>
+                </div>
+                <a class="btn solid" href={`/publication/${pub.slug}`} style="flex-shrink:0;">
+                  Open paper →
+                </a>
+              </div>
+            </div>
+          )
+        }
+
+        <div class="paper-section">
+          <h2>Comments &amp; corrections</h2>
+          <p>
+            If you have questions about this note, or you spot something we got wrong, please write
+            to {
+              author && emailMailto ? (
+                <a href={`mailto:${emailMailto}`}>{article.author}</a>
+              ) : (
+                article.author
+              )
+            } directly. We post addenda to articles when a correction is warranted.
+          </p>
+        </div>
+      </div>
+
+      <aside class="paper-sidebar">
+        <div class="sidebar-card">
+          <h4>Author</h4>
+          {
+            author ? (
+              <a class="author-mini" href={`/profile/${author.id}`}>
+                <div class="av">
+                  <Avatar name={author.name} />
+                </div>
+                <div class="info">
+                  <span class="n">{author.name}</span>
+                  <span class="r">{roleLabel[author.role]}</span>
+                </div>
+              </a>
+            ) : (
+              <div style="font-size:14px;">{article.author}</div>
+            )
+          }
+        </div>
+
+        <div class="sidebar-card">
+          <h4>This article</h4>
+          <div class="meta-row">
+            <span class="k">Published</span><span class="v">{fmtDateLong(article.date)}</span>
+          </div>
+          <div class="meta-row">
+            <span class="k">Category</span><span class="v">{article.tag}</span>
+          </div>
+          <div class="meta-row">
+            <span class="k">Reading time</span><span class="v">{readingTime(article.body)} min</span>
+          </div>
+        </div>
+
+        {
+          related.length > 0 && (
+            <div class="sidebar-card">
+              <h4>Related articles</h4>
+              <div class="related-papers">
+                {related.map((r) => (
+                  <a href={`/article/${r.slug}`}>
+                    <div class="t">{r.title}</div>
+                    <div class="v">
+                      <strong>{r.tag}</strong> · {fmtDate(r.date)}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <div style="margin-top:24px;">
+          <a class="btn outline" href="/articles" style="width:100%; justify-content:center;"
+            >← All articles</a
+          >
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
