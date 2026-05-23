@@ -337,7 +337,7 @@ section.band.alt .area { background: var(--paper-2); }
 .chip.active .count { opacity: .85; }
 
 .people-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
 }
 .people-grid .row-break { grid-column: 1 / -1; height: 0; }
 .person-card {
@@ -345,6 +345,10 @@ section.band.alt .area { background: var(--paper-2); }
   border: 1px solid var(--rule-2);
   text-decoration: none; color: inherit;
   display: flex; flex-direction: column;
+  /* Let grid columns shrink below intrinsic content width so nowrap area
+     pills can't push the card past its column. */
+  min-width: 0;
+  overflow: hidden;
   transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
 }
 .person-card:hover {
@@ -604,7 +608,7 @@ section.band.alt .area { background: var(--paper-2); }
 .profile-hero .breadcrumb-mini a:hover { color: #fff; text-decoration: underline; }
 
 .profile-body { padding: 64px 0 80px; }
-.profile-body .wrap { display: grid; grid-template-columns: 1fr 300px; gap: 64px; align-items: start; }
+.profile-body .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; align-items: start; }
 
 .bio h2, .projects h2, .pubs-section h2 {
   font-size: 26px; padding-bottom: 10px; border-bottom: 2px solid var(--maroon); margin-bottom: 18px;
@@ -640,7 +644,11 @@ section.band.alt .area { background: var(--paper-2); }
   border-radius: 2px;
 }
 
-.profile-pubs .pub-row { grid-template-columns: 100px 1fr auto; }
+/* .profile-pubs inherits .pub-row grid layout. (Override removed because
+   it had higher specificity than the @media mobile rule and prevented the
+   row from collapsing to a single column on phones.) */
+.profile-pubs .pub-row { min-width: 0; }
+.profile-body .main-col { min-width: 0; }
 
 /* =========================================================
    ARTICLES — listing page (research notes / blog)
@@ -670,7 +678,7 @@ section.band.alt .area { background: var(--paper-2); }
   border-bottom: 1px solid var(--rule);
   align-items: center;
 }
-.article-feature .thumb-wrap { aspect-ratio: 4/3; background: var(--paper-3); overflow: hidden; }
+.article-feature .thumb-wrap { display: block; aspect-ratio: 4/3; background: var(--paper-3); overflow: hidden; }
 .article-feature .thumb-wrap svg { width: 100%; height: 100%; }
 .article-feature .meta { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); display: flex; gap: 14px; margin-bottom: 14px; }
 .article-feature .meta .tag { color: var(--maroon); font-weight: 500; }
@@ -687,7 +695,7 @@ section.band.alt .area { background: var(--paper-2); }
   background: transparent;
   text-decoration: none; color: inherit;
 }
-.article-card .thumb-wrap { aspect-ratio: 16/10; background: var(--paper-3); overflow: hidden; margin-bottom: 18px; transition: transform .2s ease; }
+.article-card .thumb-wrap { display: block; aspect-ratio: 16/10; background: var(--paper-3); overflow: hidden; margin-bottom: 18px; transition: transform .2s ease; }
 .article-card:hover .thumb-wrap { transform: translateY(-2px); }
 .article-card .thumb-wrap svg { width: 100%; height: 100%; }
 .article-card .meta { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); display: flex; gap: 14px; margin-bottom: 8px; }
@@ -919,7 +927,7 @@ section.band.alt .area { background: var(--paper-2); }
   .hero .stats .stat:nth-child(2) { border-right: 0; }
   .hero .stats .stat:nth-child(-n+2) { border-bottom: 1px solid var(--rule-2); }
   .section-head { grid-template-columns: 1fr; gap: 16px; }
-  .people-grid { grid-template-columns: repeat(2, 1fr); }
+  .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .person-card.featured { grid-column: 1 / -1; }
   .news-grid { grid-template-columns: repeat(2, 1fr); }
   .areas { grid-template-columns: repeat(2, 1fr); }
@@ -932,15 +940,53 @@ section.band.alt .area { background: var(--paper-2); }
   .article-feature { grid-template-columns: 1fr; gap: 28px; }
   .article-grid { grid-template-columns: 1fr; }
 }
+
 @media (max-width: 720px) {
-  .util { display: none; }
-  .nav { display: none; }
-  .header .wrap { min-height: 64px; }
+  /* Keep the utility bar visible but tighten it. */
+  .util .wrap { gap: 8px; padding-top: 4px; padding-bottom: 4px; }
+  .util { font-size: 12px; }
+  .util .breadcrumb { display: none; }
+  .util .actions { margin-left: auto; gap: 10px; }
+
+  /* Header + nav: stack the nav under the brand on its own row, scrollable
+     horizontally so a 7-item nav doesn't squeeze the brand. */
+  .header .wrap {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-height: 0;
+    row-gap: 6px;
+    padding-top: 12px;
+    padding-bottom: 0;
+  }
+  .brand { flex: 1 1 auto; min-width: 0; }
+  .brand .mark { height: 38px; padding: 0 10px; font-size: 15px; }
+  .brand .word .lab { font-size: 16px; }
+  .brand .word .uni { font-size: 9.5px; }
+
+  .nav {
+    margin-left: 0;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    padding: 4px 0 6px;
+    border-top: 1px solid var(--rule);
+    margin-top: 8px;
+    gap: 0;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    padding: 10px 10px;
+    font-size: 14px;
+  }
+  .nav a.active::after { left: 10px; right: 10px; }
+
   .hero .wrap { padding-top: 56px; padding-bottom: 96px; min-height: auto; }
   .hero .glass { padding: 26px 24px 28px; }
   .hero-spacer { height: 120px; }
-  .people-grid { grid-template-columns: 1fr 1fr; }
-  .person-card.featured { grid-column: span 2; }
   .news-grid { grid-template-columns: 1fr; }
   .areas { grid-template-columns: 1fr; }
   .foot .cols { grid-template-columns: 1fr; }
@@ -949,5 +995,16 @@ section.band.alt .area { background: var(--paper-2); }
   .pub-row .pub-venue { text-align: left; }
   .profile-hero .wrap { grid-template-columns: 1fr; }
   .profile-hero .portrait { max-width: 200px; }
+  .paper-actions .wrap { gap: 12px; }
+  .paper-actions .actions { gap: 8px; }
+  .paper-actions .actions .btn { font-size: 12px; padding: 8px 10px; }
   section.band { padding: 56px 0; }
+}
+
+@media (max-width: 520px) {
+  /* Phones: people grid collapses to a single column; featured matches. */
+  .people-grid { grid-template-columns: 1fr; }
+  .person-card.featured { grid-column: auto; }
+  .person-card.featured .portrait { aspect-ratio: 4/3; }
+  .pubs-toolbar { grid-template-columns: 1fr; }
 }

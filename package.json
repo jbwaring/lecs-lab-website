@@ -15,5 +15,8 @@
     "@astrojs/mdx": "^5.0.6",
     "@vercel/analytics": "^2.0.1",
     "astro": "^6.3.7"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.0.4"
   }
 }
