@@ -146,26 +146,7 @@ const altLabel = tt("lang.toggle");
           <span></span>
         </button>
 
-        <nav id="primary-nav" class="nav" aria-label="Primary" data-nav>
-          <div class="nav-head">
-            <span class="nav-head-label">LECS</span>
-            <button
-              type="button"
-              class="nav-close"
-              aria-label={locale === "fr" ? "Fermer le menu" : "Close menu"}
-              data-nav-close
-            >
-              <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
-                <path
-                  d="M4 4 L16 16 M16 4 L4 16"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  fill="none"
-                />
-              </svg>
-            </button>
-          </div>
+        <nav id="primary-nav-desktop" class="nav nav-desktop" aria-label="Primary">
           {
             nav.map((n) => (
               <a href={n.href} class={n.key === activeNav ? "active" : undefined}>
@@ -173,13 +154,44 @@ const altLabel = tt("lang.toggle");
               </a>
             ))
           }
-          <a class="nav-lang" href={altPath} aria-label={tt("lang.label")} data-nav-lang>
-            {locale === "en" ? "Français" : "English"}
-          </a>
         </nav>
       </div>
     </header>
+
+    {/* Mobile drawer is at <body> level (sibling of header) so its z-index is
+        not trapped inside any stacking context. */}
     <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
+    <nav id="primary-nav" class="nav nav-drawer" aria-label="Primary" data-nav>
+      <div class="nav-head">
+        <span class="nav-head-label">LECS</span>
+        <button
+          type="button"
+          class="nav-close"
+          aria-label={locale === "fr" ? "Fermer le menu" : "Close menu"}
+          data-nav-close
+        >
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <path
+              d="M4 4 L16 16 M16 4 L4 16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              fill="none"
+            />
+          </svg>
+        </button>
+      </div>
+      {
+        nav.map((n) => (
+          <a href={n.href} class={n.key === activeNav ? "active" : undefined}>
+            {n.label}
+          </a>
+        ))
+      }
+      <a class="nav-lang" href={altPath} aria-label={tt("lang.label")} data-nav-lang>
+        {locale === "en" ? "Français" : "English"}
+      </a>
+    </nav>
 
     <main>
       <slot />
@@ -377,18 +389,22 @@ const altLabel = tt("lang.toggle");
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* ===== Nav drawer (mobile) bits ===== */
-  .nav .nav-head { display: none; }
-  .nav .nav-lang { display: none; }
+  /* ===== Nav drawer (mobile) ===== */
+  /* The drawer is hidden on desktop; the inline .nav-desktop stays. */
+  .nav-drawer {
+    display: none;
+  }
+  .nav-desktop .nav-head,
+  .nav-desktop .nav-lang { display: none; }
 
   .nav-backdrop {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(20, 8, 12, 0.45);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-    z-index: 89;
+    background: rgba(20, 8, 12, 0.55);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
@@ -399,7 +415,9 @@ const altLabel = tt("lang.toggle");
     pointer-events: auto;
   }
 
-  /* Body-scroll lock when the menu is open. */
+  /* Body-scroll lock when the menu is open. The drawer + backdrop are at
+     body-level z-indexes (1000 / 1010), so they sit above every page section
+     regardless of any internal stacking contexts. */
   :global(html[data-menu-open="true"]),
   :global(html[data-menu-open="true"] body) {
     overflow: hidden;
@@ -407,9 +425,11 @@ const altLabel = tt("lang.toggle");
 
   @media (max-width: 900px) {
     .hamburger { display: inline-flex; }
+    /* Hide the inline desktop nav on small screens — drawer takes over. */
+    .nav-desktop { display: none; }
 
-    /* The full nav is hidden by default; toggled via data-open=true. */
-    .header .nav {
+    .nav-drawer {
+      display: flex;
       position: fixed;
       top: 0;
       right: 0;
@@ -422,35 +442,36 @@ const altLabel = tt("lang.toggle");
       justify-content: flex-start;
       gap: 0;
       padding: 0;
-      border-top: 0;
-      margin-top: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      z-index: 90;
+      z-index: 1010;
       transform: translateX(105%);
       transition: transform 0.25s cubic-bezier(0.32, 0.72, 0.27, 1);
       visibility: hidden;
     }
-    .header .nav[data-open="true"] {
+    .nav-drawer[data-open="true"] {
       transform: translateX(0);
       visibility: visible;
     }
 
-    .header .nav .nav-head {
+    .nav-drawer .nav-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 16px 20px;
       border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      background: var(--paper);
     }
-    .header .nav .nav-head-label {
+    .nav-drawer .nav-head-label {
       font-family: var(--accent);
       font-weight: 600;
       font-size: 18px;
       letter-spacing: 0.04em;
       color: var(--maroon);
     }
-    .header .nav-close {
+    .nav-drawer .nav-close {
       appearance: none;
       background: transparent;
       border: 1px solid var(--rule);
@@ -462,9 +483,9 @@ const altLabel = tt("lang.toggle");
       place-items: center;
       cursor: pointer;
     }
-    .header .nav-close:hover { border-color: var(--maroon); color: var(--maroon); }
+    .nav-drawer .nav-close:hover { border-color: var(--maroon); color: var(--maroon); }
 
-    .header .nav a {
+    .nav-drawer a {
       padding: 16px 22px;
       font-size: 17px;
       font-weight: 500;
@@ -474,12 +495,13 @@ const altLabel = tt("lang.toggle");
       text-align: left;
       white-space: nowrap;
       border-radius: 0;
+      text-decoration: none;
     }
-    .header .nav a:hover { background: var(--paper-2); color: var(--maroon); }
-    .header .nav a.active { color: var(--maroon); background: var(--paper-2); }
-    .header .nav a.active::after { display: none; }
+    .nav-drawer a:hover { background: var(--paper-2); color: var(--maroon); }
+    .nav-drawer a.active { color: var(--maroon); background: var(--paper-2); }
+    .nav-drawer a.active::after { display: none; }
 
-    .header .nav .nav-lang {
+    .nav-drawer .nav-lang {
       display: block;
       margin-top: 16px;
       padding: 14px 22px;
