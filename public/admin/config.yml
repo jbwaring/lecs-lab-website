@@ -1,0 +1,205 @@
+# Sveltia CMS configuration for the LECS lab website.
+#
+# Field definitions here MUST stay in sync with the Zod schemas in
+# src/content.config.ts. The CMS does not read Zod; it validates input
+# against this file, and the build separately re-validates with Zod.
+# If you change one, change both.
+#
+# Editorial workflow:
+#   - Every save in the CMS opens (or updates) a Pull Request against `main`.
+#   - PRs trigger a Vercel preview deployment automatically.
+#   - The professor reviews the preview, then approves + merges the PR
+#     (GitHub branch protection enforces this — see docs/CMS.md).
+
+backend:
+  name: github
+  # TODO(deploy): set this to the actual GitHub repo, e.g. "lecs-lab/website".
+  repo: OWNER/REPO
+  branch: main
+  # Cloudflare Worker (sveltia-cms-auth). See docs/CMS.md for deploy steps.
+  base_url: https://YOUR-WORKER.workers.dev
+  auth_endpoint: /
+
+# Open PR per edit; show Draft / In Review / Ready columns.
+publish_mode: editorial_workflow
+
+# Media uploads land here for v2 (avatars, article images). v1: no uploads.
+media_folder: public/uploads
+public_folder: /uploads
+
+site_url: https://example.com
+display_url: https://example.com
+logo_url: /favicon.svg
+
+# Shared option lists — kept in sync with the `topic` enum in
+# src/content.config.ts.
+_topic_options: &topic_options
+  - { label: "Silicon photonic interconnects",  value: photonics }
+  - { label: "Reconfigurable architectures",    value: reconfig }
+  - { label: "Network-on-Chip",                 value: noc }
+  - { label: "Quantum computing",               value: quantum }
+  - { label: "Edge AI accelerators",            value: edge-ai }
+  - { label: "Neuromorphic architectures",      value: neuro }
+  - { label: "Manycore SoCs",                   value: soc }
+  - { label: "Approximate computing",           value: approx }
+  - { label: "FPGA prototyping",                value: fpga }
+
+# `role` enum, mirrored from src/content.config.ts.
+_role_options: &role_options
+  - { label: "Principal Investigator", value: supervisor }
+  - { label: "Postdoctoral Fellow",    value: postdoc }
+  - { label: "PhD",                    value: phd }
+  - { label: "MSc",                    value: msc }
+  - { label: "Undergraduate",          value: undergraduate }
+  - { label: "Visiting",               value: visiting }
+  - { label: "Alumni",                 value: alumni }
+
+# `labMemberId` enum, mirrored from src/content.config.ts. Keep in lockstep.
+_lab_member_options: &lab_member_options
+  - sebastien-le-beux
+  - jean-baptiste-waring
+  - masoud-rahimi
+  - ismael-ridha
+  - milad-eslaminia
+  - frederic-gagne
+  - paria-zolfaghari
+  - oceane-destras
+  - mohsen-asghari
+
+collections:
+  # ───────────────────────────────────────────────────────────── People
+  - name: people
+    label: People
+    label_singular: Person
+    folder: src/content/people
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: name
+    fields:
+      - { name: name,        label: Name, widget: string }
+      - { name: role,        label: Role, widget: select, options: *role_options }
+      - { name: title,       label: Title, widget: string }
+      - { name: affiliation, label: Affiliation, widget: string }
+      - { name: email,       label: Email (use "(at)" not @ to deter scrapers), widget: string }
+      - { name: phone,       label: Phone, widget: string, required: false }
+      - { name: office,      label: Office, widget: string, required: false }
+      - name: areas
+        label: Research areas
+        widget: select
+        multiple: true
+        options: *topic_options
+        default: []
+      - { name: since,    label: Joined (year), widget: number, value_type: int, required: false }
+      - { name: until,    label: Left (year, alumni only), widget: number, value_type: int, required: false }
+      - { name: thesis,   label: Thesis title, widget: string, required: false }
+      - { name: bio,      label: Bio, widget: text }
+      - name: links
+        label: External links
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: scholar, label: Google Scholar URL, widget: string, required: false }
+          - { name: dblp,    label: DBLP URL,           widget: string, required: false }
+          - { name: site,    label: Personal site URL,  widget: string, required: false }
+      - name: projects
+        label: Projects
+        widget: list
+        required: false
+        field: { name: project, label: Project, widget: string }
+      - { name: sortKey, label: Sort key (family-name form, e.g. "Le Beux")
+        , widget: string, required: false }
+
+  # ─────────────────────────────────────────────────────── Publications
+  - name: publications
+    label: Publications
+    label_singular: Publication
+    folder: src/content/publications
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: slug
+    fields:
+      - { name: slug,    label: Slug (URL-safe ID), widget: string }
+      - { name: title,   label: Title, widget: string }
+      - name: authors
+        label: Authors
+        widget: list
+        field: { name: author, label: Author, widget: string }
+      - { name: abstract, label: Abstract, widget: text }
+      - { name: date,     label: Date (YYYY-MM-DD), widget: string }
+      - { name: year,     label: Year, widget: number, value_type: int }
+      - { name: venue,    label: Venue, widget: string, default: arXiv }
+      - { name: type,     label: Type, widget: string, default: Preprint }
+      - name: topics
+        label: Topics
+        widget: select
+        multiple: true
+        options: *topic_options
+        default: []
+      - name: labMembers
+        label: Lab member authors
+        widget: select
+        multiple: true
+        options: *lab_member_options
+        default: []
+      - { name: arxivId,        label: arXiv ID, widget: string, required: false }
+      - { name: arxivAbs,       label: arXiv abs URL, widget: string, required: false }
+      - { name: arxivPdf,       label: arXiv PDF URL, widget: string, required: false }
+      - { name: arxivHtml,      label: arXiv HTML URL, widget: string, required: false }
+      - { name: primaryCategory, label: arXiv primary category, widget: string, required: false }
+      - { name: semanticScholarId, label: Semantic Scholar ID, widget: string, required: false }
+      - { name: doi,            label: DOI, widget: string, required: false }
+      - { name: paperUrl,       label: Canonical paper URL, widget: string, required: false }
+      - { name: openAccessUrl,  label: Open-access PDF URL, widget: string, required: false }
+      - { name: pdfPath,        label: Local PDF path (under /papers/), widget: string, required: false }
+
+  # ───────────────────────────────────────────────────────── Articles
+  - name: articles
+    label: Articles
+    label_singular: Article
+    folder: src/content/articles
+    extension: mdx
+    format: frontmatter
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    fields:
+      - { name: slug,       label: Slug (URL-safe ID), widget: string }
+      - { name: date,       label: Date (YYYY-MM-DD), widget: string }
+      - { name: tag,        label: Category tag (e.g. Research note, Engineering, Lab life), widget: string }
+      - { name: author,     label: Author (must match a person's Name exactly), widget: string }
+      - { name: relatedPub, label: Related publication slug (optional), widget: string, required: false }
+      - name: topics
+        label: Topics
+        widget: select
+        multiple: true
+        options: *topic_options
+        default: []
+      - { name: title,    label: Title, widget: string }
+      - { name: excerpt,  label: Excerpt (one short paragraph, shown on cards), widget: text }
+      - { name: body,     label: Body (Markdown), widget: markdown }
+
+  # ───────────────────────────────────────────────────────────── News
+  - name: news
+    label: News
+    label_singular: News item
+    folder: src/content/news
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
+    fields:
+      - { name: date,    label: Date (YYYY-MM-DD), widget: string }
+      - { name: tag,     label: Category tag (e.g. Paper, Award, Talk, Funding), widget: string }
+      - { name: title,   label: Title, widget: string }
+      - { name: summary, label: Summary, widget: text }
+      - { name: href,    label: Click-through link (optional), widget: string, required: false }
