@@ -1,0 +1,19 @@
+---
+slug: calibration-without-a-test-engineer
+date: "2026-02-18"
+tag: Engineering
+author: Jean-Baptiste Waring
+relatedPub: thermal-calibration-2025
+topics:
+  - photonics
+title: Calibrating a photonic link with no test engineer in the loop
+excerpt: Microring resonators want a clean thermal environment. The real world does not provide one. A closed-loop calibration scheme that fits inside the link, not on the bench.
+---
+
+Microring resonators are excellent wavelength filters and notoriously bad citizens of their thermal environment. A one-degree-Celsius drift shifts the resonance by roughly a tenth of a nanometre — enough, on a closely-spaced WDM link, to drop the channel. The classical answer is open-loop calibration: characterise each ring on the bench, store the heater bias, and trust the table. The classical answer fails the moment the ring leaves the bench.
+
+Our 2025 DATE paper sketches a closed-loop alternative. The idea is to repurpose the receiver photodetector as a wavelength-error sensor. By probing the ring with a small dither tone and reading the resulting amplitude modulation at the receiver, we extract a sign and magnitude for the resonance offset, then drive a heater controller that closes the loop in software.
+
+Two engineering details make this work. The first is the dither itself: it must be small enough not to corrupt the data, and orthogonal enough not to confuse a chain of cascaded rings. The second is the controller — a model-predictive design that anticipates thermal disturbances rather than chasing them. Together they bring the link from a thermal step to within one-tenth of a decibel of optimal in under a microsecond.
+
+What we did not solve, and what the current generation of students is working on: aging. The thermal model is stable on the timescales of a single experiment but drifts over weeks. We want a calibration loop that is also a learning loop.

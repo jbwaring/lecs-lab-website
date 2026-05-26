@@ -51,8 +51,9 @@ export function fmtDateLong(iso: string, locale: Locale): string {
   return locale === "fr" ? `${d} ${month} ${y}` : `${month} ${d}, ${y}`;
 }
 
-/** Reading time (in minutes), language-agnostic. */
-export function readingTime(body: string[]): number {
-  const words = body.join(" ").split(/\s+/).length;
+/** Reading time (in minutes), language-agnostic. Accepts raw markdown body or paragraph array. */
+export function readingTime(body: string | string[]): number {
+  const text = Array.isArray(body) ? body.join(" ") : body;
+  const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(2, Math.round(words / 220));
 }

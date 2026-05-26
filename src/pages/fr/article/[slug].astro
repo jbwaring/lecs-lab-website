@@ -1,16 +1,22 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import Avatar from "../../../components/Avatar.astro";
-import { articles } from "../../../data/lecs";
-import { getCollection } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import { detectLocale, t, fmtDate, fmtDateLong, readingTime } from "../../../lib/i18n";
 import type { StringKey } from "../../../i18n/strings";
 
-export function getStaticPaths() {
-  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+export async function getStaticPaths() {
+  const all = await getCollection("articles");
+  return all.map((article) => ({
+    params: { slug: article.data.slug },
+    props: { article }
+  }));
 }
 
-const { article } = Astro.props;
+type Props = { article: CollectionEntry<"articles"> };
+const { article } = Astro.props as Props;
+const data = article.data;
+
 const lang = detectLocale(Astro.url.pathname);
 const tt = (k: StringKey) => t(lang, k);
 const langHome = lang === "fr" ? "/fr/" : "/";
@@ -21,16 +27,21 @@ const articlesIndex = lang === "fr" ? "/fr/articles" : "/articles";
 
 const people = await getCollection("people");
 const publications = await getCollection("publications");
+const allArticles = await getCollection("articles");
 
-const author = people.find((p) => p.data.name === article.author);
-const pub = article.relatedPub
-  ? publications.find((p) => p.data.slug === article.relatedPub)
+const author = people.find((p) => p.data.name === data.author);
+const pub = data.relatedPub
+  ? publications.find((p) => p.data.slug === data.relatedPub)
   : undefined;
-const related = articles
-  .filter((a) => a.slug !== article.slug && a.topics.some((t) => article.topics.includes(t)))
+const related = allArticles
+  .filter(
+    (a) =>
+      a.data.slug !== data.slug && a.data.topics.some((tp) => data.topics.includes(tp))
+  )
   .slice(0, 3);
 
-const emailMailto = author ? (author.data.email ?? "").replace(" (at) ", "@") : null;
+const { Content } = await render(article);
+const minutes = readingTime(article.body ?? "");
 
 const crumbs = [
   { href: "https://www.concordia.ca", label: tt("util.breadcrumb.concordia") },
@@ -41,8 +52,8 @@ const crumbs = [
 ---
 
 <Layout
-  title={`${article.title} — LECS · Concordia University`}
-  description={article.excerpt}
+  title={`${data.title} — LECS · Concordia University`}
+  description={data.excerpt}
   activeNav="articles"
   crumbs={crumbs}
   condensedFooter
@@ -53,24 +64,24 @@ const crumbs = [
       <div class="breadcrumb-mini">
         <a href={articlesIndex}>{tt("nav.articles")}</a>
         <span>›</span>
-        <span>{fmtDateLong(article.date, lang)}</span>
+        <span>{fmtDateLong(data.date, lang)}</span>
       </div>
-      <div class="type-pill">{article.tag}</div>
-      <h1>{article.title}</h1>
+      <div class="type-pill">{data.tag}</div>
+      <h1>{data.title}</h1>
       <div class="authors-row">
         {tt("articles.by")} {
           author ? (
-            <a href={`${profileBase}/${author.id}`}>{article.author}</a>
+            <a href={`${profileBase}/${author.id}`}>{data.author}</a>
           ) : (
-            <span>{article.author}</span>
+            <span>{data.author}</span>
           )
         }
       </div>
       <div class="venue-row">
-        {fmtDateLong(article.date, lang)} · {readingTime(article.body)} {tt("articles.minRead")}
+        {fmtDateLong(data.date, lang)} · {minutes} {tt("articles.minRead")}
       </div>
       <div class="pill-row">
-        {article.topics.map((t) => <span class="topic-pill">{tt(`area.${t}` as StringKey)}</span>)}
+        {data.topics.map((tp) => <span class="topic-pill">{tt(`area.${tp}` as StringKey)}</span>)}
       </div>
     </div>
   </section>
@@ -80,11 +91,11 @@ const crumbs = [
       <div class="paper-main">
         <div class="abstract-block">
           <div class="label">{tt("article.inBrief")}</div>
-          <p>{article.excerpt}</p>
+          <p>{data.excerpt}</p>
         </div>
 
         <div class="paper-section">
-          {article.body.map((para) => <p>{para}</p>)}
+          <Content />
         </div>
 
         {
@@ -132,7 +143,7 @@ const crumbs = [
                 </div>
               </a>
             ) : (
-              <div style="font-size:14px;">{article.author}</div>
+              <div style="font-size:14px;">{data.author}</div>
             )
           }
         </div>
@@ -141,15 +152,15 @@ const crumbs = [
           <h4>{tt("article.thisArticle")}</h4>
           <div class="meta-row">
             <span class="k">{tt("article.published")}</span>
-            <span class="v">{fmtDateLong(article.date, lang)}</span>
+            <span class="v">{fmtDateLong(data.date, lang)}</span>
           </div>
           <div class="meta-row">
             <span class="k">{tt("article.category")}</span>
-            <span class="v">{article.tag}</span>
+            <span class="v">{data.tag}</span>
           </div>
           <div class="meta-row">
             <span class="k">{tt("article.readingTime")}</span>
-            <span class="v">{readingTime(article.body)} min</span>
+            <span class="v">{minutes} min</span>
           </div>
         </div>
 
@@ -159,10 +170,10 @@ const crumbs = [
               <h4>{tt("article.related")}</h4>
               <div class="related-papers">
                 {related.map((r) => (
-                  <a href={`${articleBase}/${r.slug}`}>
-                    <div class="t">{r.title}</div>
+                  <a href={`${articleBase}/${r.data.slug}`}>
+                    <div class="t">{r.data.title}</div>
                     <div class="v">
-                      <strong>{r.tag}</strong> · {fmtDate(r.date, lang)}
+                      <strong>{r.data.tag}</strong> · {fmtDate(r.data.date, lang)}
                     </div>
                   </a>
                 ))}

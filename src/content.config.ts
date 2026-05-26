@@ -98,4 +98,31 @@ const people = defineCollection({
   })
 });
 
-export const collections = { publications, people };
+const articles = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
+  schema: z.object({
+    slug: z.string(),
+    date: z.string(),
+    tag: z.string(),
+    author: z.string(),
+    /** Optional companion publication slug. May not resolve — pages handle gracefully. */
+    relatedPub: z.string().optional(),
+    topics: z.array(topic).default([]),
+    title: z.string(),
+    excerpt: z.string()
+  })
+});
+
+const news = defineCollection({
+  loader: glob({ pattern: "**/*.json", base: "./src/content/news" }),
+  schema: z.object({
+    date: z.string(),
+    tag: z.string(),
+    title: z.string(),
+    summary: z.string(),
+    /** Optional click-through link (internal path or external URL). */
+    href: z.string().optional()
+  })
+});
+
+export const collections = { publications, people, articles, news };

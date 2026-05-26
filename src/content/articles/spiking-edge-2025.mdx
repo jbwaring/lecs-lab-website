@@ -1,0 +1,18 @@
+---
+slug: spiking-edge-2025
+date: "2025-09-03"
+tag: Field report
+author: Frédéric Gagné
+relatedPub: spiking-dataflow-2024
+topics:
+  - edge-ai
+  - neuro
+title: Why event-driven inference is the right answer for keyword spotting
+excerpt: Keyword-spotting accelerators are typically on, always polling. Spiking accelerators only do work when something interesting happens. A look at what that buys.
+---
+
+Always-on keyword-spotting accelerators occupy a strange corner of the power budget. They are almost always idle, but they are not allowed to sleep deeply enough to actually save power. The penalty for missing a wake-word is too high.
+
+Spiking neural accelerators offer a way out of this corner. Because computation is gated by input events, the silicon spends most of its time genuinely off. A scheduler informs the device when to expect input, and the analog front end serves as both a sensor and a wake-up signal. We measure an order-of-magnitude reduction in average power for the same false-accept rate, with the caveat that the calibration of the analog front end is now part of the workload.
+
+We are now exploring whether this same approach extends to vision, where the events are pixel-level rather than acoustic. Early results from an event camera coupled to the same accelerator are promising; results from a CMOS sensor are mixed.
