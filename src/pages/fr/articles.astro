@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ArticleThumb from "../../components/ArticleThumb.astro";
-import { articles } from "../../data/lecs";
+import { getCollection } from "astro:content";
 import { detectLocale, t, fmtDate, readingTime } from "../../lib/i18n";
 import type { StringKey } from "../../i18n/strings";
 
@@ -10,13 +10,14 @@ const tt = (k: StringKey) => t(lang, k);
 const langHome = lang === "fr" ? "/fr/" : "/";
 const articleBase = lang === "fr" ? "/fr/article" : "/article";
 
-const sorted = [...articles].sort((a, b) => (a.date < b.date ? 1 : -1));
+const all = await getCollection("articles");
+const sorted = [...all].sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
 const [feature, ...rest] = sorted;
 
-const topicKeys = [...new Set(sorted.flatMap((a) => a.topics))];
+const topicKeys = [...new Set(sorted.flatMap((a) => a.data.topics))];
 const topicCounts: Record<string, number> = { all: sorted.length };
 for (const k of topicKeys) {
-  topicCounts[k] = sorted.filter((a) => a.topics.includes(k)).length;
+  topicCounts[k] = sorted.filter((a) => a.data.topics.includes(k)).length;
 }
 
 const crumbs = [
@@ -72,20 +73,20 @@ const crumbs = [
           <article
             class="article-feature"
             data-article-item
-            data-topics={feature.topics.join(",")}
+            data-topics={feature.data.topics.join(",")}
           >
-            <a href={`${articleBase}/${feature.slug}`} class="thumb-wrap" aria-label={feature.title}>
-              <ArticleThumb topic={feature.topics[0]} title={feature.title} />
+            <a href={`${articleBase}/${feature.data.slug}`} class="thumb-wrap" aria-label={feature.data.title}>
+              <ArticleThumb topic={feature.data.topics[0]} title={feature.data.title} />
             </a>
             <div>
               <div class="meta">
-                <span>{fmtDate(feature.date, lang)}</span>
-                <span class="tag">{feature.tag}</span>
+                <span>{fmtDate(feature.data.date, lang)}</span>
+                <span class="tag">{feature.data.tag}</span>
               </div>
-              <h2><a href={`${articleBase}/${feature.slug}`}>{feature.title}</a></h2>
-              <p>{feature.excerpt}</p>
+              <h2><a href={`${articleBase}/${feature.data.slug}`}>{feature.data.title}</a></h2>
+              <p>{feature.data.excerpt}</p>
               <div class="byline">
-                {tt("articles.by")} <strong>{feature.author}</strong> · {readingTime(feature.body)}{" "}
+                {tt("articles.by")} <strong>{feature.data.author}</strong> · {readingTime(feature.body ?? "")}{" "}
                 {tt("articles.minRead")}
               </div>
             </div>
@@ -99,21 +100,21 @@ const crumbs = [
             {rest.map((a) => (
               <a
                 class="article-card"
-                href={`${articleBase}/${a.slug}`}
+                href={`${articleBase}/${a.data.slug}`}
                 data-article-item
-                data-topics={a.topics.join(",")}
+                data-topics={a.data.topics.join(",")}
               >
                 <div class="thumb-wrap">
-                  <ArticleThumb topic={a.topics[0]} title={a.title} />
+                  <ArticleThumb topic={a.data.topics[0]} title={a.data.title} />
                 </div>
                 <div class="meta">
-                  <span>{fmtDate(a.date, lang)}</span>
-                  <span class="tag">{a.tag}</span>
+                  <span>{fmtDate(a.data.date, lang)}</span>
+                  <span class="tag">{a.data.tag}</span>
                 </div>
-                <h3>{a.title}</h3>
-                <p>{a.excerpt}</p>
+                <h3>{a.data.title}</h3>
+                <p>{a.data.excerpt}</p>
                 <div class="byline">
-                  {tt("articles.by")} <strong>{a.author}</strong>
+                  {tt("articles.by")} <strong>{a.data.author}</strong>
                 </div>
               </a>
             ))}

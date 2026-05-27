@@ -4,7 +4,7 @@ import HomeHero from "../components/HomeHero.astro";
 import PersonCard from "../components/PersonCard.astro";
 import NewsCard from "../components/NewsCard.astro";
 import PublicationRow from "../components/PublicationRow.astro";
-import { researchAreas, rolesOrder, type Role, type NewsItem } from "../data/lecs";
+import { researchAreas, rolesOrder, type NewsItem } from "../data/lecs";
 import { getCollection } from "astro:content";
 import { getOrderedPeople } from "../lib/people";
 import { detectLocale, t } from "../lib/i18n";
@@ -43,7 +43,16 @@ const totalPubs = publications.length;
 
 const pubBase = lang === "fr" ? "/fr/publication" : "/publication";
 
-// Synthesize news from the 6 most recent papers.
+// Editor-authored news from the content collection.
+const curatedNews = (await getCollection("news")).map((n): NewsItem & { href?: string } => ({
+  date: n.data.date,
+  tag: n.data.tag,
+  title: n.data.title,
+  summary: n.data.summary,
+  href: n.data.href
+}));
+
+// Auto-synthesized news from the 6 most recent papers.
 const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: string } => {
   const first = p.data.abstract.split(/(?<=[.?!])\s+/)[0] ?? "";
   const trimmed = first.length > 240 ? first.slice(0, 237).trimEnd() + "…" : first;
@@ -55,6 +64,11 @@ const newsFromPapers = publications.slice(0, 6).map((p): NewsItem & { href: stri
     href: `${pubBase}/${p.data.slug}`
   };
 });
+
+// Merge curated + synthesized, newest first, cap at 6.
+const newsItems = [...curatedNews, ...newsFromPapers]
+  .sort((a, b) => (a.date < b.date ? 1 : -1))
+  .slice(0, 6);
 
 const activeMembers = people.filter((p) => p.data.role !== "alumni").length;
 const yearsAtConcordia = new Date().getFullYear() - 2019;
@@ -148,7 +162,7 @@ const yearsAtConcordia = new Date().getFullYear() - 2019;
         <p class="lede">{tt("news.lede")}</p>
       </div>
       <div class="news-grid">
-        {newsFromPapers.map((n) => <NewsCard item={n} href={n.href} locale={lang} />)}
+        {newsItems.map((n) => <NewsCard item={n} href={n.href} locale={lang} />)}
       </div>
     </div>
   </section>

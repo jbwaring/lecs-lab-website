@@ -1,0 +1,22 @@
+---
+slug: yield-from-the-foundry
+date: "2026-04-29"
+tag: Research note
+author: Masoud Rahimi
+relatedPub: variability-aware-mapping-2026
+topics:
+  - photonics
+  - noc
+title: Designing photonic networks for the variability you’ll actually get from the foundry
+excerpt: Silicon photonics promises terabit-per-second on-chip links. Process variation is what stands between that promise and the wafer. Here’s what we measured, and what we did about it.
+---
+
+Silicon-photonic foundries can deliver microring filters with quality factors in the tens of thousands and footprints under ten square micrometres. What they cannot deliver — at least not yet — is uniformity. A typical multi-project wafer run shows a resonance-wavelength standard deviation of around two hundred picometres across a single die, and the variation between dies is larger still. For a wavelength-division-multiplexed link with one nanometre of channel spacing, that variation is enough to scramble the channel assignments entirely.
+
+The conventional response is post-fabrication tuning: each ring is heated until it lands on its assigned wavelength, and a feedback loop keeps it there. Tuning works, but it is power-hungry. On a 256-node photonic NoC we measure peak tuning powers exceeding the static power of the entire electrical fabric beneath it. Worse, the tuning budget grows with the square of the channel density, exactly where we want photonics to win.
+
+Our DATE 2026 paper takes a different tack. Instead of treating variability as a problem to be repaired downstream, we treat it as a design input. The compiler is given a measured variability profile — derived from monitor structures placed on the same die — and it assigns wavelengths, rings and routes to minimise expected tuning power. The mapping problem becomes a statistical one: we are no longer placing a network on a deterministic substrate, but on a distribution of possible substrates.
+
+The results are pleasing. At iso-throughput the variability-aware flow reduces tuning power by 37 %, and yield at a one-decibel power penalty improves from 41 % to 88 %. The flow is not free — solving the mapping problem takes minutes rather than seconds — but the ratio is favourable.
+
+Two open questions follow from the work. First, the variability profile of a yet-to-be-fabricated die is uncertain; how confidently can we predict it from upstream monitors? Second, what does this look like at the next process node, where the absolute variation may shrink but the relative variation across thousands of rings may not? Both are on our agenda for the year ahead.

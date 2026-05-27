@@ -1,0 +1,18 @@
+---
+slug: approximate-edge-inference
+date: "2025-11-12"
+tag: Research note
+author: Paria Zolfaghari
+relatedPub: quality-arith-2025
+topics:
+  - approx
+  - edge-ai
+title: How much precision does an edge classifier actually need?
+excerpt: Quality-configurable arithmetic units let an embedded neural network spend bits where they matter and save them where they do not. A short tour of what changes when accuracy is a knob.
+---
+
+Most embedded neural classifiers are over-provisioned. The arithmetic is fixed-precision because the silicon was fixed-precision, not because the workload demanded it. Make the arithmetic precision a runtime parameter and several things become possible at once: voltage scaling becomes safe, batteries last longer, and the same accelerator can serve a wider product line.
+
+Our 2025 TVLSI paper introduces a multiply-accumulate unit whose precision can be reconfigured per layer, per inference, and even per channel. The trick is in the bias correction: lowering the precision of a MAC introduces a systematic error that, left uncompensated, accumulates across layers and destroys the classifier. We characterise this error analytically and pre-compute a correction term per layer that adds zero runtime cost.
+
+The headline result, measured on a small CNN deployed for visual wake-words: 38 % energy reduction at the iso-accuracy operating point, with the option to trade further accuracy for a further 2.4× energy reduction when the device is on battery. The quality knob is a knob the application gets to turn, not a fixed design decision.
